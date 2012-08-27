@@ -1,0 +1,7 @@
+{% extends standalone ? "EntvalleyAppBundle::no_layout.html.twig" : "EntvalleyAppBundle::layout_exterior.html.twig" %}
+
+{% form_theme form 'EntvalleyAppBundle::register_fields.html.twig' %}
+
+{% block block_content %}
+{% include "FOSUserBundle:Registration:register_content.html.twig" %}
+{% endblock block_content %}

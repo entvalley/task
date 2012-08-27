@@ -3,6 +3,8 @@
 namespace Entvalley\AppBundle\Controller;
 
 use Mzz\MzzBundle\Controller\Controller;
+use Entvalley\AppBundle\Component\HttpFoundation\JsonResponse;
+use Entvalley\AppBundle\Domain\JsonEncoder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Entvalley\AppBundle\Entity\Factory\TaskFactory;
 use Entvalley\AppBundle\Form\TaskType;
@@ -13,22 +15,27 @@ class TaskController extends Controller
 {
     public function indexAction()
     {
-
         $user = $this->getUser();
 
         $em = $this->getDoctrine()->getManager();
+
         $taskRepository = $em->getRepository('Entvalley\AppBundle\Entity\Task');
 
         $tasks = $taskRepository->findNewOrAssignedTo($user);
 
-        return $this->view(array(
-            'tasks' => $tasks
-        ));
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            return JsonResponse::createWithSerializer($this->get('serializer'), $tasks);
+        } else {
+            return $this->view(array(
+                'tasks' => $tasks
+            ));
+        }
     }
 
     public function createAction()
     {
         $user = $this->getUser();
+
 
         $em = $this->getDoctrine()->getManager();
 
@@ -63,9 +70,13 @@ class TaskController extends Controller
      */
     public function viewAction(Task $task)
     {
-        return $this->view(array(
-            'task' => $task
-        ));
+        if ($this->getRequest()->isXmlHttpRequest()) {
+            return JsonResponse::createWithSerializer($this->get('serializer'), $task);
+        } else {
+            return $this->view(array(
+                'task' => $task
+            ));
+        }
     }
 
     public function deleteAction(Task $task)

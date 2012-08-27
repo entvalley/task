@@ -1,4 +1,8 @@
-<form action="{{ path('app_command_send') }}" class="command_form" method="post">
+<div class="command_tooltip" style="display: none;">
+    <b>The task is assigned has been closed.</b>
+</div>
+<form action="{{ path('app_command_send') }}" class="command_form" method="post" data-bind="with: command">
     {{ form_widget(form.text, { attrs : { id: "main_input" } }) }}
+    {{ form_rest(form) }}
     <button id="command_send" class="btn btn-primary">Send</button>
 </form>

@@ -11,13 +11,24 @@
         </id>
 
         <field name="title" length="140" />
+
         <field name="status" type="smallint" />
         <field name="text" type="text" />
         <field name="createdAt" type="datetime" />
         <field name="lastModification" nullable="true" type="datetime" />
 
+        <one-to-one field="lastStatus" target-entity="Entvalley\AppBundle\Entity\StatusHistory">
+            <cascade>
+                <cascade-all/>
+            </cascade>
+        </one-to-one>
+
+        <one-to-many field="comments" orphan-removal="true" target-entity="Entvalley\AppBundle\Entity\Comment" mapped-by="task" />
+
         <many-to-one field="author" target-entity="Entvalley\AppBundle\Entity\User" />
         <many-to-one field="assignedTo" target-entity="Entvalley\AppBundle\Entity\User" />
+
+        <many-to-one target-entity="Entvalley\AppBundle\Entity\Company" field="company" />
 
     </entity>
 </doctrine-mapping>

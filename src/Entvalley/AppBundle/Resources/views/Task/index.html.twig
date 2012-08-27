@@ -1,29 +1,52 @@
 {% extends 'EntvalleyAppBundle::layout.html.twig' %}
 
 {% block content %}
-
-    <a class="btn" href="{{ path('app_task_create') }}">Create a task</a>
+    <div class="task" data-bind="with: chosenTask">
+        <div class="status-header">
+            UNRESOLVED
+        </div>
+        <a class="btn" href="{{ path('app_task_list') }}" data-bind="click: $root.goToTaskList">List of tasks</a>
+        <a href="#" class="btn btn-danger">Delete</a>
         <hr>
+        <p><b>The task is <span data-bind="text: status"></span>; Title: </b> <span data-bind="text: title"></span></p>
 
-    <ul class="separated-list">
-        {% for task in tasks %}
+        <p data-bind="text: text"></p>
+
+        <p>Comments: <span data-bind="text: comments().length"></span></p>
+
+        <div class="comments">
+            <ul data-bind="foreach: comments" class="separated-list">
+                <li>
+                    <div class="row-fluid" data-bind="text: text">
+
+                    </div>
+                    <p>Created by <span data-bind="text: username"></span></p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="task-list" data-bind="visible: tasks().length > 0 && !chosenTask()">
+        <a class="btn" href="{{ path('app_task_create') }}">Create a task</a>
+        <ul data-bind="foreach: {data: tasks, beforeRemove: hideTask }" class="separated-list">
             <li>
                 <div class="row-fluid">
                     <div class="message-info span1">
-                        <span class="month">{{ task.createdAt.format('F') }}</span>
-                        <span class="daynumber">{{ task.createdAt.format('d') }}</span>
-                        <span class="date">{{ task.createdAt.format('l') }}</span>
+                        <span class="month" data-bind="text: createdAtMonth"></span>
+                        <span class="daynumber" data-bind="text: createdAtDay"></span>
+                        <span class="date" data-bind="text: createdAtDate"></span>
                     </div>
                     <div class="span11">
-                    <a class="message-title" href="{{ path('app_task_view', { id: task.id }) }}">
-                        {{ task.title }}
-                    </a>
-                    <p>{{ task.text }}</p>
-                    <p class="reportedby">{{ task.author.username }}, {{ task.createdAt.format('m/d/y h:i a') }}</p>
+                        <a class="message-title"
+                           data-bind="text: title, click: $root.goToTask, attr: { href: url }"></a>
 
+                        <p data-bind="text: text"></p>
+
+                        <p class="reportedby"><span data-bind="text: formatDate(date)"><span>,
+                    <span data-bind="text: author"></span></p>
                     </div>
                 </div>
             </li>
-        {% endfor %}
-    </ul>
+        </ul>
+    </div>
 {% endblock %}

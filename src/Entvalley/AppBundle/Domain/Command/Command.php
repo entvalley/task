@@ -4,8 +4,9 @@ namespace Entvalley\AppBundle\Domain\Command;
 
 interface Command
 {
-    function execute();
+    const PREFIX = "@";
+
+    function execute($content);
     function getName();
-    function setContent($content);
-    function getContent();
+    function setSource(CommandSource $source);
 }

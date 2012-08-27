@@ -2,27 +2,43 @@
 
 namespace Entvalley\AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Entvalley\AppBundle\Domain\Status;
+
 class Task
 {
-    const STATUS_NEW = 1;
-    const STATUS_ACCEPTED = 2;
-    const STATUS_CLOSED = 3;
-    const STATUS_REJECTED = 4;
-    const STATUS_REOPENED = 5;
-    const STATUS_WILLNOTFIX = 6;
-
     private $id;
     private $title;
-    private $status;
     private $text;
     private $author;
     private $assignedTo;
     private $createdAt;
     private $lastModification;
+    private $comments;
+    private $company;
+    private $lastStatus;
+    private $status;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTime();
+        $this->comments = new ArrayCollection();
+        $this->status = Status::UNASSIGNED;
+    }
 
     public function setAssignedTo($assignedTo)
     {
         $this->assignedTo = $assignedTo;
+    }
+
+    public function setCompany($company)
+    {
+        $this->company = $company;
+    }
+
+    public function getCompany()
+    {
+        return $this->company;
     }
 
     public function getAssignedTo()
@@ -70,16 +86,6 @@ class Task
         return $this->lastModification;
     }
 
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
     public function setText($text)
     {
         $this->text = $text;
@@ -98,5 +104,46 @@ class Task
     public function getTitle()
     {
         return $this->title;
+    }
+
+    public function setComments($comments)
+    {
+        $this->comments = $comments;
+    }
+
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    public function setTextWithTitle($text)
+    {
+        $textParts = preg_split("~(\n|\r)~", $text, 2);
+
+        $this->title = trim($textParts[0]);
+        $this->text = isset($textParts[1]) ? trim($textParts[1]) : "";
+    }
+
+    public function setStatus(User $whoUpdated, $status)
+    {
+        $statusHistory = new StatusHistory();
+        $statusHistory->setTask($this);
+        $statusHistory->setStatus($status);
+        $statusHistory->setWhoUpdated($whoUpdated);
+        $this->status = $status;
+        $this->lastStatus = $statusHistory;
+    }
+
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return StatusHistory
+     */
+    public function getLastStatus()
+    {
+        return $this->lastStatus;
     }
 }

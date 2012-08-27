@@ -23,13 +23,75 @@
              factory-method="get">
         </service>
 
+        <service id="entvalley.command_create" class="Entvalley\AppBundle\Domain\Command\CreateCommand">
+            <argument type="service" id="doctrine" />
+            <argument type="service" id="context.user" />
+        </service>
+
+        <service id="entvalley.command_delete" class="Entvalley\AppBundle\Domain\Command\DeleteCommand">
+            <argument type="service" id="doctrine" />
+        </service>
+
+        <service id="entvalley.command_add_comment" class="Entvalley\AppBundle\Domain\Command\AddCommentCommand">
+            <argument type="service" id="doctrine" />
+            <argument type="service" id="context.user" />
+        </service>
+
+        <service id="entvalley.command_abandon" class="Entvalley\AppBundle\Domain\Command\AbandonCommand">
+            <argument type="service" id="doctrine" />
+        </service>
+
+        <service id="entvalley.command_close" class="Entvalley\AppBundle\Domain\Command\CloseCommand">
+            <argument type="service" id="doctrine" />
+        </service>
+
+        <service id="entvalley.command_open" class="Entvalley\AppBundle\Domain\Command\OpenCommand">
+            <argument type="service" id="doctrine" />
+        </service>
+
+        <service id="entvalley.command_take" class="Entvalley\AppBundle\Domain\Command\TakeCommand">
+            <argument type="service" id="doctrine" />
+        </service>
+
+        <service id="entvalley.command_done" class="Entvalley\AppBundle\Domain\Command\DoneCommand">
+            <argument type="service" id="doctrine" />
+            <argument type="service" id="context.user" />
+        </service>
+
+        <service id="entvalley.command_registry" class="Entvalley\AppBundle\Domain\Command\CommandRegistry">
+            <call method="register">
+                <argument type="service" id="entvalley.command_create" />
+            </call>
+            <call method="register">
+                <argument type="service" id="entvalley.command_delete" />
+            </call>
+            <call method="register">
+                <argument type="service" id="entvalley.command_add_comment" />
+            </call>
+            <call method="register">
+                <argument type="service" id="entvalley.command_close" />
+            </call>
+            <call method="register">
+                <argument type="service" id="entvalley.command_open" />
+            </call>
+            <call method="register">
+                <argument type="service" id="entvalley.command_take" />
+            </call>
+            <call method="register">
+                <argument type="service" id="entvalley.command_done" />
+            </call>
+            <call method="register">
+                <argument type="service" id="entvalley.command_abandon" />
+            </call>
+        </service>
+
         <service id="entvalley.command_interpreter" class="Entvalley\AppBundle\Domain\Command\CommandInterpreter">
-            <argument>%entvalley.commands%</argument>
+            <argument type="service" id="entvalley.command_registry" />
         </service>
 
         <service id="entvalley.command_manager" class="Entvalley\AppBundle\Domain\Command\CommandManager">
             <argument type="service" id="entvalley.command_interpreter"/>
-            <argument>%entvalley.commands%</argument>
+            <argument type="service" id="entvalley.command_registry" />
         </service>
     </services>
 

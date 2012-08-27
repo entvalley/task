@@ -13,6 +13,12 @@ class CommandType extends AbstractType
     {
         $builder
             ->add('text', 'textarea')
+            ->add('contextId', 'hidden', array('attr' => array(
+                'data-bind' => 'value: contextId'
+            )))
+            ->add('contextType', 'hidden', array('attr' => array(
+                'data-bind' => 'value: contextType'
+            )))
         ;
     }
 

@@ -1,0 +1,9 @@
+{% extends standalone ? "EntvalleyAppBundle::no_layout.html.twig" : "EntvalleyAppBundle::layout_exterior.html.twig" %}
+
+
+{% block block_content %}
+    {% if standalone == false %}
+        {% render "EntvalleyUserBundle:Registration:register" with { standalone: true }%}
+    {% endif %}
+    {% include "FOSUserBundle:Security:login_content.html.twig" with { standalone: standalone } %}
+{% endblock block_content %}

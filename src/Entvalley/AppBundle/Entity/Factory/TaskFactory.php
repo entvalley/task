@@ -14,8 +14,6 @@ class TaskFactory
     public function createFor(User $user)
     {
         $task = new Task;
-        $task->setStatus(Task::STATUS_NEW);
-        $task->setCreatedAt(new \DateTime());
         $task->setAuthor($user);
         return $task;
     }

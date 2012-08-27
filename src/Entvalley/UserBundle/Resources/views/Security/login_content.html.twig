@@ -1,0 +1,36 @@
+<div class="sign-block sign-in-block"{% if standalone == true %} style="display: none;"{% endif %}>
+    <h3>Sign In</h3>
+
+    <p class="sign-up-link"><a href="#">Do not have an account?</a></p>
+    <hr>
+
+    <h4>Use your username and password to sign in.</h4>
+
+    {% if error is defined and error %}
+        <div class="alert alert-error">
+            {{ error|trans({}, 'FOSUserBundle') }}
+        </div>
+    {% endif %}
+    <form class="form" action="{{ path("fos_user_security_check") }}" method="post">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}"/>
+        <fieldset>
+            <div class="control-group">
+                <div class="controls">
+                    <input type="text" placeholder="Username" name="_username" class="input-large">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <input type="password" name="_password" placeholder="Password" class="input-large">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <input type="checkbox" id="remember_me" name="_remember_me" value="on"/>
+                    {{ 'security.login.remember_me'|trans({}, 'FOSUserBundle') }}
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-large">Start working</button>
+        </fieldset>
+    </form>
+</div>

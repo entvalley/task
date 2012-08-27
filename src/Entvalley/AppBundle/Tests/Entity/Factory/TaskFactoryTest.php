@@ -5,6 +5,7 @@ namespace Entvalley\AppBundle\Tests\Entity\Factory;
 use Entvalley\AppBundle\Entity\Factory\TaskFactory;
 use Entvalley\AppBundle\Entity\User;
 use Entvalley\AppBundle\Entity\Task;
+use Entvalley\AppBundle\Domain\Status;
 
 class TaskFactoryTest extends \PHPUnit_Framework_TestCase
 {
@@ -14,7 +15,7 @@ class TaskFactoryTest extends \PHPUnit_Framework_TestCase
         $taskFactory = new TaskFactory;
         $task = $taskFactory->createFor($user);
 
-        $this->assertEquals(Task::STATUS_NEW, $task->getStatus());
+        $this->assertEquals(Status::UNASSIGNED, $task->getStatus());
         $this->assertNotEmpty($task->getCreatedAt());
         $this->assertEquals($user, $task->getAuthor());
     }

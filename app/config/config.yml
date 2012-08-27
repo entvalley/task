@@ -1,5 +1,5 @@
 imports:
-    - { resource: parameters.yml }
+    - { resource: parameters.php }
     - { resource: security.yml }
 
 framework:
@@ -8,7 +8,7 @@ framework:
     secret:          %secret%
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
-        strict_parameters: %kernel.debug%
+        strict_requirements: %kernel.debug%
     form:            true
     csrf_protection: true
     validation:      { enable_annotations: true }
@@ -66,8 +66,20 @@ fos_user:
     firewall_name: main
     user_class: Entvalley\AppBundle\Entity\User
 
+jms_serializer:
+    handlers:
+        object_based: false
+        datetime:
+            format: "F d, Y H:i:s" # ISO8601
+            default_timezone: "UTC"
+        array_collection: true
+        form_error: true
+        constraint_violation: true
 
-parameters:
-    entvalley.commands:
-        create: Entvalley\AppBundle\Domain\Command\CreateCommand
-        delete: Entvalley\AppBundle\Domain\Command\DeleteCommand
+    metadata:
+        auto_detection: false
+
+        directories:
+            FOSUB:
+                namespace_prefix: "FOS\\UserBundle"
+                path: "%kernel.root_dir%/serializer/FOSUB"

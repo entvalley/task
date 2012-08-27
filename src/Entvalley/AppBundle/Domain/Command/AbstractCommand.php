@@ -6,13 +6,18 @@ abstract class AbstractCommand implements Command
 {
     protected $content;
 
-    public function setContent($content)
+    /**
+     * @var $source CommandSource
+     */
+    protected $source;
+
+    public function setSource(CommandSource $source)
     {
-        $this->content = $content;
+        $this->source = $source;
     }
 
-    public function getContent()
+    public function isGuessableBySource(CommandSource $source)
     {
-        return $this->content;
+        return false;
     }
 }

@@ -2,18 +2,72 @@
 
 body
 {
-    padding-top: 90px;
-    padding-bottom: 40px;
+    padding-bottom: 90px;
     background: url(/bundles/entvalleyapp/images/background.png);
+    overflow-y: scroll;
+
+    > .container > .row > .span12 {
+         background-color: #ffffff;
+         padding: 10px;
+        .box-shadow(1px 1px 7px 0px rgba(0, 0, 0, 0.2));
+    }
 }
 
+@media (min-width: 768px) and (max-width: 979px) {
+  body > .container > .row  >.span12 {
+    width: 704px;
+  }
+}
+
+
+@media (min-width: 1200px) {
+    body > .container > .row  >.span12 {
+        width: 1130px;
+        padding: 20px;
+  }
+}
+
+
+@media (min-width: 980px) {
+    body {
+        padding-top: 90px;
+    }
+}
+
+@media (max-width: 767px) {
+  .main .navbar-fixed-top,
+  .main .navbar-fixed-bottom {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+    .main .navbar .picture
+    {
+    }
+
+}
 .navbar .topbar
 {
-    background-color: #3e383a;
+    /*background-color: #3e383a;*/
     .border-radius(4px);
-    padding: 12px 10px 4px 10px;
-    margin: 10px 0;
+    margin: 12px 0 2px;
     display: inline-block;
+
+    ul {
+        margin: 0 4px;
+    }
+
+    font-family: 'Lato', sans-serif;
+
+}
+
+.navbar {
+    .logo-inner {
+        margin: 13px 0 14px;
+    }
+    .nav > li > a {
+        padding: 15px 10px 11px;
+    }
 }
 
 .topbar ul
@@ -29,7 +83,11 @@ body
     display: block;
     float: left;
     margin-right: 8px;
+    font-family: 'lato', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    text-transform: uppercase;
+    font-size: 13px;
 }
+.navbar .nav > li > a
 
 .navbar .username
 {
@@ -42,31 +100,57 @@ body
     color: white;
     font-size: 13px;
     font-weight: bold;
-}
-
-@picture-padding: 12px;
-.navbar .picture
-{
-    float: left;
-    margin: -@picture-padding @picture-padding+2 -@picture-padding -@picture-padding;
+    margin: 10px;
     position: relative;
 }
 
+@picture-padding: 10px;
+.navbar .picture
+{
+    float: left;
+    position: relative;
+    margin: -@picture-padding @picture-padding+2 -@picture-padding - 4 -0;
+
+}
+
+.main .navbar .picture {
+    margin: 0px;
+}
+
 @summary-done-color: #b5b5b5;
-@summary-inprogress-color: #dfdfdf;
-@summary-unresolved-color: #009bc3;
-@summary-border: 4px solid #443f41;
+@summary-inprogress-color: #84cee7;
+@summary-unresolved-color: #e9da85;
+@summary-background: #443f41;
+
+
+.task {
+    position: relative;
+
+    .status-header {
+        position: absolute;
+        background: #88af0b url(/bundles/entvalleyapp/images/task-status-background.png);
+        height: 16px;
+        font-size: 12px;
+        padding: 4px 8px;
+        margin-bottom: -30px;
+        color: white;
+        font-family: Arial, sans-serif;
+        top: -44px;
+        display: table-cell;
+    }
+}
+
 
 .navbar .summary
 {
-    border: @summary-border;
+    background-color: @summary-background;
+    padding: 4px 2px;
     .border-radius(6px);
     overflow: auto;
     display: inline-block;
-    margin-bottom: 2px;
-    font-family: "Times New Roman", serif;
-    font-size: 18px;
-    font-weight: bold;
+    font-family: 'Lato', "Arial", serif;
+    font-size: 12px;
+    margin: -4px 0 -12px 14px;
 
     .done {
         background-color: @summary-done-color;
@@ -74,26 +158,29 @@ body
 
     .inprogress {
         background-color: @summary-inprogress-color;
+
+        .arrow {
+            border-top-color: @summary-inprogress-color;
+        }
     }
 
     .unresolved {
         background-color: @summary-unresolved-color;
-    }
 
-    .done, .inprogress {
-        color: #3f3f3f;
-    }
-
-    .unresolved {
-        color: #fff;
+        .arrow {
+            border-top-color: @summary-unresolved-color;
+        }
     }
 
     .done, .inprogress, .unresolved {
+        color: #000;
         .box-shadow(inset 1px 1px 7px 0px rgba(0, 0, 0, 0.2));
         float: left;
         position: block;
-        padding: 6px 10px;
+        padding: 3px 12px;
         text-align: center;
+        .border-radius(3px);
+        margin: 0 2px;
     }
 
     p {
@@ -101,6 +188,27 @@ body
         font-size: 10px;
         margin: 0;
     }
+
+
+    .arrow,
+        .arrow:after {
+         position: absolute;
+         display: inline-block;
+         width: 0;
+         height: 0;
+         border-color: transparent;
+         border-style: solid;
+       }
+        .arrow:after {
+         z-index: -1;
+         content: "";
+       }
+
+       .arrow {
+         bottom: 8px;
+         margin-left: -8px;
+         border-width: 6px 6px 0;
+       }
 }
 
 .tools
@@ -110,7 +218,7 @@ body
     left: 0;
     right: 0;
     color: white;
-    padding: 6px 40px;
+    padding: 6px 45px 0px;
     z-index: 6000001;
     background-color: #dcdce0;
     border-top: 2px solid #adadad;
@@ -118,9 +226,48 @@ body
     textarea {
         .box-shadow(0px 0px 4px 0px rgba(0, 0, 0, 0.2));
         width: 500px;
-        height: 100px;
+        height: 60px;
     }
 
+    form {
+        margin: 0;
+    }
+
+    .command_tooltip {
+        background-color: #fffac4;
+        position: absolute;
+        top: -36px;
+        height: 20px;
+        border: 1px solid #d9daab;
+        width: 490px;
+        font-size: 11px;
+        color: black;
+        padding: 5px 10px;
+        font-weight: bold;
+    }
+
+    .command_tooltip:after {
+        bottom:15px;
+        left:4px;
+        width:50%;
+        height:20%;
+        max-width:300px;
+        max-height:100px;
+        .box-shadow(0 15px 2px rgba(0, 0, 0, 0.3));
+        -webkit-transform:rotate(-2deg);
+           -moz-transform:rotate(-2deg);
+            -ms-transform:rotate(-2deg);
+             -o-transform:rotate(-2deg);
+                transform:rotate(-2deg);
+
+    }
+
+    .command_tooltip:before,
+    .command_tooltip:after {
+        content:"";
+        position:absolute;
+        z-index:-2;
+    }
 }
 
 .separator
@@ -213,3 +360,82 @@ ul.auto-list{
     }
 }
 
+.main {
+    .topbar {
+        margin: 30px 10px 53px;
+        background-color: transparent;
+    }
+
+    .navbar-inner {
+        .box-shadow(none);
+        background: black url(/bundles/entvalleyapp/images/line-background.png) left bottom repeat-x;
+    }
+
+    .intro p {
+        font-family: Georgia, Arial, Tahoma, serif;
+        font-size: 30px;
+        line-height: 120%;
+        margin: 20px 0;
+    }
+
+    .intro p:first-child {
+        color: #1b6eaf;
+    }
+
+    .navbar-fixed-top, .navbar-fixed-bottom {
+        position: absolute;
+    }
+}
+
+body.main {
+    padding-top: 150px;
+}
+
+.sign-block {
+    margin-top: -77px;
+    z-index: 10000;
+    background-color: white;
+    position: relative;
+    border: 5px solid rgb(212, 212, 212);
+    padding: 10px;
+    border: 5px solid rgba(125, 125, 125, .5);
+    -webkit-background-clip: padding-box;
+    background-clip: padding-box;
+
+    form {
+        margin-top: 18px;
+    }
+}
+
+hr {
+    border-top: none;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+footer {
+    color: #a1a1a1;
+}
+
+#status {
+    position: fixed;
+    text-align: center;
+    top: -8px;
+    height: 20px;
+    padding: 4px;
+    width: 100%;
+    z-index: 9999;
+
+    .text {
+        display: inline-block;
+        border:2px solid #daca80;
+        .border-radius(3px);
+        padding: 3px 10px;
+        background-color: #fef5cd;
+    }
+
+    &.error .text {
+        background-color: #d5200f;
+        color: white;
+        border:2px solid #d5200f;
+    }
+}

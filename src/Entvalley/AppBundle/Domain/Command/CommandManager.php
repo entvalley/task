@@ -4,13 +4,13 @@ namespace Entvalley\AppBundle\Domain\Command;
 
 class CommandManager
 {
-    private $map;
+    private $registry;
     private $interpreter;
 
-    public function __construct(CommandInterpreter $interpreter, $map)
+    public function __construct(CommandInterpreter $interpreter, $registry)
     {
         $this->interpreter = $interpreter;
-        $this->map = $map;
+        $this->registry = $registry;
     }
 
     public function extractCommands($source)
@@ -21,7 +21,7 @@ class CommandManager
     public function getCommandNames()
     {
         return array_map(function ($val) {
-            return '@' . $val;
-        }, array_keys($this->map));
+            return Command::PREFIX . $val;
+        }, $this->registry->getRegisteredNames());
     }
 }

@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html dir="ltr" lang="en-US">
 <head>
     <meta charset="utf-8">
     <title>{% block title "Entvalley Tasks" %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="">
     <meta name="author" content="">
+    <link href="http://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet" type="text/css">
 
     {% stylesheets
         '@EntvalleyAppBundle/Resources/public/css/bootstrap.min.css'
         '@EntvalleyAppBundle/Resources/public/css/bootstrap-responsive.min.css'
         '@EntvalleyAppBundle/Resources/public/css/main.less'
-        filter='cssrewrite'
         %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
@@ -28,35 +28,36 @@
 <body>
 
 <div class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-        <div class="container">
 
+    <div class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <div class="container">
+                <div class="topbar">
+                    <img width="44" height="44" class="picture" src="{{ asset('/bundles/entvalleyapp/images/no-avatar.png') }}">
+                    <a class="username" href="{{ path('app_homepage') }}">{{ app.user.username }}</a>
 
-            <div class="topbar">
-                <img width="44" height="44" class="picture" src="{{ asset('/bundles/entvalleyapp/images/no-avatar.png') }}">
-                <a class="username" href="{{ path('app_homepage') }}">{{ app.user.username }}</a>
-                <ul class="user-links">
-                    <li>profile</li>
-                    <li>|</li>
-                    <li>log out</li>
-                </ul>
+                    <div class="summary">
+                        <div class="inprogress">
+                            <div class="arrow"></div>
+                            12 In progress
+                        </div>
+                        <div class="unresolved">
+                            <div class="arrow"></div>
+                            <span data-bind="text: tasks().length"></span> Unresolved
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="logo-inner pull-right">
+                    <img width="153" height="19" src="/bundles/entvalleyapp/images/logo-inner.png">
+                </div>
+                <ul class="nav pull-right">
+                              <li class="active"><a href="#">Tasks</a></li>
+                              <li><a href="#about">Setting</a></li>
+                              <li><a href="#contact">Log out</a></li>
+                            </ul>
             </div>
-
-            <div class="summary">
-                <div class="done">
-                    4
-                    <p>Done</p>
-                </div>
-                <div class="inprogress">
-                    12
-                    <p>In progress</p>
-                </div>
-                <div class="unresolved">
-                    14
-                    <p>Unresolved</p>
-                </div>
-            </div>
-
         </div>
     </div>
 </div>
@@ -81,14 +82,22 @@
         {% render 'EntvalleyAppBundle:Command:form' %}
     </div>
 </div>
+
+<div id="status" style="display: none;">
+    <div class="text"></div>
+</div>
 <!-- /container -->
 
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/date-en-US.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/jquery.autocomplete.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/app.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/knockout-2.1.0.debug.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/sammy-latest.min.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/jquery.scrollTo-min.js') }}"></script>
 
 </body>
 </html>

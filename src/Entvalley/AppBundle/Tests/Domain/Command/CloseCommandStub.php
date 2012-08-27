@@ -6,7 +6,7 @@ use Entvalley\AppBundle\Domain\Command\AbstractCommand;
 
 class CloseCommandStub extends AbstractCommand
 {
-    public function execute()
+    public function execute($content)
     {
         return true;
     }

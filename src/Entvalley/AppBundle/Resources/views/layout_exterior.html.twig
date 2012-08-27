@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title "Entvalley Tasks" %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    {% stylesheets
+    '@EntvalleyAppBundle/Resources/public/css/bootstrap.min.css'
+    '@EntvalleyAppBundle/Resources/public/css/bootstrap-responsive.min.css'
+    '@EntvalleyAppBundle/Resources/public/css/main.less'
+    filter='cssrewrite' %}
+    <link rel="stylesheet" href="{{ asset_url }}"/>
+    {% endstylesheets %}
+
+    <script type="text/javascript" src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script type="text/javascript" src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+</head>
+<body class="main">
+
+<div class="navbar navbar-fixed-top main">
+    <div class="navbar-inner">
+        <div class="container">
+
+
+            <div class="topbar">
+                <img width="175" height="48" class="picture" src="{{ asset('/bundles/entvalleyapp/images/logo.png') }}">
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<div class="container">
+
+    <div class="row">
+        <div class="intro span5 offset1">
+            <p>It is a simple application that lets you manage tickets. </p>
+
+            <p>Easy to start to use. Pretty interface. More features coming soon. </p>
+
+            <p>Try it now! </p>
+        </div>
+        <div class="span5">
+            {% block block_content %}
+            {% endblock %}
+
+
+            {% for type, flashMessages in app.session.flashbag.all() %}
+            {% for flashMessage in flashMessages %}
+                <div class="alert alert-{{ type }}">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ flashMessage }}
+                </div>
+            {% endfor %}
+            {% endfor %}
+        </div>
+
+
+    </div>
+
+    <hr>
+
+    <footer>
+        <p>Copyright &copy; 2012 Ticketdesk. </p>
+    </footer>
+
+</div>
+<!-- /container -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/jquery.autocomplete.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/app.js') }}"></script>
+
+</body>
+</html>
+
+
+

@@ -2,6 +2,8 @@
 
 namespace Entvalley\AppBundle\Factory;
 
+use Symfony\Component\Security\Core\SecurityContextInterface;
+
 class UserFactory
 {
     private $context;

@@ -1,0 +1,37 @@
+{% block form_widget_simple %}
+{% spaceless %}
+    {% set type = type|default('text') %}
+    <input type="{{ type }}" placeholder="{{ label|trans({}, translation_domain) }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+{% endspaceless %}
+{% endblock form_widget_simple %}
+{% block form_label %}
+{% spaceless %}
+{% endspaceless %}
+{% endblock form_label %}
+
+{% block form_row %}
+{% spaceless %}
+    <div class="control-group">
+        {{ form_label(form) }}
+        <div class="controls">
+            {{ form_errors(form) }}
+            {{ form_widget(form) }}
+        </div>
+    </div>
+{% endspaceless %}
+{% endblock form_row %}
+
+
+{% block form_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+    {% for error in errors %}
+        <div class="alert alert-error">{{
+            error.messagePluralization is null
+                ? error.messageTemplate|trans(error.messageParameters, 'validators')
+                : error.messageTemplate|transchoice(error.messagePluralization, error.messageParameters, 'validators')
+        }}</div>
+    {% endfor %}
+    {% endif %}
+{% endspaceless %}
+{% endblock form_errors %}

@@ -6,36 +6,55 @@ use RuntimeException;
 
 class CommandInterpreter
 {
-    private $map;
+    private $registry;
 
-    public function __construct(array $map)
+    public function __construct(CommandRegistry $registry)
     {
-        $this->map = $map;
+        $this->registry = $registry;
     }
 
-    public function interpret($source)
+    public function interpret(CommandSource $source)
     {
-        $expr = $this->buildNamesExpression();
+        $result = array();
 
-        $matches = preg_split('~(?:^(' . $expr . ') )~m', $source, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $matches = $this->splitCommands($source->getText());
 
         reset($matches);
-        while (next($matches)) {
-            $class = $this->map[ltrim(current($matches), '@ ')];
-            $command = new $class;
 
-            if (!($command instanceof Command)) {
-                throw new RuntimeException('The class "' . $class . '" should implement the command interface');
-            }
-            $command->setContent(trim(next($matches)));
-            $result[] = $command;
+        if ($this->commandNeedsToBeGuessed($matches)) {
+            $result = array_merge($result, $this->guessCommand($source, current($matches)));
         }
 
+        while (next($matches)) {
+            $commandName = ltrim(current($matches), Command::PREFIX . ' ');
+            $command = $this->registry->get($commandName);
+            $command->setSource($source);
+            $result[$commandName][] = $command->execute(trim(next($matches)));
+        }
+
+        return empty($result) ? false : $result;
+    }
+
+    private function commandNeedsToBeGuessed($matches)
+    {
+        return trim(current($matches)) !== '';
+    }
+
+    private function guessCommand(CommandSource $source, $content)
+    {
+        $result = array();
+        foreach ($this->registry->getAll() as $name => $command) {
+            if ($command->isGuessableBySource($source)) {
+                $command->setSource($source);
+                $result[$name][] = $command->execute(trim($content));
+            }
+        }
         return $result;
     }
 
-    private function buildNamesExpression()
+    private function splitCommands($text)
     {
-        return '@' . implode('|@', array_keys($this->map));
+        $expr =  Command::PREFIX . implode('|' . Command::PREFIX, $this->registry->getRegisteredNames());
+        return preg_split('~(?:^(' . $expr . ')(?: |$))~m', $text, -1, PREG_SPLIT_DELIM_CAPTURE);
     }
 }

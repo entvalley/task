@@ -11,13 +11,15 @@ class TaskRepository extends EntityRepository
     {
 
         $query = $this->getEntityManager()
-            ->createQuery('SELECT t
+            ->createQuery("SELECT LENGTH(t.title) as HIDDEN l, t
                              FROM EntvalleyAppBundle:Task t
-                            WHERE t.assignedTo IS NULL OR t.assignedTo = :user
-                            ORDER BY t.id DESC')
+                            WHERE (t.assignedTo IS NULL OR t.assignedTo = :user)
+                                  AND t.company = :company_id
+                            ORDER BY l DESC")
         ;
 
         $query->setParameter('user', $user->getId());
+        $query->setParameter('company_id', $user->getCompany()->getId());
         return $query->getResult();
     }
 }
