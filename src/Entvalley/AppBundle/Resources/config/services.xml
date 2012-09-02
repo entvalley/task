@@ -26,63 +26,63 @@
         <service id="entvalley.command_create" class="Entvalley\AppBundle\Domain\Command\CreateCommand">
             <argument type="service" id="doctrine" />
             <argument type="service" id="context.user" />
+            <tag name="entvalley.command" />
         </service>
 
         <service id="entvalley.command_delete" class="Entvalley\AppBundle\Domain\Command\DeleteCommand">
             <argument type="service" id="doctrine" />
+            <tag name="entvalley.command" />
         </service>
 
         <service id="entvalley.command_add_comment" class="Entvalley\AppBundle\Domain\Command\AddCommentCommand">
             <argument type="service" id="doctrine" />
             <argument type="service" id="context.user" />
+            <tag name="entvalley.command" />
         </service>
 
         <service id="entvalley.command_abandon" class="Entvalley\AppBundle\Domain\Command\AbandonCommand">
             <argument type="service" id="doctrine" />
+            <argument type="service" id="context.user" />
+            <tag name="entvalley.command" />
         </service>
 
         <service id="entvalley.command_close" class="Entvalley\AppBundle\Domain\Command\CloseCommand">
             <argument type="service" id="doctrine" />
+            <argument type="service" id="context.user" />
+            <tag name="entvalley.command" />
         </service>
 
         <service id="entvalley.command_open" class="Entvalley\AppBundle\Domain\Command\OpenCommand">
             <argument type="service" id="doctrine" />
+            <argument type="service" id="context.user" />
+            <tag name="entvalley.command" />
+        </service>
+
+        <service id="entvalley.command_reject" class="Entvalley\AppBundle\Domain\Command\RejectCommand">
+            <argument type="service" id="doctrine" />
+            <argument type="service" id="context.user" />
+            <tag name="entvalley.command" />
+        </service>
+
+        <service id="entvalley.command_wontfix" class="Entvalley\AppBundle\Domain\Command\WontfixCommand">
+            <argument type="service" id="doctrine" />
+            <argument type="service" id="context.user" />
+            <tag name="entvalley.command" />
         </service>
 
         <service id="entvalley.command_take" class="Entvalley\AppBundle\Domain\Command\TakeCommand">
             <argument type="service" id="doctrine" />
+            <argument type="service" id="context.user" />
+            <tag name="entvalley.command" />
         </service>
 
         <service id="entvalley.command_done" class="Entvalley\AppBundle\Domain\Command\DoneCommand">
             <argument type="service" id="doctrine" />
             <argument type="service" id="context.user" />
+            <tag name="entvalley.command" />
         </service>
 
         <service id="entvalley.command_registry" class="Entvalley\AppBundle\Domain\Command\CommandRegistry">
-            <call method="register">
-                <argument type="service" id="entvalley.command_create" />
-            </call>
-            <call method="register">
-                <argument type="service" id="entvalley.command_delete" />
-            </call>
-            <call method="register">
-                <argument type="service" id="entvalley.command_add_comment" />
-            </call>
-            <call method="register">
-                <argument type="service" id="entvalley.command_close" />
-            </call>
-            <call method="register">
-                <argument type="service" id="entvalley.command_open" />
-            </call>
-            <call method="register">
-                <argument type="service" id="entvalley.command_take" />
-            </call>
-            <call method="register">
-                <argument type="service" id="entvalley.command_done" />
-            </call>
-            <call method="register">
-                <argument type="service" id="entvalley.command_abandon" />
-            </call>
         </service>
 
         <service id="entvalley.command_interpreter" class="Entvalley\AppBundle\Domain\Command\CommandInterpreter">
@@ -93,6 +93,24 @@
             <argument type="service" id="entvalley.command_interpreter"/>
             <argument type="service" id="entvalley.command_registry" />
         </service>
+
+        <service id="entvalley.user_mananger" class="Entvalley\UserBundle\Doctrine\UserManager">
+            <argument type="service" id="security.encoder_factory" />
+            <argument type="service" id="fos_user.util.username_canonicalizer" />
+            <argument type="service" id="fos_user.util.email_canonicalizer" />
+            <argument type="service" id="fos_user.entity_manager" />
+            <argument>%fos_user.model.user.class%</argument>
+        </service>
+
+
+        <service id="entvalley.form.handler.registration" class="Entvalley\UserBundle\Form\Handler\RegistrationFormHandler" scope="request" public="false">
+            <argument type="service" id="fos_user.registration.form" />
+            <argument type="service" id="request" />
+            <argument type="service" id="fos_user.user_manager" />
+            <argument type="service" id="fos_user.mailer" />
+            <argument type="service" id="fos_user.util.token_generator" />
+        </service>
+
     </services>
 
 </container>

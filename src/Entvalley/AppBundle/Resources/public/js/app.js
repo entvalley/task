@@ -16,6 +16,17 @@ jQuery(function ($) {
         var weekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
             'Thursday', 'Friday', 'Saturday'];
 
+
+        App.Task = {};
+        App.Task.Status = {
+            UNASSIGNED: 1,
+            ACCEPTED: 2,
+            CLOSED: 3,
+            REOPENED: 4,
+            REJECTED: 5,
+            WONTFIX: 6
+        };
+
         App.UI.prototype = {
             run: function () {
                 this.initCommands();
@@ -50,6 +61,10 @@ jQuery(function ($) {
                 $('.command_tooltip').one('click', closeTooltip);
             },
 
+            scroll: function (elm, duration) {
+                $.scrollTo(elm, duration, { offset: {left: 0, top: -60 } });
+            },
+
             initUi: function () {
 
                 var Comment = function (data) {
@@ -59,7 +74,7 @@ jQuery(function ($) {
 
                 var Task = function (data) {
                     var self = this;
-                    this.author = data.author;
+                    this.author = data.author.username;
                     this.title = data.title;
                     this.text = data.text;
                     this.id = data.id;
@@ -72,7 +87,9 @@ jQuery(function ($) {
                         return new Comment(item);
                     });
 
-                    console.log(this.status.subscribe);
+                    this.status.subscribe(function (newStatus) {
+                    console.log('STATUS HAS CHANGES');
+                    });
 
                     this.comments(mappedComments);
 
@@ -81,7 +98,7 @@ jQuery(function ($) {
                     };
 
                     this.formatDate = function (date) {
-                        return date().toLocaleDateString() + ' ' + date().toLocaleTimeString();
+                        return date().getHours() + ':' + date().getMinutes();
                     };
 
                     this.createdAtDay = ko.computed(function () {
@@ -89,7 +106,7 @@ jQuery(function ($) {
                     });
 
                     this.createdAtMonth = ko.computed(function () {
-                        return monthNames[ko.utils.unwrapObservable(self.date).getMonth() - 1];
+                        return monthNames[ko.utils.unwrapObservable(self.date).getMonth()];
                     });
 
                     this.createdAtDate = ko.computed(function () {
@@ -115,6 +132,7 @@ jQuery(function ($) {
                     self.tasks = ko.observableArray([]);
                     self.chosenTask = ko.observable();
                     self.command = new Command();
+                    self.lastVisited = null;
 
                     self.goToTask = function (task) {
                         location.hash = 'task/' + task.id;
@@ -131,10 +149,15 @@ jQuery(function ($) {
                     };
 
                     self.hideTask = function (elem) {
-                        $(elem).fadeOut();
+                        $(elem).fadeOut(function () {
+                            $(this).remove();
+                        });
                     };
 
                     self.goToTaskList = function () {
+                        if (self.chosenTask()) {
+                            self.lastVisited = self.chosenTask().id;
+                        }
                         location.hash = 'tasks';
                     };
 
@@ -144,7 +167,7 @@ jQuery(function ($) {
                             return;
                         }
                         self.chosenTask().addComment(data);
-                        $.scrollTo('.comments ul li:last-child', 50);
+                        App.UI.scroll('.comments ul li:last-child', 50);
                     };
 
                     var loadTasks = function () {
@@ -153,6 +176,7 @@ jQuery(function ($) {
                                 return new Task(item);
                             });
                             self.tasks(mappedTasks);
+                            App.UI.hideStatus();
                         });
                     };
                     $.sammy(function () {
@@ -166,12 +190,14 @@ jQuery(function ($) {
                                 App.UI.hideStatus();
                                 self.chosenTask(new Task(data));
                                 self.command.setContext('task', id);
+                                App.UI.scroll('0', 50);
                             });
                         });
                         this.get('#tasks', function () {
                             self.chosenTask(null);
                             App.UI.hideStatus();
                             self.command.setContext('tasks');
+                            App.UI.scroll('#task-item-' + self.lastVisited, 0);
                         });
                         this.get('', function () {
                             self.goToTaskList();
@@ -180,7 +206,48 @@ jQuery(function ($) {
                     }).run();
 
                 };
+                ko.bindingHandlers.toggleStatusIcon = (function () {
+                    var _oldValue = null;
+                    var _duration = 150;
+                    var _classPrefix = 'status-header-';
+                    var _map = ['', 'unassigned', 'accepted', 'closed', 'reopened', 'rejected', 'wontfix'];
 
+                    var init = function(element, valueAccessor, allBindingsAccessor, viewModel) {
+                            var status = valueAccessor();
+                            _oldValue = status();
+                        },
+                        update = function(element, valueAccessor, allBindingsAccessor, viewModel) {
+                            var status = valueAccessor();
+                            if (status() < 1 || status() >= _map.length) {
+                                return;
+                            }
+
+                            console.log(_oldValue, status());
+
+                            var $element = $(element);
+                            var storedValue = _oldValue;
+                            var duration = _oldValue === status() ? 0 : _duration;
+                            $element.removeClass(_classPrefix + _map[_oldValue]);
+                            $element.slideUp(duration, function () {
+                                $element.html(_map[status()].toUpperCase())
+                                    .addClass(_classPrefix + _map[status()])
+                                    .slideDown(duration);
+
+
+                                if (storedValue !== status()) {
+                                    $element.addClass('status-header-notify');
+                                    setTimeout(function () {
+                                        $element.removeClass('status-header-notify');
+                                    }, duration * 15);
+                                }
+                            });
+                            _oldValue = status();
+                        };
+                        return {
+                            init: init,
+                            update: update
+                        };
+                })();
                 ko.applyBindings(App.UI.taskListViewModel = new TaskListViewModel());
             },
 
@@ -216,6 +283,7 @@ jQuery(function ($) {
                                 .html('Send');
                         });
 
+                    e.stopPropagation();
                     e.preventDefault();
                 });
 

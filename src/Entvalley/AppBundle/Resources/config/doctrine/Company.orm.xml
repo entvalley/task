@@ -11,5 +11,7 @@
         </id>
 
         <field name="name" length="140" />
+
+        <one-to-one field="owner" target-entity="Entvalley\AppBundle\Entity\User" />
     </entity>
 </doctrine-mapping>

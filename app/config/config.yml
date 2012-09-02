@@ -65,6 +65,11 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: Entvalley\AppBundle\Entity\User
+    service:
+        user_manager: entvalley.user_mananger
+    registration:
+        form:
+            handler: entvalley.form.handler.registration
 
 jms_serializer:
     handlers:

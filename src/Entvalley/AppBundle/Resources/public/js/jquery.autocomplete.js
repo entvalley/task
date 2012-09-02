@@ -444,6 +444,7 @@
         data.ta.value = a + seletedText + ' ' + c;
         data.ta.scrollTop = scrollTop;
         data.ta.selectionEnd = pos + 2 + seletedText.length;
+        data.ta.selectionStart = pos + 2 + seletedText.length;
         hideList(data);
         $(data.ta).focus();
     }

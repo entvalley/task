@@ -3,11 +3,11 @@
 namespace Entvalley\AppBundle\Domain\Command;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use Entvalley\AppBundle\Domain\Status;
 use Entvalley\AppBundle\Entity\User;
+use Entvalley\AppBundle\Domain\Status;
 use Entvalley\AppBundle\Entity\Task;
 
-class TakeCommand extends AbstractCommand
+class WontfixCommand extends AbstractCommand
 {
     /**
      * @var \Doctrine\Bundle\DoctrineBundle\Registry
@@ -37,13 +37,13 @@ class TakeCommand extends AbstractCommand
             return array();
         }
 
-        $task->setStatus($this->user, Status::ACCEPTED);
+        $task->setStatus($this->user, Status::WONTFIX);
 
         return array('updatedId' => (int)$updatedId);
     }
 
     public function getName()
     {
-        return 'take';
+        return 'wontfix';
     }
 }

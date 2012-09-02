@@ -2,9 +2,7 @@
 
 {% block content %}
     <div class="task" data-bind="with: chosenTask">
-        <div class="status-header">
-            UNRESOLVED
-        </div>
+        <div class="status-header" data-bind="toggleStatusIcon: status"></div>
         <a class="btn" href="{{ path('app_task_list') }}" data-bind="click: $root.goToTaskList">List of tasks</a>
         <a href="#" class="btn btn-danger">Delete</a>
         <hr>
@@ -26,10 +24,18 @@
         </div>
     </div>
 
-    <div class="task-list" data-bind="visible: tasks().length > 0 && !chosenTask()">
+
+    <div data-bind="visible: !tasks().length && !chosenTask()">
+        <h3>No task has been created yet</h3>
+        <p>To begin you need to create a new task. Just put the description in the input in the bottom.
+        After you press the send button it'll be created immediately.</p>
+    </div>
+
+    <div class="task-list" data-bind="visible: tasks().length && !chosenTask()">
         <a class="btn" href="{{ path('app_task_create') }}">Create a task</a>
         <ul data-bind="foreach: {data: tasks, beforeRemove: hideTask }" class="separated-list">
-            <li>
+            <li data-bind="attr: { id: 'task-item-' + id }">
+
                 <div class="row-fluid">
                     <div class="message-info span1">
                         <span class="month" data-bind="text: createdAtMonth"></span>
@@ -42,8 +48,8 @@
 
                         <p data-bind="text: text"></p>
 
-                        <p class="reportedby"><span data-bind="text: formatDate(date)"><span>,
-                    <span data-bind="text: author"></span></p>
+                        <p class="reportedby"><span data-bind="text: author"></span> at
+                    <span data-bind="text: formatDate(date)"></span></p>
                     </div>
                 </div>
             </li>

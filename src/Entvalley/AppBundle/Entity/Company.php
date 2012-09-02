@@ -6,6 +6,17 @@ class Company
 {
     private $id;
     private $name;
+    private $owner;
+
+    public function setOwner($owner)
+    {
+        $this->owner = $owner;
+    }
+
+    public function getOwner()
+    {
+        return $this->owner;
+    }
 
     public function setName($name)
     {
