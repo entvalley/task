@@ -7,39 +7,16 @@ use Entvalley\AppBundle\Entity\User;
 use Entvalley\AppBundle\Domain\Status;
 use Entvalley\AppBundle\Entity\Task;
 
-class AbandonCommand extends AbstractCommand
+class AbandonCommand extends AbstractStatusChangeCommand
 {
-    /**
-     * @var \Doctrine\Bundle\DoctrineBundle\Registry
-     */
-    private $doctrine;
-
-    /**
-     * @var User
-     */
-    private $user;
-
-    /**
-     * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
-     * @param User $user
-     */
-    public function __construct(Registry $doctrine, User $user)
+    public function getNewStatus()
     {
-        $this->doctrine = $doctrine;
-        $this->user = $user;
+        return Status::UNASSIGNED;
     }
 
-    public function execute($content)
+    public function onStatusChange($task)
     {
-        $em = $this->doctrine->getManager();
-        $task = $em->find('EntvalleyAppBundle:Task', $updatedId = $this->source->getContextId());
-        if (!$task) {
-            return array();
-        }
-
-        $task->setStatus($this->user, Status::UNASSIGNED);
-
-        return array('updatedId' => (int)$updatedId);
+        $task->setAssignedTo(null);
     }
 
     public function getName()

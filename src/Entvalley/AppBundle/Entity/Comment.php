@@ -10,6 +10,11 @@ class Comment
     private $createdAt;
     private $task;
 
+    /**
+     * @var StatusChange $statusChange
+     */
+    private $statusChange;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -64,5 +69,21 @@ class Comment
     public function getText()
     {
         return $this->text;
+    }
+
+    /**
+     * @param \Entvalley\AppBundle\Entity\StatusChange $statusChange
+     */
+    public function setStatusChange(StatusChange $statusChange = null)
+    {
+        $this->statusChange = $statusChange;
+    }
+
+    /**
+     * @return \Entvalley\AppBundle\Entity\StatusChange
+     */
+    public function getStatusChange()
+    {
+        return $this->statusChange;
     }
 }

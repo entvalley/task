@@ -8,3 +8,5 @@ Entvalley\AppBundle\Entity\Comment:
             groups: [details]
         createdAt:
             groups: [details]
+        statusChange:
+            groups: [details]

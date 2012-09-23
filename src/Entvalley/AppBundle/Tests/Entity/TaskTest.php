@@ -25,7 +25,7 @@ class TaskTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($task->getText());
     }
 
-    public function testShouldCreateStatusHistoryOnStatusChange()
+    public function testShouldCreateStatusChangeOnStatusChange()
     {
         $userMock = $this->getMock('\Entvalley\AppBundle\Entity\User');
 
@@ -34,7 +34,7 @@ class TaskTest extends \PHPUnit_Framework_TestCase
 
         $result = $task->getLastStatus();
 
-        $this->assertInstanceOf('\Entvalley\AppBundle\Entity\StatusHistory', $result);
+        $this->assertInstanceOf('\Entvalley\AppBundle\Entity\StatusChange', $result);
         $this->assertEquals(Status::CLOSED, $result->getStatus());
         $this->assertEquals($userMock, $result->getWhoUpdated());
     }

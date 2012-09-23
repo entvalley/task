@@ -73,8 +73,30 @@ jQuery(function ($) {
             initUi: function () {
 
                 var Comment = function (data) {
-                    this.text = data.text;
-                    this.username = data.author.username;
+                    var self = this;
+                    self.text = data.text;
+                    self.username = data.author.username;
+
+                    var statusChange = data.status_change || {
+                        status: null,
+                        created_at: null
+                    };
+
+                    self.statusChanged = typeof data.status_change !== 'undefined';
+
+                    self.statusChange = ko.observable(statusChange.status);
+                    self.statusChangeDate = ko.observable(statusChange.created_at);
+
+                    self.statusName = ko.computed(function () {
+                        return statusNames[self.statusChange() - 1];
+                    });
+                    self.statusNameCapitalized = ko.computed(function () {
+                        var statusName = self.statusName();
+                        if (!statusName) {
+                            return;
+                        }
+                        return statusName.toUpperCase();
+                    });
                 };
 
                 var Task = function (data) {
@@ -135,7 +157,7 @@ jQuery(function ($) {
 
                     this.hasStatus = function (statusName) {
                         return self.status() - 1 === statusNames.indexOf(statusName);
-                    }
+                    };
                 };
 
                 var Command = function () {
@@ -232,7 +254,7 @@ jQuery(function ($) {
                             App.UI.hideStatus();
                         });
                     };
-                    $.sammy(function () {
+                    $.sammy('body > .container', function () {
                         this.before(function (callback) {
                             App.UI.showStatus('Loading...');
                         });

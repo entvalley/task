@@ -5,7 +5,7 @@
       xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           http://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Entvalley\AppBundle\Entity\StatusHistory" table="entvalley_status_history">
+    <entity name="Entvalley\AppBundle\Entity\StatusChange" table="entvalley_status_change">
         <id name="id" type="integer">
             <generator strategy="IDENTITY"/>
         </id>

@@ -1,0 +1,8 @@
+Entvalley\AppBundle\Entity\StatusChange:
+    properties:
+        id:
+            groups: [details]
+        status:
+            groups: [details]
+        createdAt:
+            groups: [details]

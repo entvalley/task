@@ -162,7 +162,7 @@ body
     background-color: #b4a619;
 }
 .status-wontfix {
-    background-color: #888888;
+    background-color: #aaaaaa;
 }
 
 .navbar .summary
@@ -241,7 +241,6 @@ body
     bottom: 0;
     left: 0;
     right: 0;
-    color: white;
     padding: 6px 45px 0px;
     z-index: 6000001;
     background-color: #dcdce0;
@@ -306,6 +305,34 @@ ul.separated-list > li
     background: url('/bundles/entvalleyapp/images/separator.png') repeat-x;
     padding: 14px 0;
     margin: 0;
+}
+
+.comments {
+    ul.separated-list > li
+    {
+        background: none;
+        border-bottom: 2px solid #ededed;
+    }
+
+    .about {
+        color: #919191;
+        font-size: 85%;
+    }
+
+    .status-change {
+        font-size: 11px;
+        color: #6c6c6c;
+
+        p {
+            margin: 0;
+        }
+
+        .status-line {
+            margin-top: 5px;
+            height: 5px;
+        }
+    }
+
 }
 
 ul.separated-list

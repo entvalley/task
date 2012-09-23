@@ -18,7 +18,7 @@
         <field name="createdAt" type="datetime" />
         <field name="lastModification" nullable="true" type="datetime" />
 
-        <one-to-one field="lastStatus" target-entity="Entvalley\AppBundle\Entity\StatusHistory">
+        <one-to-one field="lastStatus" target-entity="Entvalley\AppBundle\Entity\StatusChange">
             <cascade>
                 <cascade-all/>
             </cascade>

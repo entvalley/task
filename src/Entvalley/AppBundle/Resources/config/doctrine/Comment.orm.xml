@@ -14,6 +14,7 @@
         <field name="createdAt" type="datetime" />
 
         <many-to-one field="author" target-entity="Entvalley\AppBundle\Entity\User" />
+        <many-to-one field="statusChange" target-entity="Entvalley\AppBundle\Entity\StatusChange" />
         <many-to-one field="task" target-entity="Entvalley\AppBundle\Entity\Task" inversed-by="comments" />
 
     </entity>

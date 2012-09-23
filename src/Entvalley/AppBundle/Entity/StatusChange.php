@@ -2,7 +2,7 @@
 
 namespace Entvalley\AppBundle\Entity;
 
-class StatusHistory
+class StatusChange
 {
     private $id;
     private $whoUpdated;

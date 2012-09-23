@@ -27,7 +27,7 @@ class Task
         $this->status = Status::UNASSIGNED;
     }
 
-    public function setAssignedTo($assignedTo)
+    public function setAssignedTo($assignedTo = null)
     {
         $this->assignedTo = $assignedTo;
     }
@@ -128,12 +128,12 @@ class Task
 
     public function setStatus(User $whoUpdated, $status)
     {
-        $statusHistory = new StatusHistory();
-        $statusHistory->setTask($this);
-        $statusHistory->setStatus($status);
-        $statusHistory->setWhoUpdated($whoUpdated);
+        $statusChange = new StatusChange();
+        $statusChange->setTask($this);
+        $statusChange->setStatus($status);
+        $statusChange->setWhoUpdated($whoUpdated);
         $this->status = $status;
-        $this->lastStatus = $statusHistory;
+        $this->lastStatus = $statusChange;
     }
 
     public function getStatus()
@@ -142,7 +142,7 @@ class Task
     }
 
     /**
-     * @return StatusHistory
+     * @return StatusChange
      */
     public function getLastStatus()
     {
