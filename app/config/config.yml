@@ -72,19 +72,23 @@ fos_user:
             handler: entvalley.form.handler.registration
 
 jms_serializer:
-    handlers:
-        object_based: false
-        datetime:
-            format: "F d, Y H:i:s" # ISO8601
-            default_timezone: "UTC"
-        array_collection: true
-        form_error: true
-        constraint_violation: true
+   handlers:
+       object_based: false
+       datetime:
+           format: "F d, Y H:i:s" # ISO8601
+           default_timezone: "UTC"
+       array_collection: true
+       form_error: true
+       constraint_violation: true
 
-    metadata:
-        auto_detection: false
+   metadata:
+       cache: file
+       debug: "%kernel.debug%"
+       file_cache:
+           dir: "%kernel.cache_dir%/serializer"
+       auto_detection: true
 
-        directories:
-            FOSUB:
-                namespace_prefix: "FOS\\UserBundle"
-                path: "%kernel.root_dir%/serializer/FOSUB"
+       directories:
+           FOSUB:
+               namespace_prefix: "FOS\\UserBundle"
+               path: "%kernel.root_dir%/serializer/FOSUB"

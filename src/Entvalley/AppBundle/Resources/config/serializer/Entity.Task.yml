@@ -1,0 +1,26 @@
+Entvalley\AppBundle\Entity\Task:
+    properties:
+        comments:
+            groups: [details]
+        id:
+            groups: [summary]
+        title:
+            groups: [summary]
+        text:
+            groups: [summary]
+        author:
+            groups: [summary]
+        assignedTo:
+            groups: [summary]
+        createdAt:
+            groups: [summary]
+        lastModification:
+            groups: [summary]
+        company:
+            groups: [summary]
+        lastStatus:
+            groups: [summary]
+        status:
+            groups: [summary]
+        numberComments:
+            groups: [summary]

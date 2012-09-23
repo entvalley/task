@@ -34,7 +34,7 @@
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.command_add_comment" class="Entvalley\AppBundle\Domain\Command\AddCommentCommand">
+        <service id="entvalley.command_comment" class="Entvalley\AppBundle\Domain\Command\CommentCommand">
             <argument type="service" id="doctrine" />
             <argument type="service" id="context.user" />
             <tag name="entvalley.command" />

@@ -32,12 +32,14 @@ class TakeCommand extends AbstractCommand
     public function execute($content)
     {
         $em = $this->doctrine->getManager();
+        /** @var $task Task */
         $task = $em->find('EntvalleyAppBundle:Task', $updatedId = $this->source->getContextId());
         if (!$task) {
             return array();
         }
 
         $task->setStatus($this->user, Status::ACCEPTED);
+        $task->setAssignedTo($this->user);
 
         return array('updatedId' => (int)$updatedId);
     }

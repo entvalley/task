@@ -1,1 +1,2 @@
 App.UI.taskListViewModel.chosenTask().status(App.Task.Status.ACCEPTED);
+App.UI.taskListViewModel.chosenTask().assignedTo({"username": {{ app.user.username|json_encode|raw }}, "id": {{ app.user.id }}});

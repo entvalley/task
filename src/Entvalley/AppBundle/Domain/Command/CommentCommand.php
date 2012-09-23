@@ -5,13 +5,15 @@ namespace Entvalley\AppBundle\Domain\Command;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Entvalley\AppBundle\Entity\Comment;
 
-class AddCommentCommand extends AbstractCommand
+class CommentCommand extends AbstractCommand
 {
     /**
      * @var \Doctrine\Bundle\DoctrineBundle\Registry
      */
     private $doctrine;
     private $user;
+
+    protected $isVisible = false;
 
 
     public function __construct(Registry $doctrine, $user)

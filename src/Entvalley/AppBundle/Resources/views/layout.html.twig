@@ -39,11 +39,11 @@
                     <div class="summary">
                         <div class="inprogress">
                             <div class="arrow"></div>
-                            12 In progress
+                            <span data-bind="text: assignedToMe().length"></span> In progress
                         </div>
                         <div class="unresolved">
                             <div class="arrow"></div>
-                            <span data-bind="text: tasks().length"></span> Unresolved
+                            <span data-bind="text: unassigned().length"></span> Unresolved
                         </div>
                     </div>
 
@@ -88,8 +88,12 @@
 </div>
 <!-- /container -->
 
-
-
+<script type="text/javascript">
+    var App = App || {};
+    App.Me = {
+        id: {{ app.user.id }}
+    };
+</script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/bootstrap.min.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/date-en-US.js') }}"></script>

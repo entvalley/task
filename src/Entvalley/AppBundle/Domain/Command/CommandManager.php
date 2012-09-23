@@ -24,4 +24,20 @@ class CommandManager
             return Command::PREFIX . $val;
         }, $this->registry->getRegisteredNames());
     }
+
+    public function getCommandsConfigs()
+    {
+        $commands = $this->registry->getAll();
+
+
+        $configs = array();
+
+        foreach ($commands as $command) {
+            $configs[Command::PREFIX . $command->getName()] = array(
+                'is_visible' => $command->isVisible()
+            );
+        }
+
+        return $configs;
+    }
 }

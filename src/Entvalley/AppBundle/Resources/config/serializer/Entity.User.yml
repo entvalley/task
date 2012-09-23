@@ -1,0 +1,6 @@
+Entvalley\AppBundle\Entity\User:
+    exclusion_policy: ALL
+    properties:
+        id:
+          groups: [summary]
+          expose: true

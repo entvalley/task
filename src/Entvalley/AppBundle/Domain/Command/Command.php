@@ -9,4 +9,5 @@ interface Command
     function execute($content);
     function getName();
     function setSource(CommandSource $source);
+    function isVisible();
 }

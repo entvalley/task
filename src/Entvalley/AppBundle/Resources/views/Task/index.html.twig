@@ -24,12 +24,13 @@
         </div>
     </div>
 
-
+    {% if tasks|length < 0 %}
     <div data-bind="visible: !tasks().length && !chosenTask()">
         <h3>No task has been created yet</h3>
         <p>To begin you need to create a new task. Just put the description in the input in the bottom.
         After you press the send button it'll be created immediately.</p>
     </div>
+    {% endif %}
 
     <div class="task-list" data-bind="visible: tasks().length && !chosenTask()">
         <a class="btn" href="{{ path('app_task_create') }}">Create a task</a>
@@ -38,9 +39,10 @@
 
                 <div class="row-fluid">
                     <div class="message-info span1">
-                        <span class="month" data-bind="text: createdAtMonth"></span>
                         <span class="daynumber" data-bind="text: createdAtDay"></span>
-                        <span class="date" data-bind="text: createdAtDate"></span>
+                        <span class="month" data-bind="text: createdAtMonth"></span>
+                        <span class="comments-number"><span class="icon">\</span> <span data-bind="text: numberComments"></span></span>
+                        <span data-bind="text: statusName, attr: { class: 'status status-' + statusName() }"></span>
                     </div>
                     <div class="span11">
                         <a class="message-title"
@@ -49,7 +51,9 @@
                         <p data-bind="text: text"></p>
 
                         <p class="reportedby"><span data-bind="text: author"></span> at
-                    <span data-bind="text: formatDate(date)"></span></p>
+                            <span data-bind="text: formatDate(date)"></span>.
+                            <span data-bind="if: typeof assignedTo() !== 'undefined'">Taken by <b data-bind="text: assignedTo().username"></b>.</span>
+                        </p>
                     </div>
                 </div>
             </li>

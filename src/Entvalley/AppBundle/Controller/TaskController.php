@@ -24,7 +24,9 @@ class TaskController extends Controller
         $tasks = $taskRepository->findNewOrAssignedTo($user);
 
         if ($this->getRequest()->isXmlHttpRequest()) {
-            return JsonResponse::createWithSerializer($this->get('serializer'), $tasks);
+            $serializer = $this->get('serializer');
+            $serializer->setGroups(array('summary'));
+            return JsonResponse::createWithSerializer($serializer, $tasks);
         } else {
             return $this->view(array(
                 'tasks' => $tasks
@@ -52,7 +54,7 @@ class TaskController extends Controller
             if ($form->isValid()) {
                 $em->persist($task);
                 $em->flush();
-                $this->get('session')->setFlash('success', 'New task has been saved!');
+                $this->get('session')->setFlash('success', 'A new task has been saved!');
 
                 return $this->redirect($this->url('app_task_list'));
             }
@@ -71,7 +73,9 @@ class TaskController extends Controller
     public function viewAction(Task $task)
     {
         if ($this->getRequest()->isXmlHttpRequest()) {
-            return JsonResponse::createWithSerializer($this->get('serializer'), $task);
+            $serializer = $this->get('serializer');
+            $serializer->setGroups(array('details', 'summary'));
+            return JsonResponse::createWithSerializer($serializer, $task);
         } else {
             return $this->view(array(
                 'task' => $task

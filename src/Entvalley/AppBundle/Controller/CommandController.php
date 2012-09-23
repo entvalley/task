@@ -15,7 +15,7 @@ class CommandController extends Controller
     {
         $commandManager = $this->get('entvalley.command_manager');
 
-        return new JsonResponse($commandManager->getCommandNames());
+        return new JsonResponse($commandManager->getCommandsConfigs());
     }
 
     public function sendAction()

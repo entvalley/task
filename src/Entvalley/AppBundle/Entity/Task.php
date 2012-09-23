@@ -18,6 +18,7 @@ class Task
     private $company;
     private $lastStatus;
     private $status;
+    private $numberComments = 0;
 
     public function __construct()
     {
@@ -106,9 +107,10 @@ class Task
         return $this->title;
     }
 
-    public function setComments($comments)
+    public function addComment(Comment $comment)
     {
-        $this->comments = $comments;
+        $this->comments[] = $comment;
+        $this->numberComments++;
     }
 
     public function getComments()
@@ -145,5 +147,10 @@ class Task
     public function getLastStatus()
     {
         return $this->lastStatus;
+    }
+
+    public function getNumberComments()
+    {
+        return $this->numberComments;
     }
 }

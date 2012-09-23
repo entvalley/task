@@ -48,6 +48,7 @@ class Comment
     public function setTask(Task $task)
     {
         $this->task = $task;
+        $task->addComment($this);
     }
 
     public function getTask()

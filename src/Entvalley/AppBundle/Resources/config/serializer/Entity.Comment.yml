@@ -1,0 +1,10 @@
+Entvalley\AppBundle\Entity\Comment:
+    properties:
+        id:
+            groups: [details]
+        text:
+            groups: [details]
+        author:
+            groups: [details]
+        createdAt:
+            groups: [details]

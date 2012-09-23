@@ -11,6 +11,8 @@ abstract class AbstractCommand implements Command
      */
     protected $source;
 
+    protected $isVisible = true;
+
     public function setSource(CommandSource $source)
     {
         $this->source = $source;
@@ -19,5 +21,10 @@ abstract class AbstractCommand implements Command
     public function isGuessableBySource(CommandSource $source)
     {
         return false;
+    }
+
+    public function isVisible()
+    {
+        return $this->isVisible;
     }
 }
