@@ -3,6 +3,7 @@
 namespace Entvalley\AppBundle\Domain\Command;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Entvalley\AppBundle\Domain\UserContext;
 use Entvalley\AppBundle\Entity\Task;
 
 class CreateCommand extends AbstractCommand
@@ -12,12 +13,12 @@ class CreateCommand extends AbstractCommand
      */
     private $doctrine;
 
-    private $user;
+    private $userContext;
 
-    public function __construct(Registry $doctrine, $user)
+    public function __construct(Registry $doctrine, UserContext $userContext)
     {
         $this->doctrine = $doctrine;
-        $this->user = $user;
+        $this->userContext = $userContext;
     }
 
     public function execute($content)
@@ -26,9 +27,9 @@ class CreateCommand extends AbstractCommand
 
         $task = new Task;
         $task->setCreatedAt(new \DateTime());
-        $task->setAuthor($this->user);
+        $task->setAuthor($this->userContext->getUser());
         $task->setTextWithTitle($content);
-        $task->setCompany($this->user->getCompany());
+        $task->setCompany($this->userContext->getUser()->getCompany());
 
         $em->persist($task);
 

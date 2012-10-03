@@ -1,10 +1,10 @@
 <?php
 
-namespace Entvalley\AppBundle\Factory;
+namespace Entvalley\AppBundle\Domain;
 
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
-class UserFactory
+class UserContext
 {
     private $context;
 
@@ -13,7 +13,7 @@ class UserFactory
         $this->context = $context;
     }
 
-    public function get()
+    public function getUser()
     {
         if (null === $token = $this->context->getToken()) {
             return null;

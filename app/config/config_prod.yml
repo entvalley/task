@@ -8,6 +8,10 @@ imports:
 framework:
     router:
         strict_requirements: null
+    templating: {
+        engines: ['twig'],
+        assets_base_urls: "http://d3rofqgd8nygag.cloudfront.net/release-9"
+    }
 
 #doctrine:
 #    orm:

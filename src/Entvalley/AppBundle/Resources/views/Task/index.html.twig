@@ -1,15 +1,28 @@
 {% extends 'EntvalleyAppBundle::layout.html.twig' %}
 
+{% macro message_summary(with_status) %}
+    <div class="message-info">
+        <span class="created-at" data-bind="text: createdAt"></span>
+        <span class="comments-number"><span class="icon">\</span> <span
+                data-bind="text: numberComments"></span></span>
+        {% if with_status %}
+            <span data-bind="text: statusName, attr: { class: 'status status-' + statusName() }"></span>
+        {% endif %}
+    </div>
+{% endmacro %}
+
 {% block content %}
+
     <div class="task" data-bind="with: chosenTask" xmlns="http://www.w3.org/1999/html">
         <div class="status-header" data-bind="toggleStatusIcon: status"></div>
+        <div class="actions-header">
+            <ul>
+                <li class="action">Edit</li>
+            </ul>
+        </div>
         <div class="row-fluid">
-            <div class="message-info span1">
-                <span class="daynumber" data-bind="text: createdAtDay"></span>
-                <span class="month" data-bind="text: createdAtMonth"></span>
-                <span class="comments-number"><span class="icon">\</span> <span data-bind="text: numberComments"></span></span>
-            </div>
-            <div class="span11">
+            {{ _self.message_summary(false) }}
+            <div class="message">
                 <a class="message-title"
                    data-bind="text: title, click: $root.goToTask, attr: { href: url }"></a>
 
@@ -32,7 +45,7 @@
                         <div class="span10">
                             <p>
                                 <b data-bind="text: username"></b>
-                                <span class="about">from development team 12.12:12012</span>
+                                <span class="about" data-bind="text: createdAt"></span>
                             </p>
                             <p data-bind="text: text"></p>
                         </div>
@@ -59,18 +72,11 @@
     <div class="task-list" data-bind="visible: tasks().length && !chosenTask()">
         <ul data-bind="foreach: {data: tasks, beforeRemove: hideTask }" class="separated-list">
             <li data-bind="attr: { id: 'task-item-' + id }">
-
                 <div class="row-fluid">
-                    <div class="message-info span1">
-                        <span class="daynumber" data-bind="text: createdAtDay"></span>
-                        <span class="month" data-bind="text: createdAtMonth"></span>
-                        <span class="comments-number"><span class="icon">\</span> <span
-                                data-bind="text: numberComments"></span></span>
-                        <span data-bind="text: statusName, attr: { class: 'status status-' + statusName() }"></span>
-                    </div>
-                    <div class="span11">
+                    {{ _self.message_summary(true) }}
+                    <div class="message">
                         <a class="message-title"
-                           data-bind="text: title, click: $root.goToTask, attr: { href: url }"></a>
+                           data-bind="text: title, attr: { href: url }"></a>
 
                         <p data-bind="text: text"></p>
 
@@ -84,4 +90,6 @@
             </li>
         </ul>
     </div>
+
+    <textarea class="textarea" placeholder="Enter text ..." style="width: 810px; height: 200px"></textarea>
 {% endblock %}

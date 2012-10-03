@@ -11,6 +11,8 @@ body
          padding: 10px;
         .box-shadow(1px 1px 7px 0px rgba(0, 0, 0, 0.2));
     }
+
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 @media (min-width: 768px) and (max-width: 979px) {
@@ -137,6 +139,31 @@ body
         display: table-cell;
     }
 
+    .actions-header {
+        position: absolute;
+        background-image: url(/bundles/entvalleyapp/images/task-status-background.png);
+        height: 16px;
+        font-size: 12px;
+        padding: 4px 8px;
+        margin-bottom: -30px;
+        color: white;
+        font-family: Arial, sans-serif;
+        top: -44px;
+        right: -16px;
+        display: table-cell;
+
+        ul {
+          list-style-type: none;
+        }
+        .action {
+          padding: 0px 10px;
+          background-color: #0f76d5;
+          float: left;
+          font-size: 11px;
+          .border-radius(5px 5px 0 0);
+        }
+    }
+
     .status-notify {
         position: fixed;
         top: 66px;
@@ -172,12 +199,15 @@ body
     .border-radius(6px);
     overflow: auto;
     display: inline-block;
-    font-family: 'Arial', "Arial", serif;
     font-size: 12px;
     margin: -4px 0 -12px 14px;
 
     .done {
         background-color: @summary-done-color;
+
+        .arrow {
+            border-top-color: @summary-done-color;
+        }
     }
 
     .inprogress {
@@ -217,7 +247,6 @@ body
     .arrow,
         .arrow:after {
          position: absolute;
-         display: inline-block;
          width: 0;
          height: 0;
          border-color: transparent;
@@ -350,6 +379,9 @@ ul.separated-list
     font-size: 16px;
 }
 
+.message {
+}
+
 .message-info
 {
     background-color: #f0f0f0;
@@ -357,16 +389,14 @@ ul.separated-list
     .border-radius(6px);
     font-size: 10px;
     line-height: 120%;
+    width:65px;
+  margin-right: 10px;
+    float: left;
+  font-family: "Open Sans";
 
-    .daynumber {
-        font-weight: bold;
-    }
-
-    .month {
+    .created-at {
         text-transform: uppercase;
-        font-family: "PT Sans";
         font-size: 11px;
-        font-weight: bold;
     }
 
     .comments-number {
@@ -392,14 +422,6 @@ ul.separated-list
         .border-radius(0px 0px 6px 6px);
     }
 
-    .daynumber,  .date {
-        font-family: "PT Sans";
-        font-size: 11px;
-    }
-
-    .date {
-        color: #888;
-    }
 }
 
 .reportedby {
@@ -526,4 +548,31 @@ footer {
         color: white;
         border:2px solid #d5200f;
     }
+}
+
+
+
+
+input,
+button,
+select,
+textarea {
+  font-family: inherit;
+}
+
+
+.btn {
+  padding: 1px 12px;
+  font-size: 12px;
+  background-color: #f9f9f9;
+  *background-color: #f9f9f9;
+  background-image: none;
+  border: 1px solid #c1c1c1;
+  *border: 0;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  border-color: #c1c1c1;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  filter: none;
 }

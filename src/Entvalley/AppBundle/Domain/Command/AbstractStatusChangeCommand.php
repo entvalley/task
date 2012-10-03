@@ -3,6 +3,7 @@
 namespace Entvalley\AppBundle\Domain\Command;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Entvalley\AppBundle\Domain\UserContext;
 use Entvalley\AppBundle\Entity\Comment;
 use Entvalley\AppBundle\Entity\User;
 use Entvalley\AppBundle\Domain\Status;
@@ -16,18 +17,18 @@ abstract class AbstractStatusChangeCommand extends AbstractCommand
     protected $doctrine;
 
     /**
-     * @var User
+     * @var UserContext
      */
-    protected $user;
+    protected $userContext;
 
     /**
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
-     * @param User $user
+     * @param UserContext $userContext
      */
-    public function __construct(Registry $doctrine, User $user)
+    public function __construct(Registry $doctrine, UserContext $userContext)
     {
         $this->doctrine = $doctrine;
-        $this->user = $user;
+        $this->userContext = $userContext;
     }
 
     abstract public function getNewStatus();
@@ -40,12 +41,12 @@ abstract class AbstractStatusChangeCommand extends AbstractCommand
             return array();
         }
 
-        $task->setStatus($this->user, $this->getNewStatus());
+        $task->setStatus($this->userContext->getUser(), $this->getNewStatus());
         $this->onStatusChange($task);
 
         $comment = new Comment;
         $comment->setText($content);
-        $comment->setAuthor($this->user);
+        $comment->setAuthor($this->userContext->getUser());
         $comment->setTask($task);
         $status = $task->getLastStatus();
         $comment->setStatusChange($status);

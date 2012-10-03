@@ -4,12 +4,12 @@
 <form action="{{ path('app_command_send') }}" class="command_form" method="post" data-bind="with: command">
     {{ form_widget(form.text, { attrs : { id: "main_input" } }) }}
     {{ form_rest(form) }}
-    <button id="command_send" class="btn btn-primary">Send</button>
+    <button id="command_send" class="btn">Send</button>
     <button id="command_send" class="btn"  href="#myModal" role="button" class="btn" data-toggle="modal">Help</button>
 </form>
 
 
-<div class="modal" style="position: absolute; display: none;" id="myModal" tabindex="-1" role="dialog">
+<div class="modal" style="display: none;" id="myModal" tabindex="-1" role="dialog">
   <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
     <h3 id="myModalLabel">Commands Help</h3>

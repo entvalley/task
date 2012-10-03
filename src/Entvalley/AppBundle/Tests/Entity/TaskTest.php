@@ -1,6 +1,6 @@
 <?php
 
-namespace Entvalley\AppBundle\Tests\Entity\Factory;
+namespace Entvalley\AppBundle\Tests\Entity;
 
 use Entvalley\AppBundle\Entity\Task;
 use Entvalley\AppBundle\Domain\Status;
@@ -30,8 +30,10 @@ class TaskTest extends \PHPUnit_Framework_TestCase
         $userMock = $this->getMock('\Entvalley\AppBundle\Entity\User');
 
         $task = new Task;
-        $task->setStatus($userMock, Status::CLOSED);
 
+        $this->assertEmpty($task->getLastStatus());
+
+        $task->setStatus($userMock, Status::CLOSED);
         $result = $task->getLastStatus();
 
         $this->assertInstanceOf('\Entvalley\AppBundle\Entity\StatusChange', $result);

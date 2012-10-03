@@ -3,6 +3,7 @@
 namespace Entvalley\AppBundle\Domain\Command;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Entvalley\AppBundle\Domain\UserContext;
 use Entvalley\AppBundle\Entity\Comment;
 
 class CommentCommand extends AbstractCommand
@@ -11,15 +12,15 @@ class CommentCommand extends AbstractCommand
      * @var \Doctrine\Bundle\DoctrineBundle\Registry
      */
     private $doctrine;
-    private $user;
+    private $userContext;
 
     protected $isVisible = false;
 
 
-    public function __construct(Registry $doctrine, $user)
+    public function __construct(Registry $doctrine, UserContext $userContext)
     {
         $this->doctrine = $doctrine;
-        $this->user = $user;
+        $this->userContext = $userContext;
     }
 
     public function execute($content)
@@ -35,7 +36,7 @@ class CommentCommand extends AbstractCommand
         $comment = new Comment;
         $comment->setText($content);
         $comment->setCreatedAt(new \DateTime());
-        $comment->setAuthor($this->user);
+        $comment->setAuthor($this->userContext->getUser());
         $comment->setTask($task);
 
         $em->persist($comment);

@@ -16,7 +16,7 @@ class TakeCommand extends AbstractStatusChangeCommand
 
     public function onStatusChange($task)
     {
-        $task->setAssignedTo($this->user);
+        $task->setAssignedTo($this->userContext->getUser());
     }
 
     public function getName()

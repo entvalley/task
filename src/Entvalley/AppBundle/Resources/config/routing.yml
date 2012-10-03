@@ -1,20 +1,20 @@
 app_homepage:
     pattern:  /
-    defaults: { _controller: EntvalleyAppBundle:Task:index }
+    defaults: { _controller: entvalley.task_controller:indexAction }
 
 app_task_list:
-    pattern:  /tasks
-    defaults: { _controller: EntvalleyAppBundle:Task:index }
+    pattern:  /tasks/{filter}
+    defaults: { _controller: entvalley.task_controller:indexAction, filter: null }
     options:
         expose: true
 
 app_task_create:
     pattern:  /task/create
-    defaults: { _controller: EntvalleyAppBundle:Task:create }
+    defaults: { _controller: entvalley.task_controller:createAction }
 
 app_task_view:
     pattern:  /task/{id}
-    defaults: { _controller: EntvalleyAppBundle:Task:view }
+    defaults: { _controller: entvalley.task_controller:viewAction }
     options:
         expose: true
     requirements:
@@ -22,16 +22,16 @@ app_task_view:
 
 app_task_delete:
     pattern:  /task/{id}/delete
-    defaults: { _controller: EntvalleyAppBundle:Task:delete }
+    defaults: { _controller: entvalley.task_controller:deleteAction }
     requirements:
         id: \d+
 
 app_command_list:
     pattern:  /commands
-    defaults: { _controller: EntvalleyAppBundle:Command:list }
+    defaults: { _controller: entvalley.command_controller:listAction }
     options:
         expose: true
 
 app_command_send:
     pattern:  /command/send
-    defaults: { _controller: EntvalleyAppBundle:Command:send }
+    defaults: { _controller: entvalley.command_controller:sendAction }

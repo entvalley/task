@@ -12,7 +12,7 @@
 
         <field name="title" length="140" />
 
-        <field name="numberComments" type="integer" column-definition="INT NOT NULL DEFAULT 0"/>
+        <field name="numberComments" nullable="true" type="integer" />
         <field name="status" type="smallint" />
         <field name="text" type="text" />
         <field name="createdAt" type="datetime" />

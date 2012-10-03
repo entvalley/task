@@ -10,4 +10,9 @@ class Status
     const REOPENED = 4;
     const REJECTED = 5;
     const WONTFIX = 6;
+
+    public static function supports($name)
+    {
+        return defined('self::' . strtoupper($name));
+    }
 }

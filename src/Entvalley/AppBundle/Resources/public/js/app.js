@@ -76,6 +76,7 @@ jQuery(function ($) {
                     var self = this;
                     self.text = data.text;
                     self.username = data.author.username;
+                    self.createdAt = data.created_at;
 
                     var statusChange = data.status_change || {
                         status: null,
@@ -139,8 +140,10 @@ jQuery(function ($) {
                         return (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
                     };
 
-                    this.createdAtDay = ko.computed(function () {
-                        return ko.utils.unwrapObservable(self.date).getDate();
+                    this.createdAt = ko.computed(function () {
+                        return ko.utils.unwrapObservable(self.date).getDate() + ' ' +
+                            abbrMonthNames[ko.utils.unwrapObservable(self.date).getMonth()] + ' ' +
+                            ko.utils.unwrapObservable(self.date).getFullYear();
                     });
 
                     this.createdAtMonth = ko.computed(function () {
@@ -190,11 +193,12 @@ jQuery(function ($) {
                                 break;
                             }
                         }
+
                         self.tasks.valueHasMutated();
                     });
 
                     self.goToTask = function (task) {
-                        location.hash = 'task/' + task.id;
+                        window.location = Routing.generate('app_task_view', { id: task.id });
                     };
 
                     self.addTask = function (data) {
@@ -208,7 +212,11 @@ jQuery(function ($) {
                     };
 
                     self.hideTask = function (elem) {
-                        $(elem).fadeOut(function () {
+                        if (elem.nodeType === 3) { // skip text nodes
+                            return;
+                        }
+
+                        $(elem).animate({ height: 'toggle', opacity: 'toggle' }, 'slow', function () {
                             $(this).remove();
                         });
                     };
@@ -245,12 +253,22 @@ jQuery(function ($) {
                         });
                     });
 
-                    var loadTasks = function () {
-                        $.get(Routing.generate('app_task_list', {}), {}, function (allData) {
-                            var mappedTasks = $.map(allData, function (item) {
-                                return new Task(item);
+                    var loadTasks = function (filter) {
+                        var loaded = [];
+                        self.tasks([]);
+                        self.tasks().forEach(function (item) {
+                            loaded.push(item.id);
+                        });
+                        return $.get(Routing.generate('app_task_list', { filter: filter }), {}, function (allData) {
+                            $.map(allData, function (item) {
+                                if (loaded.indexOf(parseInt(item.id, 10)) === -1) {
+                                    if (loaded.length === 0) {
+                                        self.tasks.push(new Task(item));
+                                    } else {
+                                        self.tasks.unshift(new Task(item));
+                                    }
+                                }
                             });
-                            self.tasks(mappedTasks);
                             App.UI.hideStatus();
                         });
                     };
@@ -259,7 +277,7 @@ jQuery(function ($) {
                             App.UI.showStatus('Loading...');
                         });
 
-                        this.get('#task/:id', function () {
+                        this.get('\/task/:id', function () {
                             var id = this.params.id;
                             $.get(Routing.generate('app_task_view', { id: id }), {}, function (data) {
                                 App.UI.hideStatus();
@@ -268,16 +286,24 @@ jQuery(function ($) {
                                 App.UI.scroll('0', 50);
                             });
                         });
-                        this.get('#tasks', function () {
+                        this.get(/\/tasks(\/(\w+))?/, function () {
+                            console.log(123);
                             self.chosenTask(null);
-                            App.UI.hideStatus();
-                            self.command.setContext('tasks');
                             App.UI.scroll('#task-item-' + self.lastVisited, 0);
+                            var dfd;
+                            if (this.params.splat[1]) {
+                                dfd = loadTasks(this.params.splat[1]);
+                            } else {
+                                dfd = loadTasks();
+                            }
+                            dfd.done(function () {
+                                App.UI.hideStatus();
+                                self.command.setContext('tasks');
+                            });
                         });
                         this.get('', function () {
                             self.goToTaskList();
                         });
-                        loadTasks();
                     }).run();
 
                 };
@@ -404,10 +430,8 @@ jQuery(function ($) {
             }
         };
 
-
         App.UI = new App.UI("command_text");
         App.UI.run();
     })(window.App = window.App || {}, window.Routing = window.Routing || {});
-
 });
 

@@ -2,8 +2,15 @@
 
 namespace Entvalley\AppBundle\Controller;
 
-use Mzz\MzzBundle\Controller\Controller;
 use Entvalley\AppBundle\Domain\JsonEncoder;
+use Entvalley\AppBundle\Domain\Command\CommandInterpreter;
+use Symfony\Component\HttpFoundation\Request;
+use Entvalley\AppBundle\Domain\Command\CommandManager;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Bridge\Doctrine\RegistryInterface;
+use JMS\SerializerBundle\Serializer\SerializerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
 use Entvalley\AppBundle\Form\CommandType;
 use Entvalley\AppBundle\Domain\Command\CommandSource;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,26 +18,41 @@ use Entvalley\AppBundle\Entity\User;
 
 class CommandController extends Controller
 {
+    private $serializer;
+    private $commandManager;
+    private $commandInterpreter;
+
+    public function __construct(Request $request,
+        RouterInterface $router,
+        $templating,
+        SessionInterface $session,
+        RegistryInterface $doctrine,
+        FormFactoryInterface $formFactory,
+        SerializerInterface $serializer,
+        CommandManager $commandManager,
+        CommandInterpreter $commandInterpreter)
+    {
+        $this->serializer = $serializer;
+        $this->commandManager = $commandManager;
+        $this->commandInterpreter = $commandInterpreter;
+        parent::__construct($request, $router, $templating, $session, $doctrine, $formFactory);
+    }
+
     public function listAction()
     {
-        $commandManager = $this->get('entvalley.command_manager');
-
-        return new JsonResponse($commandManager->getCommandsConfigs());
+        return new JsonResponse($this->commandManager->getCommandsConfigs());
     }
 
     public function sendAction()
     {
         $receivedCommand = new CommandSource();
-        $form = $this->createForm(new CommandType(), $receivedCommand);
+        $form = $this->formFactory->create(new CommandType(), $receivedCommand);
 
-        $request = $this->getRequest();
+        if ('POST' === $this->request->getMethod()) {
+            $form->bind($this->request);
 
-        if ('POST' === $request->getMethod()) {
-            $form->bind($request);
-
-            $em = $this->getDoctrine()->getManager();
-            $interpreter = $this->get("entvalley.command_interpreter");
-            $commandsResults = $interpreter->interpret($receivedCommand);
+            $em = $this->doctrine->getManager();
+            $commandsResults = $this->commandInterpreter->interpret($receivedCommand);
             $em->flush();
 
             return $this->createResponse($this->_prepareCommandsResponse($commandsResults));
@@ -43,7 +65,7 @@ class CommandController extends Controller
 
     public function formAction()
     {
-        $form = $this->createForm(new CommandType(), new CommandSource());
+        $form = $this->formFactory->create(new CommandType(), new CommandSource());
         return $this->view(array(
             'form' => $form->createView(),
         ));
@@ -52,7 +74,6 @@ class CommandController extends Controller
     private function _prepareCommandsResponse($commandsResults)
     {
         $finalResponse = '';
-        $serializer = $this->get('serializer');
 
         foreach ($commandsResults as $command => $commandResults) {
             foreach ($commandResults as $commandResult) {
@@ -60,7 +81,7 @@ class CommandController extends Controller
                     /**
                      * Serializing object requires complicated logic
                      */
-                    $commandResult[$commandResultKey] = is_object($commandResultItem) ? $serializer->serialize($commandResultItem, 'json') : JsonEncoder::encode($commandResultItem);
+                    $commandResult[$commandResultKey] = is_object($commandResultItem) ? $this->serializer->serialize($commandResultItem, 'json') : JsonEncoder::encode($commandResultItem);
                 }
                 $finalResponse .= $this->renderView('EntvalleyAppBundle:Command:executed/' . $command . '.html.twig', $commandResult);
             }
