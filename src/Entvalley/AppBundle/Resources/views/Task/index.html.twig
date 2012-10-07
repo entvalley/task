@@ -17,7 +17,9 @@
         <div class="status-header" data-bind="toggleStatusIcon: status"></div>
         <div class="actions-header">
             <ul>
-                <li class="action">Edit</li>
+                <li class="action">
+                    <a href="#edit-task" data-bind="click: editTask">Edit</a>
+                </li>
             </ul>
         </div>
         <div class="row-fluid">
@@ -26,7 +28,7 @@
                 <a class="message-title"
                    data-bind="text: title, click: $root.goToTask, attr: { href: url }"></a>
 
-                <p data-bind="text: text"></p>
+                <p data-bind="text: body"></p>
 
                 <p class="reportedby"><span data-bind="text: author"></span> at
                     <span data-bind="text: formatDate(date)"></span>.
@@ -78,7 +80,7 @@
                         <a class="message-title"
                            data-bind="text: title, attr: { href: url }"></a>
 
-                        <p data-bind="text: text"></p>
+                        <p data-bind="text: body"></p>
 
                         <p class="reportedby"><span data-bind="text: author"></span> at
                             <span data-bind="text: formatDate(date)"></span>.
@@ -90,6 +92,4 @@
             </li>
         </ul>
     </div>
-
-    <textarea class="textarea" placeholder="Enter text ..." style="width: 810px; height: 200px"></textarea>
 {% endblock %}

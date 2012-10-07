@@ -9,7 +9,7 @@ class Task
 {
     private $id;
     private $title;
-    private $text;
+    private $body;
     private $author;
     private $assignedTo;
     private $createdAt;
@@ -87,14 +87,14 @@ class Task
         return $this->lastModification;
     }
 
-    public function setText($text)
+    public function setBody($body)
     {
-        $this->text = $text;
+        $this->body = $body;
     }
 
-    public function getText()
+    public function getBody()
     {
-        return $this->text;
+        return $this->body;
     }
 
     public function setTitle($title)
@@ -118,12 +118,12 @@ class Task
         return $this->comments;
     }
 
-    public function setTextWithTitle($text)
+    public function setBodyWithTitle($text)
     {
         $textParts = preg_split("~(\n|\r)~", $text, 2);
 
         $this->title = trim($textParts[0]);
-        $this->text = isset($textParts[1]) ? trim($textParts[1]) : "";
+        $this->body = isset($textParts[1]) ? trim($textParts[1]) : "";
     }
 
     public function setStatus(User $whoUpdated, $status)

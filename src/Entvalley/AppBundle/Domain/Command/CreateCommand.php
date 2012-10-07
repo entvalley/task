@@ -28,7 +28,7 @@ class CreateCommand extends AbstractCommand
         $task = new Task;
         $task->setCreatedAt(new \DateTime());
         $task->setAuthor($this->userContext->getUser());
-        $task->setTextWithTitle($content);
+        $task->setBodyWithTitle($content);
         $task->setCompany($this->userContext->getUser()->getCompany());
 
         $em->persist($task);

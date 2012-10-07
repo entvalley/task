@@ -117,6 +117,7 @@
                 }
             });
         });
+
     };
 
     Wysihtml5.prototype = {
@@ -287,7 +288,7 @@
                 var activeButton = $(this).hasClass("wysihtml5-command-active");
 
                 if (!activeButton) {
-                    insertLinkModal.append('body').modal('show');
+                    insertLinkModal.modal('show');
                     insertLinkModal.on('click.dismiss.modal', '[data-dismiss="modal"]', function(e) {
                         e.stopPropagation();
                     });

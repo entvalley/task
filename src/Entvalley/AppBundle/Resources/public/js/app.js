@@ -61,7 +61,7 @@ jQuery(function ($) {
                         clearTimeout(tooltipTimeout);
                     }
                 };
-                tooltipTimeout = setTimeout(closeTooltip, 3000);
+                tooltipTimeout = setTimeout(closeTooltip, 5000);
 
                 $('.command_tooltip').one('click', closeTooltip);
             },
@@ -104,7 +104,7 @@ jQuery(function ($) {
                     var self = this;
                     this.author = data.author.username;
                     this.title = data.title;
-                    this.text = data.text;
+                    this.body = data.body;
                     this.id = data.id;
                     this.assignedTo = ko.observable(data.assigned_to);
                     this.status = ko.observable(data.status);
@@ -161,12 +161,17 @@ jQuery(function ($) {
                     this.hasStatus = function (statusName) {
                         return self.status() - 1 === statusNames.indexOf(statusName);
                     };
+
+                    this.editTask = function () {
+                        console.log(123);
+                    };
                 };
 
                 var Command = function () {
                     var self = this;
                     this.contextType = ko.observable();
                     this.contextId = ko.observable();
+                    this.placeholder = ko.observable();
 
                     this.setContext = function (type, id) {
                         self.contextType(type);
@@ -225,7 +230,7 @@ jQuery(function ($) {
                         if (self.chosenTask()) {
                             self.lastVisited = self.chosenTask().id;
                         }
-                        location.hash = 'tasks';
+                        window.location = Routing.generate('app_task_list');
                     };
 
                     self.addTaskComment = function (data) {
@@ -283,6 +288,7 @@ jQuery(function ($) {
                                 App.UI.hideStatus();
                                 self.chosenTask(new Task(data));
                                 self.command.setContext('task', id);
+                                self.command.placeholder('Leave a comment...');
                                 App.UI.scroll('0', 50);
                             });
                         });
@@ -299,6 +305,7 @@ jQuery(function ($) {
                             dfd.done(function () {
                                 App.UI.hideStatus();
                                 self.command.setContext('tasks');
+                                self.command.placeholder('Create a new task...');
                             });
                         });
                         this.get('', function () {
@@ -394,6 +401,22 @@ jQuery(function ($) {
                 $('.sign-up-link').click(function () {
                     $('.sign-in-block').fadeOut(200, function () {
                         $('.sign-up-block').fadeIn(200);
+                    });
+                });
+
+                $('*[data-behaviour~="autosize"]').each(function () {
+                    $(this).autosize();
+                });
+
+                $('textarea[data-behaviour~="wysiwyg"]').each(function () {
+                    $(this).wysihtml5();
+                    var iframe = window.editor.currentView.iframe;
+                    iframe.height = $(this).height();
+                    window.editor.on('newword:composer', function () {
+                        var body = $(iframe).contents().find('body');
+                        body.css('overflow', 'hidden');
+
+                        $(iframe).animate({ height: body.height() }, 'fast');
                     });
                 });
             },

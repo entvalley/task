@@ -83,7 +83,14 @@ class CommandController extends Controller
                      */
                     $commandResult[$commandResultKey] = is_object($commandResultItem) ? $this->serializer->serialize($commandResultItem, 'json') : JsonEncoder::encode($commandResultItem);
                 }
-                $finalResponse .= $this->renderView('EntvalleyAppBundle:Command:executed/' . $command . '.html.twig', $commandResult);
+
+                if (empty($commandResult)) {
+                    $finalResponse .= $this->renderView('EntvalleyAppBundle:Command:executed/_failed.html.twig', array(
+                        'command' => $command
+                    ));
+                } else {
+                    $finalResponse .= $this->renderView('EntvalleyAppBundle:Command:executed/' . $command . '.html.twig', $commandResult);
+                }
             }
         }
         return $finalResponse;

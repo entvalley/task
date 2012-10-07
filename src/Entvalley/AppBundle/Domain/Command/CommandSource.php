@@ -5,7 +5,7 @@ namespace Entvalley\AppBundle\Domain\Command;
 class CommandSource
 {
     private $text;
-    private $contextId;
+    private $contextId = 0;
     private $contextType;
 
     public function __construct($text = null)
@@ -25,7 +25,7 @@ class CommandSource
 
     public function setContextId($contextId)
     {
-        $this->contextId = $contextId;
+        $this->contextId = (int)$contextId;
     }
 
     public function getContextId()

@@ -10,19 +10,19 @@ class TaskTest extends \PHPUnit_Framework_TestCase
     public function testShouldSplitContentIntoTitleAndText()
     {
         $task = new Task;
-        $task->setTextWithTitle("It's a title\r\nand it's not a title\r\njusttext");
+        $task->setBodyWithTitle("It's a title\r\nand it's not a title\r\njusttext");
 
         $this->assertEquals("It's a title", $task->getTitle());
-        $this->assertEquals("and it's not a title\r\njusttext", $task->getText());
+        $this->assertEquals("and it's not a title\r\njusttext", $task->getBody());
     }
 
     public function testShouldSplitContentIntoTitle()
     {
         $task = new Task;
-        $task->setTextWithTitle("It's a title");
+        $task->setBodyWithTitle("It's a title");
 
         $this->assertEquals("It's a title", $task->getTitle());
-        $this->assertEmpty($task->getText());
+        $this->assertEmpty($task->getBody());
     }
 
     public function testShouldCreateStatusChangeOnStatusChange()

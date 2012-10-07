@@ -2,7 +2,7 @@
     <b>The task is assigned has been closed.</b>
 </div>
 <form action="{{ path('app_command_send') }}" class="command_form" method="post" data-bind="with: command">
-    {{ form_widget(form.text, { attrs : { id: "main_input" } }) }}
+    {{ form_widget(form.text, { attr : { 'data-bind': "attr: { placeholder: placeholder }" } }) }}
     {{ form_rest(form) }}
     <button id="command_send" class="btn">Send</button>
     <button id="command_send" class="btn"  href="#myModal" role="button" class="btn" data-toggle="modal">Help</button>

@@ -6,7 +6,7 @@ Entvalley\AppBundle\Entity\Task:
             groups: [summary]
         title:
             groups: [summary]
-        text:
+        body:
             groups: [summary]
         author:
             groups: [summary]
