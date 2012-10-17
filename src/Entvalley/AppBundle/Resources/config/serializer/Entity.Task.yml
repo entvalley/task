@@ -8,6 +8,8 @@ Entvalley\AppBundle\Entity\Task:
             groups: [summary]
         body:
             groups: [summary]
+        safeBody:
+            groups: [summary]
         author:
             groups: [summary]
         assignedTo:
@@ -16,7 +18,7 @@ Entvalley\AppBundle\Entity\Task:
             groups: [summary]
         lastModification:
             groups: [summary]
-        company:
+        project:
             groups: [summary]
         lastStatus:
             groups: [summary]
@@ -24,3 +26,6 @@ Entvalley\AppBundle\Entity\Task:
             groups: [summary]
         numberComments:
             groups: [summary]
+
+    callback_methods:
+        pre_serialize: [purifyHtmlTags]

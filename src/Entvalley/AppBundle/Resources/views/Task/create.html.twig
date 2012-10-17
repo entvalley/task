@@ -1,29 +1,8 @@
 {% extends 'EntvalleyAppBundle::layout.html.twig' %}
 
-{% block title 'Edit a task | ' ~ parent() %}
+{% block title 'Create a task | ' ~ parent() %}
 
 {% block content %}
-    <form method="post" class="form-page form-horizontal" action="{{ path("app_task_create") }}">
-        <div class="control-group">
-            {{ form_label(form.title, {}, { label_attr: { class: "control-label" } }) }}
-            <div class="controls">
-                {{ form_widget(form.title, { attr: { 'data-behaviour': 'autosize', 'class': 'span6', rows: 1 } }) }}
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="row-separator"></div>
-        </div>
-        <div class="control-group">
-            {{ form_label(form.body, {}, { label_attr: { class: "control-label" } }) }}
-            <div class="controls">
-                {{ form_widget(form.body, { attr: { 'data-behaviour': 'autosize wysiwyg', 'class': 'span6' } }) }}
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <input class="btn" type="submit" value="Create" />
-            </div>
-        </div>
-    </form>
+    {% include "EntvalleyAppBundle:Task:_form.html.twig" with { 'form_action' :  path("app_task_create") } %}
 {% endblock %}
 

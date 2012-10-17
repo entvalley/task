@@ -13,7 +13,7 @@
 
 {% block content %}
 
-    <div class="task" data-bind="with: chosenTask" xmlns="http://www.w3.org/1999/html">
+    <div class="task" data-bind="with: chosenTask, attr: { id: chosenTask() ? 'task-' + chosenTask().id : null }" xmlns="http://www.w3.org/1999/html">
         <div class="status-header" data-bind="toggleStatusIcon: status"></div>
         <div class="actions-header">
             <ul>
@@ -23,12 +23,13 @@
             </ul>
         </div>
         <div class="row-fluid">
-            {{ _self.message_summary(false) }}
             <div class="message">
-                <a class="message-title"
-                   data-bind="text: title, click: $root.goToTask, attr: { href: url }"></a>
+                <p>
+                    <span class="created-at" data-bind="text: createdAt"></span>
+                    <span class="message-title" data-bind="text: title"></span>
+                </p>
 
-                <p data-bind="text: body"></p>
+                <p data-bind="html: safeBody"></p>
 
                 <p class="reportedby"><span data-bind="text: author"></span> at
                     <span data-bind="text: formatDate(date)"></span>.
@@ -49,11 +50,13 @@
                                 <b data-bind="text: username"></b>
                                 <span class="about" data-bind="text: createdAt"></span>
                             </p>
+
                             <p data-bind="text: text"></p>
                         </div>
 
                         <div class="span2 status-change" data-bind="visible: statusChanged">
                             <p data-bind="text: statusNameCapitalized() + ' ' + statusChangeDate()"></p>
+
                             <p data-bind="attr: { class: 'status-line status-'  + statusName() }"></p>
                         </div>
                     </div>
@@ -62,7 +65,7 @@
         </div>
     </div>
 
-    {% if tasks|length < 0 %}
+    {% if tasks is defined and tasks|length < 0 %}
         <div data-bind="visible: !tasks().length && !chosenTask()">
             <h3>No task has been created yet</h3>
 
@@ -80,7 +83,7 @@
                         <a class="message-title"
                            data-bind="text: title, attr: { href: url }"></a>
 
-                        <p data-bind="text: body"></p>
+                        <p data-bind="html: safeBody"></p>
 
                         <p class="reportedby"><span data-bind="text: author"></span> at
                             <span data-bind="text: formatDate(date)"></span>.

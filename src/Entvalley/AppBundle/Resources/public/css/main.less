@@ -1,14 +1,13 @@
 @import "common.less";
 
-body
-{
+body {
     padding-bottom: 90px;
     background: url(/bundles/entvalleyapp/images/background.png);
     overflow-y: scroll;
 
     > .container > .row > .span12 {
-         background-color: #ffffff;
-         padding: 10px;
+        background-color: #ffffff;
+        padding: 10px;
         .box-shadow(1px 1px 7px 0px rgba(0, 0, 0, 0.2));
     }
 
@@ -16,19 +15,17 @@ body
 }
 
 @media (min-width: 768px) and (max-width: 979px) {
-  body > .container > .row  >.span12 {
-    width: 704px;
-  }
+    body > .container > .row  >.span12 {
+        width: 704px;
+    }
 }
-
 
 @media (min-width: 1200px) {
     body > .container > .row  >.span12 {
         width: 1130px;
         padding: 20px;
-  }
+    }
 }
-
 
 @media (min-width: 980px) {
     body {
@@ -37,20 +34,19 @@ body
 }
 
 @media (max-width: 767px) {
-  .main .navbar-fixed-top,
-  .main .navbar-fixed-bottom {
-    padding-right: 20px;
-    padding-left: 20px;
-  }
+    .main .navbar-fixed-top,
+    .main .navbar-fixed-bottom {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
 
-    .main .navbar .picture
-    {
+    .main .navbar .picture {
     }
 
 }
-.navbar .topbar
-{
-    /*background-color: #3e383a;*/
+
+.navbar .topbar {
+/*background-color: #3e383a;*/
     .border-radius(4px);
     margin: 12px 0 2px;
     display: inline-block;
@@ -68,18 +64,57 @@ body
     .nav > li > a {
         padding: 15px 10px 11px;
     }
+/*
+    */
+    .project {
+        background-color: #434343;
+        color: #888;
+        margin: 7px 10px 7px;
+
+        .expand {
+            font-family: Typicons;
+            color: #777;
+            font-size: 18px;
+            vertical-align: middle;
+        }
+    }
+
+
+    .project ul {
+        margin: 0;
+        list-style-type: none;
+    }
+
+    .project > ul > li, .project .dropdown-menu ul li {
+        margin: 0;
+        padding: 6px 12px;
+    }
+
+    .project .dropdown-menu {
+        background-color: #333;
+        .border-radius(0px);
+    }
+
+    .project ul > li > a {
+        color: inherit;
+        text-decoration: none;
+        margin: 0;
+    }
+
+    .project ul > li > a:hover {
+        color: white;
+    }
+
 }
 
-.topbar ul
-{
+.topbar ul {
     list-style-type: none;
     display: block;
     position: relative;
     float: left;
 }
 
-.navbar ul > li
-{
+.navbar > .navbar-inner > .container > ul > li {
     display: block;
     float: left;
     margin-right: 8px;
@@ -87,16 +122,15 @@ body
     text-transform: uppercase;
     font-size: 14px;
 }
+
 .navbar .nav > li > a
 
-.navbar .username
-{
+.navbar .username {
     display: block;
     float: left;
 }
 
-.navbar a.username
-{
+.navbar a.username {
     color: white;
     font-size: 13px;
     font-weight: bold;
@@ -105,8 +139,7 @@ body
 }
 
 @picture-padding: 10px;
-.navbar .picture
-{
+.navbar .picture {
     float: left;
     position: relative;
     margin: -@picture-padding @picture-padding+2 -@picture-padding - 4 -0;
@@ -121,7 +154,6 @@ body
 @summary-inprogress-color: #84cee7;
 @summary-unresolved-color: #e9da85;
 @summary-background: #443f41;
-
 
 .task {
     position: relative;
@@ -153,14 +185,18 @@ body
         display: table-cell;
 
         ul {
-          list-style-type: none;
+            list-style-type: none;
         }
         .action {
-          padding: 0px 10px;
-          background-color: #0f76d5;
-          float: left;
-          font-size: 11px;
-          .border-radius(5px 5px 0 0);
+            padding: 0px 10px;
+            background-color: #0f76d5;
+            float: left;
+            font-size: 11px;
+            .border-radius(5px 5px 0 0);
+        }
+
+        .action a {
+            color: white;
         }
     }
 
@@ -174,33 +210,40 @@ body
     background-color: #88af0b;
 
 }
+
 .status-closed {
     background-color: #272727;
 }
+
 .status-accepted {
     background-color: #0191ba;
 
 }
+
 .status-unassigned {
     background-color: #b43319;
 
 }
+
 .status-rejected {
     background-color: #b4a619;
 }
+
 .status-wontfix {
     background-color: #aaaaaa;
 }
 
-.navbar .summary
-{
-    background-color: @summary-background;
+.navbar .summary {
     padding: 4px 2px;
     .border-radius(6px);
     overflow: auto;
     display: inline-block;
     font-size: 12px;
     margin: -4px 0 -12px 14px;
+
+    a {
+        color: black;
+    }
 
     .done {
         background-color: @summary-done-color;
@@ -233,7 +276,6 @@ body
         position: block;
         padding: 3px 12px;
         text-align: center;
-        .border-radius(3px);
         margin: 0 2px;
     }
 
@@ -243,29 +285,27 @@ body
         margin: 0;
     }
 
-
     .arrow,
-        .arrow:after {
-         position: absolute;
-         width: 0;
-         height: 0;
-         border-color: transparent;
-         border-style: solid;
-       }
-        .arrow:after {
-         z-index: -1;
-         content: "";
-       }
+    .arrow:after {
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-color: transparent;
+        border-style: solid;
+    }
+    .arrow:after {
+        z-index: -1;
+        content: "";
+    }
 
-       .arrow {
-         bottom: 8px;
-         margin-left: -8px;
-         border-width: 6px 6px 0;
-       }
+    .arrow {
+        bottom: 8px;
+        margin-left: -8px;
+        border-width: 6px 6px 0;
+    }
 }
 
-.tools
-{
+.tools {
     position: fixed;
     bottom: 0;
     left: 0;
@@ -298,46 +338,43 @@ body
     }
 
     .command_tooltip:after {
-        bottom:15px;
-        left:4px;
-        width:50%;
-        height:20%;
-        max-width:300px;
-        max-height:100px;
+        bottom: 15px;
+        left: 4px;
+        width: 50%;
+        height: 20%;
+        max-width: 300px;
+        max-height: 100px;
         .box-shadow(0 15px 2px rgba(0, 0, 0, 0.3));
-        -webkit-transform:rotate(-2deg);
-           -moz-transform:rotate(-2deg);
-            -ms-transform:rotate(-2deg);
-             -o-transform:rotate(-2deg);
-                transform:rotate(-2deg);
+        -webkit-transform: rotate(-2deg);
+        -moz-transform: rotate(-2deg);
+        -ms-transform: rotate(-2deg);
+        -o-transform: rotate(-2deg);
+        transform: rotate(-2deg);
 
     }
 
     .command_tooltip:before,
     .command_tooltip:after {
-        content:"";
-        position:absolute;
-        z-index:-2;
+        content: "";
+        position: absolute;
+        z-index: -2;
     }
 }
 
-.separator
-{
+.separator {
     background: url('/bundles/entvalleyapp/images/separator.png');
     height: 9px;
     width: 100%;
 }
 
-ul.separated-list > li
-{
+ul.separated-list > li {
     background: url('/bundles/entvalleyapp/images/separator.png') repeat-x;
     padding: 14px 0;
     margin: 0;
 }
 
 .comments {
-    ul.separated-list > li
-    {
+    ul.separated-list > li {
         background: none;
         border-bottom: 2px solid #ededed;
     }
@@ -363,14 +400,11 @@ ul.separated-list > li
 
 }
 
-ul.separated-list
-{
+ul.separated-list {
     margin: 0;
     padding: 0;
     list-style-type: none;
 }
-
-
 
 @link-color: #0662aa;
 
@@ -379,23 +413,26 @@ ul.separated-list
 }
 
 .message {
+    .created-at {
+        color: #999;
+    }
 }
 
-.message-info
-{
+.message-info {
     background-color: #f0f0f0;
     padding: 8px;
     .border-radius(6px);
     font-size: 10px;
     line-height: 120%;
-    width:65px;
-  margin-right: 10px;
+    width: 65px;
+    margin-right: 10px;
     float: left;
-  font-family: "Open Sans";
+    font-family: "Open Sans";
 
     .created-at {
         text-transform: uppercase;
         font-size: 11px;
+        color: black;
     }
 
     .comments-number {
@@ -437,28 +474,27 @@ ul.separated-list
     .box-shadow(inset rgba(30, 30, 30, 0.12) 1px 1px 3px);
 }
 
-
-ul.auto-list{
-	position:absolute;
-	top:0px;
-	left:0px;
-	background: white;
-    border:1px solid #B2B2B2;
-	padding:0;
-    margin:0;
-	list-style:none;
+ul.auto-list {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background: white;
+    border: 1px solid #B2B2B2;
+    padding: 0;
+    margin: 0;
+    list-style: none;
 
     .border-radius(4px);
     .box-shadow(0px 1px 4px rgba(0, 0, 0, 0.163));
 
-    >li:hover, >li[data-selected=true]{
-    	background-color:#F2F2F2;
+    >li:hover, >li[data-selected=true] {
+        background-color: #F2F2F2;
     }
 
-    >li{
-    	cursor:default;
-    	padding:4px;
-        border-bottom:1px solid #EEE;
+    >li {
+        cursor: default;
+        padding: 4px;
+        border-bottom: 1px solid #EEE;
         .border-radius(3px);
         color: black;
     }
@@ -536,7 +572,7 @@ footer {
 
     .text {
         display: inline-block;
-        border:2px solid #daca80;
+        border: 2px solid #daca80;
         .border-radius(3px);
         padding: 3px 10px;
         background-color: #fef5cd;
@@ -545,147 +581,142 @@ footer {
     &.error .text {
         background-color: #d5200f;
         color: white;
-        border:2px solid #d5200f;
+        border: 2px solid #d5200f;
     }
 }
-
-
-
 
 input,
 button,
 select,
 textarea {
-  font-family: inherit;
+    font-family: inherit;
 }
 
 label {
-  color: #888;
+    color: #888;
 }
-
 
 .btn {
-  padding: 1px 12px;
-  font-size: 12px;
-  background-color: #f9f9f9;
-  *background-color: #f9f9f9;
-  background-image: none;
-  border: 1px solid #c1c1c1;
-  *border: 0;
-  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
-  border-color: #c1c1c1;
-  -webkit-border-radius: 4px;
-     -moz-border-radius: 4px;
-          border-radius: 4px;
-  filter: none;
+    padding: 1px 12px;
+    font-size: 12px;
+    background-color: #f9f9f9;
+    *background-color: #f9f9f9;
+    background-image: none;
+    border: 1px solid #c1c1c1;
+    *border: 0;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    border-color: #c1c1c1;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    filter: none;
 }
-
 
 .form-page {
 
-  .row-separator {
-    border-top: 1px dotted #ccc;
-    height: 1px;
-    content: " ";
-    margin-bottom: 10px;
-    width: 100%;
-  }
+    .row-separator {
+        border-top: 1px dotted #ccc;
+        height: 1px;
+        content: " ";
+        margin-bottom: 10px;
+        width: 100%;
+    }
 
-  input:focus:required:invalid:focus,
-  textarea:focus:required:invalid:focus,
-  select:focus:required:invalid:focus {
-    border-color: #f8b9b7;
-    -webkit-box-shadow: 0 0 2px #f8b9b7;
-       -moz-box-shadow: 0 0 2px #f8b9b7;
-            box-shadow: 0 0 2px #f8b9b7;
-  }
+    input:focus:required:invalid:focus,
+    textarea:focus:required:invalid:focus,
+    select:focus:required:invalid:focus {
+        border-color: #f8b9b7;
+        -webkit-box-shadow: 0 0 2px #f8b9b7;
+        -moz-box-shadow: 0 0 2px #f8b9b7;
+        box-shadow: 0 0 2px #f8b9b7;
+    }
 
-  textarea:focus,
-   input[type="text"]:focus,
-   input[type="password"]:focus,
-   input[type="datetime"]:focus,
-   input[type="datetime-local"]:focus,
-   input[type="date"]:focus,
-   input[type="month"]:focus,
-   input[type="time"]:focus,
-   input[type="week"]:focus,
-   input[type="number"]:focus,
-   input[type="email"]:focus,
-   input[type="url"]:focus,
-   input[type="search"]:focus,
-   input[type="tel"]:focus,
-   input[type="color"]:focus,
-   .uneditable-input:focus {
-     border-color: transparent;
-     -webkit-box-shadow: none;
+    textarea:focus,
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="datetime"]:focus,
+    input[type="datetime-local"]:focus,
+    input[type="date"]:focus,
+    input[type="month"]:focus,
+    input[type="time"]:focus,
+    input[type="week"]:focus,
+    input[type="number"]:focus,
+    input[type="email"]:focus,
+    input[type="url"]:focus,
+    input[type="search"]:focus,
+    input[type="tel"]:focus,
+    input[type="color"]:focus,
+    .uneditable-input:focus {
+        border-color: transparent;
+        -webkit-box-shadow: none;
         -moz-box-shadow: none;
-             box-shadow: none;
-   }
+        box-shadow: none;
+    }
 
     textarea {
-      resize: none;
+        resize: none;
     }
 
     textarea,
-     input[type="text"],
-     input[type="password"],
-     input[type="datetime"],
-     input[type="datetime-local"],
-     input[type="date"],
-     input[type="month"],
-     input[type="time"],
-     input[type="week"],
-     input[type="number"],
-     input[type="email"],
-     input[type="url"],
-     input[type="search"],
-     input[type="tel"],
-     input[type="color"],
-     .uneditable-input {
-       border: 1px solid transparent;
-      -webkit-box-shadow: none;
-         -moz-box-shadow: none;
-              box-shadow: none;
-       -webkit-transition: none;
-          -moz-transition: none;
-            -o-transition: none;
-               transition: none;
-     }
+    input[type="text"],
+    input[type="password"],
+    input[type="datetime"],
+    input[type="datetime-local"],
+    input[type="date"],
+    input[type="month"],
+    input[type="time"],
+    input[type="week"],
+    input[type="number"],
+    input[type="email"],
+    input[type="url"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="color"],
+    .uneditable-input {
+        border: 1px solid transparent;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+        -webkit-transition: none;
+        -moz-transition: none;
+        -o-transition: none;
+        transition: none;
+    }
 
-     textarea:focus,
-     input[type="text"]:focus,
-     input[type="password"]:focus,
-     input[type="datetime"]:focus,
-     input[type="datetime-local"]:focus,
-     input[type="date"]:focus,
-     input[type="month"]:focus,
-     input[type="time"]:focus,
-     input[type="week"]:focus,
-     input[type="number"]:focus,
-     input[type="email"]:focus,
-     input[type="url"]:focus,
-     input[type="search"]:focus,
-     input[type="tel"]:focus,
-     input[type="color"]:focus,
-     .uneditable-input:focus {
-       border-color: transparent;
-       -webkit-box-shadow: none;
-          -moz-box-shadow: none;
-               box-shadow: none;
-     }
+    textarea:focus,
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    input[type="datetime"]:focus,
+    input[type="datetime-local"]:focus,
+    input[type="date"]:focus,
+    input[type="month"]:focus,
+    input[type="time"]:focus,
+    input[type="week"]:focus,
+    input[type="number"]:focus,
+    input[type="email"]:focus,
+    input[type="url"]:focus,
+    input[type="search"]:focus,
+    input[type="tel"]:focus,
+    input[type="color"]:focus,
+    .uneditable-input:focus {
+        border-color: transparent;
+        -webkit-box-shadow: none;
+        -moz-box-shadow: none;
+        box-shadow: none;
+    }
 
     .control-label {
-      float: left;
-      width: 100px;
-      padding-top: 5px;
-      text-align: left;
+        float: left;
+        width: 80px;
+        padding-top: 5px;
+        text-align: left;
     }
 
     .controls {
-       margin-left: 110px;
+        margin-left: 90px;
     }
 
     .control-group {
-      margin-bottom: 10px;
+        margin-bottom: 10px;
     }
 }

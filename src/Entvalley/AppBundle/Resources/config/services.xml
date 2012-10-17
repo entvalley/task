@@ -114,6 +114,8 @@
         <service id="entvalley.task_controller" class="Entvalley\AppBundle\Controller\TaskController" scope="request" parent="entvalley.controller">
             <argument type="service" id="serializer"/>
             <argument type="service" id="context.user"/>
+            <argument type="service" id="entvalley.negotiator"/>
+            <argument type="service" id="exercise_html_purifier.default"/>
         </service>
 
         <service id="entvalley.command_controller" class="Entvalley\AppBundle\Controller\CommandController" scope="request" parent="entvalley.controller">
@@ -122,6 +124,12 @@
             <argument type="service" id="entvalley.command_interpreter"/>
         </service>
 
+        <service id="badfaith.negotiator" class="BadFaith\Negotiator">
+        </service>
+
+        <service id="entvalley.negotiator" class="Entvalley\AppBundle\Service\ContentNegotiator">
+            <argument type="service" id="badfaith.negotiator" />
+        </service>
     </services>
 
 </container>

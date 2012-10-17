@@ -3,8 +3,8 @@ app_homepage:
     defaults: { _controller: entvalley.task_controller:indexAction }
 
 app_task_list:
-    pattern:  /tasks/{filter}
-    defaults: { _controller: entvalley.task_controller:indexAction, filter: null }
+    pattern:  /tasks/{filterByType}
+    defaults: { _controller: entvalley.task_controller:indexAction, filterByType: null }
     options:
         expose: true
 
@@ -15,6 +15,14 @@ app_task_create:
 app_task_view:
     pattern:  /task/{id}
     defaults: { _controller: entvalley.task_controller:viewAction }
+    options:
+        expose: true
+    requirements:
+        id: \d+
+
+app_task_edit:
+    pattern:  /task/{id}/edit
+    defaults: { _controller: entvalley.task_controller:editAction }
     options:
         expose: true
     requirements:

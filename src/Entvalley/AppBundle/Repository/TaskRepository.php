@@ -13,8 +13,9 @@ class TaskRepository extends EntityRepository
         $query = $this->getEntityManager()
             ->createQuery("SELECT t
                              FROM EntvalleyAppBundle:Task t
+                             JOIN t.project p
                             WHERE (t.assignedTo IS NULL OR t.assignedTo = :user)
-                                  AND t.company = :company_id
+                                  AND p.company = :company_id
                             ORDER BY t.createdAt DESC")
         ;
 

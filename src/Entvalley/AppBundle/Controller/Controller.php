@@ -7,8 +7,8 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Mzz\MzzBundle\Response\JsonResponseMessage;
-use Mzz\MzzBundle\Templating\ViewTemplateResolver;
+use Entvalley\AppBundle\Response\JsonResponseMessage;
+use Entvalley\AppBundle\Templating\ViewTemplateResolver;
 USE Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -178,13 +178,20 @@ class Controller
      */
     public function view(array $parameters = array(), Response $response = null, $extension = '')
     {
-        if (empty($this->request)) {
-            throw new \RuntimeException('The request service should be set to render the view');
-        }
+        return $this->render($this->resolveViewName($extension), $parameters);
+    }
 
-        $extension = !empty($extension) ? $extension : $this->templateExtension;
-        $view = ViewTemplateResolver::resolve($this->request->get('_controller'), get_called_class());
-        return $this->render($view . '.' . $extension, $parameters, $response);
+    /**
+     * Renders a view without creating response
+     *
+     * @param string   $view The view name
+     * @param array    $parameters An array of parameters to pass to the view
+     *
+     * @return string rendered view
+     */
+    public function viewContent(array $parameters = array(), $extension = '')
+    {
+        return $this->renderView($this->resolveViewName($extension), $parameters);
     }
 
     /**
@@ -207,5 +214,23 @@ class Controller
 
         $form->bind($this->request);
         return $form->isValid();
+    }
+
+    /**
+     * Resolve the template name (with the right extension)
+     *
+     * @param $extension
+     * @return string
+     * @throws \RuntimeException
+     */
+    private function resolveViewName($extension = null)
+    {
+        if (empty($this->request)) {
+            throw new \RuntimeException('The request service should be set to render the view');
+        }
+
+        $extension = !empty($extension) ? $extension : $this->templateExtension;
+        $view = ViewTemplateResolver::resolve($this->request->get('_controller'), get_called_class());
+        return $view . '.' . $extension;
     }
 }

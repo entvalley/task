@@ -3,6 +3,7 @@
 namespace Entvalley\AppBundle\Controller;
 
 use Entvalley\AppBundle\Domain\TaskFilter;
+use Entvalley\AppBundle\Service\ContentNegotiator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -23,6 +24,8 @@ class TaskController extends Controller
 {
     private $serializer;
     private $userContext;
+    private $negotiator;
+    private $htmlPurifier;
 
     public function __construct(Request $request,
         RouterInterface $router,
@@ -31,10 +34,14 @@ class TaskController extends Controller
         RegistryInterface $doctrine,
         FormFactoryInterface $formFactory,
         SerializerInterface $serializer,
-        UserContext $userContext)
+        UserContext $userContext,
+        ContentNegotiator $negotiator,
+        $htmlPurifier)
     {
         $this->serializer = $serializer;
         $this->userContext = $userContext;
+        $this->negotiator = $negotiator;
+        $this->htmlPurifier = $htmlPurifier;
         parent::__construct($request, $router, $templating, $session, $doctrine, $formFactory);
     }
 
@@ -42,25 +49,27 @@ class TaskController extends Controller
      * @param string $filter filter by task status
      * @return \Entvalley\AppBundle\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($filter = null)
+    public function indexAction($filterByType = null)
     {
         $user = $this->userContext->getUser();
 
         $em = $this->doctrine->getManager();
 
         $taskRepository = $em->getRepository('Entvalley\AppBundle\Entity\Task');
-        if (!is_null($filter)) {
+        if (!is_null($filterByType)) {
             $taskFilter = new TaskFilter();
-            $taskFilter->thatAre($filter);
+            $taskFilter->thatAre($filterByType);
             $tasks = $taskRepository->findWithFilterForCompany($taskFilter, $user->getCompany());
         } else {
-            $filter = null;
             $tasks = $taskRepository->findNewOrAssignedTo($user);
         }
 
         if ($this->request->isXmlHttpRequest()) {
             $this->serializer->setGroups(array('summary'));
-            return JsonResponse::createWithSerializer($this->serializer, $tasks);
+            return JsonResponse::createWithSerializer($this->serializer, array_map(function ($task) {
+                        $task->setPurifier($this->htmlPurifier);
+                        return $task;
+                    }, $tasks));
         } else {
             return $this->view(array(
                 'tasks' => $tasks
@@ -96,6 +105,42 @@ class TaskController extends Controller
         ));
     }
 
+    public function editAction(Task $task)
+    {
+        //var_dump($this->negotiator->getPreferredType($this->request->headers->get('accept')));
+
+        $em = $this->doctrine->getManager();
+
+        $form = $this->formFactory->create(new TaskType(), $task);
+
+        if ('POST' === $this->request->getMethod()) {
+            $form->bind($this->request);
+            if ($form->isValid()) {
+                $em->flush();
+                $this->session->getFlashBag()->add('success', 'A new task has been saved!');
+
+                return $this->redirect($this->url('app_task_view', [
+                            'id' => $task->getId()
+                        ]));
+            }
+        }
+
+        $result = $this->viewContent(
+            array(
+                'form' => $form->createView(),
+                'task' => $task
+            )
+        );
+
+        return $this->javascript($this->viewContent(
+            array(
+                'task' => $task,
+                'result' => JsonEncoder::encode($result)
+            ),
+            'js.twig'
+        ));
+    }
+
     /**
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
@@ -104,6 +149,7 @@ class TaskController extends Controller
     {
         if ($this->request->isXmlHttpRequest()) {
             $this->serializer->setGroups(array('details', 'summary'));
+            $task->setPurifier($this->htmlPurifier);
             return JsonResponse::createWithSerializer($this->serializer, $task);
         } else {
             return $this->view(array(

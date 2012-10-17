@@ -4,6 +4,7 @@ namespace Entvalley\AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Entvalley\AppBundle\Domain\Status;
+use HTMLPurifier;
 
 class Task
 {
@@ -15,10 +16,16 @@ class Task
     private $createdAt;
     private $lastModification;
     private $comments;
-    private $company;
+    private $project;
     private $lastStatus;
     private $status;
     private $numberComments = 0;
+    private $safeBody = '';
+
+    /**
+     * @var $htmlPurifier HTMLPurifier
+     */
+    private $htmlPurifier;
 
     public function __construct()
     {
@@ -30,16 +37,6 @@ class Task
     public function setAssignedTo($assignedTo = null)
     {
         $this->assignedTo = $assignedTo;
-    }
-
-    public function setCompany($company)
-    {
-        $this->company = $company;
-    }
-
-    public function getCompany()
-    {
-        return $this->company;
     }
 
     public function getAssignedTo()
@@ -152,5 +149,27 @@ class Task
     public function getNumberComments()
     {
         return $this->numberComments;
+    }
+
+    public function purifyHtmlTags()
+    {
+        if ($this->htmlPurifier) {
+            $this->safeBody = $this->htmlPurifier->purify($this->body);
+        }
+    }
+
+    public function setPurifier($htmlPurifier)
+    {
+        $this->htmlPurifier = $htmlPurifier;
+    }
+
+    public function setProject(Project $project)
+    {
+        $this->project = $project;
+    }
+
+    public function getProject()
+    {
+        return $this->project;
     }
 }

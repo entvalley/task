@@ -34,13 +34,14 @@
         <div class="navbar-inner">
             <div class="container">
                 <div class="topbar">
+                    <div class=" pull-left">
                     <img width="44" height="44" class="picture" src="{{ asset('/bundles/entvalleyapp/images/no-avatar.png') }}">
                     <a class="username" href="{{ path('app_homepage') }}">{{ app.user.username }}</a>
 
-                    <div class="summary">
+                    </div>
+                    <div class="summary pull-left">
                         <div class="done">
-                            <div class="arrow"></div>
-                            Recent
+                            <div class="arrow"></div>Recent
                         </div>
                         <div class="inprogress">
                             <div class="arrow"></div>
@@ -59,13 +60,33 @@
                 </div>
 
                 <div class="logo-inner pull-right">
-                    <img width="159" height="19" src="/bundles/entvalleyapp/images/logo-inner.png">
+                    <img width="79" height="19" src="/bundles/entvalleyapp/images/logo-inner.png">
+                </div>
+                <div class="project pull-right">
+
+
+
+                                <ul class="">
+                                  <li class="dropdown">
+                                    <a class="dropdown-toggle" id="drop4" role="button" data-toggle="dropdown" href="#">
+                                        Our First Project <span class="expand">H</span></a>
+                                    <ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
+                                      <li><a tabindex="-1" href="#">Another Our Project that we have</a></li>
+                                      <li><a tabindex="-1" href="#">Another action</a></li>
+                                      <li><a tabindex="-1" href="#">Something else here</a></li>
+                                    </ul>
+                                  </li>
+                                </ul> <!-- /tabs -->
+
+
+
                 </div>
                 <ul class="nav pull-right">
                     <li class="active"><a href="{{ path('app_task_list') }}">Tasks</a></li>
                     <!--li><a href="#">Setting</a></li-->
                     <li><a href="{{ path('fos_user_security_logout') }}">Log out</a></li>
                 </ul>
+
             </div>
         </div>
     </div>
@@ -106,17 +127,23 @@
 
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="{{ asset('bundles/entvalleyapp/js/bootstrap.min.js') }}"></script>
-<script src="{{ asset('bundles/entvalleyapp/js/date-en-US.js') }}"></script>
-<script src="{{ asset('bundles/entvalleyapp/js/jquery.autocomplete.js') }}"></script>
-<script src="{{ asset('bundles/entvalleyapp/js/knockout-2.1.0.debug.js') }}"></script>
-<script src="{{ asset('bundles/entvalleyapp/js/sammy-latest.min.js') }}"></script>
-<script src="{{ asset('bundles/entvalleyapp/js/jquery.scrollTo-min.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/bootstrap.min.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/date-en-US.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/jquery.autocomplete.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/knockout-2.1.0.debug.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/sammy-latest.min.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/jquery.scrollTo-min.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/jquery.iframe-auto-height.plugin.1.8.0.min.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/app.js') }}"></script>
-<script src="{{ asset('bundles/entvalleyapp/js/wysihtml5-0.3.0.js') }}"></script>
-<script src="{{ asset('bundles/entvalleyapp/js/prettify.js') }}"></script>
-<script src="{{ asset('bundles/entvalleyapp/js/bootstrap-wysihtml5.js') }}"></script>
-<script src="{{ asset('bundles/entvalleyapp/js/jquery.autosize.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/command.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/TaskListViewModel.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/Task.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/Comment.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/routes.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/wysihtml5-0.3.0.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/prettify.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/bootstrap-wysihtml5.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/jquery.autosize.js') }}"></script>
 <script type="text/javascript">
     $(prettyPrint);
 </script>

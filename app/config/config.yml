@@ -93,3 +93,10 @@ jms_serializer:
            FOSUB:
                namespace_prefix: "FOS\\UserBundle"
                path: "%kernel.root_dir%/serializer/FOSUB"
+
+exercise_html_purifier:
+    default:
+        Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
+        Core.Encoding: 'UTF-8'
+        Core.EscapeInvalidTags: true
+        HTML.Allowed: 'a[href],b,i,u,li,ul,blockquote,ol,br,h1,h2,h3,img[src]'

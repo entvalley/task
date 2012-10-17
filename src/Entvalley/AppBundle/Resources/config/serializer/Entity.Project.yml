@@ -1,0 +1,6 @@
+Entvalley\AppBundle\Entity\Project:
+    properties:
+        id:
+            groups: [summary]
+        name:
+            groups: [summary]

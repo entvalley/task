@@ -10,3 +10,5 @@ Entvalley\AppBundle\Entity\Comment:
             groups: [details]
         statusChange:
             groups: [details]
+        task:
+            exclude: true
