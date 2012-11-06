@@ -2,31 +2,38 @@ app_homepage:
     pattern:  /
     defaults: { _controller: entvalley.task_controller:indexAction }
 
-app_task_list:
-    pattern:  /tasks/{filterByType}
-    defaults: { _controller: entvalley.task_controller:indexAction, filterByType: null }
-    options:
-        expose: true
-
-app_task_create:
-    pattern:  /task/create
-    defaults: { _controller: entvalley.task_controller:createAction }
-
 app_task_view:
-    pattern:  /task/{id}
+    pattern: /{project}-{project_name}/tasks/{id}
     defaults: { _controller: entvalley.task_controller:viewAction }
     options:
         expose: true
     requirements:
         id: \d+
+        project: \d+
+        project_name: "[^/]+"
+
+app_task_list:
+    pattern:  /{project}-{project_name}/tasks/{filterByType}
+    defaults: { _controller: entvalley.task_controller:indexAction, filterByType: null }
+    options:
+        expose: true
+    requirements:
+        project: \d+
+        project_name: "[^/]+"
+
+app_task_create:
+    pattern:  /task/create
+    defaults: { _controller: entvalley.task_controller:createAction }
 
 app_task_edit:
-    pattern:  /task/{id}/edit
+    pattern: /{project}-{project_name}/tasks/{id}/edit
     defaults: { _controller: entvalley.task_controller:editAction }
     options:
         expose: true
     requirements:
         id: \d+
+        project: \d+
+        project_name: "[^/]+"
 
 app_task_delete:
     pattern:  /task/{id}/delete
@@ -43,3 +50,7 @@ app_command_list:
 app_command_send:
     pattern:  /command/send
     defaults: { _controller: entvalley.command_controller:sendAction }
+
+app_project_create:
+    pattern:  /projects/create
+    defaults: { _controller: entvalley.project_controller:createAction }

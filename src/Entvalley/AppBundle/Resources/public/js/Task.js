@@ -11,7 +11,7 @@
         this.assignedTo = ko.observable(data.assigned_to);
         this.status = ko.observable(data.status);
         this.date = ko.observable(Date.parse(data.created_at));
-        this.url = Routing.generate('app_task_view', {id: this.id});
+        this.url = Routing.generate('app_task_view', {id: this.id, project: data.project.id, project_name: App.Project.CanonicalName});
         this.comments = ko.observableArray([]);
 
         var numberComments = data.number_comments || 0;
@@ -65,14 +65,16 @@
 
         this.editTask = function () {
             $.ajax(Routing.generate('app_task_edit', {
-                id: self.id
+                id: self.id,
+                project: App.Project.Id,
+                project_name: App.Project.CanonicalName
             }), {
                 dataType: "script"
             });
 
             $('#task-' + self.id).one('click', '.cancel', function(e) {
                 e.preventDefault();
-                App.UI.taskListViewModel.switchToTask(self.id);
+                App.UI.taskListViewModel.switchToTask( self.id);
             });
         };
     };

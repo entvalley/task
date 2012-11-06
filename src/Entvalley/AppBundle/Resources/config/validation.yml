@@ -1,0 +1,4 @@
+Entvalley\AppBundle\Entity\Project:
+    properties:
+        name:
+            - NotBlank: { message: "A name would help you to find the project later" }

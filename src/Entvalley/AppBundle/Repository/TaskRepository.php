@@ -8,28 +8,29 @@ use Entvalley\AppBundle\Entity\User;
 
 class TaskRepository extends EntityRepository
 {
-    public function findNewOrAssignedTo(User $user)
+    public function findWithFilterNewOrAssignedTo(TaskFilter $filter, User $user)
     {
         $query = $this->getEntityManager()
             ->createQuery("SELECT t
                              FROM EntvalleyAppBundle:Task t
                              JOIN t.project p
                             WHERE (t.assignedTo IS NULL OR t.assignedTo = :user)
-                                  AND p.company = :company_id
+                                  AND p.company = :company_id AND p.id = :project_id
                             ORDER BY t.createdAt DESC")
         ;
 
         $query->setParameter('user', $user->getId());
         $query->setParameter('company_id', $user->getCompany()->getId());
+        $query->setParameter('project_id', $filter->getWithinProject()->getId());
         return $query->getResult();
     }
 
-    public function findWithFilterForCompany(TaskFilter $filter, $company)
+    public function findWithFilterByCompany(TaskFilter $filter, $company)
     {
         $statuses = $filter->getStatuses();
         $qb = $this->createQueryBuilder('t');
 
-        $companyExpr = $qb->expr()->eq('t.company', ':company_id');
+        $companyExpr = $qb->expr()->eq('p.company', ':company_id');
 
         if (empty($statuses)) {
            $qb->where($companyExpr);
@@ -40,9 +41,8 @@ class TaskRepository extends EntityRepository
                 ));
         }
 
-
         $qb->orderBy('t.createdAt', 'DESC');
-
+        $qb->join('t.project', 'p');
         $query = $qb->getQuery();
         $query->setParameter('company_id', $company->getId());
         return $query->getResult();

@@ -3,6 +3,7 @@
 namespace Entvalley\AppBundle\Controller;
 
 use Entvalley\AppBundle\Domain\TaskFilter;
+use Entvalley\AppBundle\Entity\Project;
 use Entvalley\AppBundle\Service\ContentNegotiator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
@@ -11,14 +12,12 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Entvalley\AppBundle\Domain\UserContext;
 use JMS\SerializerBundle\Serializer\SerializerInterface;
-use Entvalley\AppBundle\Domain\Status;
 use Entvalley\AppBundle\Component\HttpFoundation\JsonResponse;
 use Entvalley\AppBundle\Domain\JsonEncoder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Entvalley\AppBundle\Entity\Factory\TaskFactory;
 use Entvalley\AppBundle\Form\TaskType;
 use Entvalley\AppBundle\Entity\Task;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class TaskController extends Controller
 {
@@ -46,34 +45,43 @@ class TaskController extends Controller
     }
 
     /**
+     * @param Project $project
      * @param string $filter filter by task status
      * @return \Entvalley\AppBundle\Component\HttpFoundation\JsonResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction($filterByType = null)
+    public function indexAction(Project $project, $filterByType = null)
     {
         $user = $this->userContext->getUser();
 
         $em = $this->doctrine->getManager();
 
         $taskRepository = $em->getRepository('Entvalley\AppBundle\Entity\Task');
-        if (!is_null($filterByType)) {
-            $taskFilter = new TaskFilter();
-            $taskFilter->thatAre($filterByType);
-            $tasks = $taskRepository->findWithFilterForCompany($taskFilter, $user->getCompany());
-        } else {
-            $tasks = $taskRepository->findNewOrAssignedTo($user);
+
+        if (!$project->belongsToCompany($user->getCompany())) {
+            throw new NotFoundHttpException();
         }
 
+        $taskFilter = new TaskFilter();
+        $taskFilter->withinProject($project);
+        if (!is_null($filterByType)) {
+            $taskFilter->thatAre($filterByType);
+            $tasks = $taskRepository->findWithFilterByCompany($taskFilter, $user->getCompany());
+        } else {
+            $tasks = $taskRepository->findWithFilterNewOrAssignedTo($taskFilter, $user);
+        }
+
+
         if ($this->request->isXmlHttpRequest()) {
-            $this->serializer->setGroups(array('summary'));
+            $this->serializer->setGroups(['summary']);
             return JsonResponse::createWithSerializer($this->serializer, array_map(function ($task) {
                         $task->setPurifier($this->htmlPurifier);
                         return $task;
                     }, $tasks));
         } else {
-            return $this->view(array(
-                'tasks' => $tasks
-            ));
+            return $this->view([
+                'tasks' => $tasks,
+                'project' => $project
+            ]);
         }
     }
 
@@ -99,10 +107,10 @@ class TaskController extends Controller
             }
         }
 
-        return $this->view(array(
+        return $this->view([
             'form'  => $form->createView(),
             'task' => $task,
-        ));
+        ]);
     }
 
     public function editAction(Task $task)
@@ -120,23 +128,25 @@ class TaskController extends Controller
                 $this->session->getFlashBag()->add('success', 'A new task has been saved!');
 
                 return $this->redirect($this->url('app_task_view', [
-                            'id' => $task->getId()
+                            'id' => $task->getId(),
+                            'project' => $task->getProject()->getId(),
+                            'project_name' => $task->getProject()->getCanonicalName()
                         ]));
             }
         }
 
         $result = $this->viewContent(
-            array(
+            [
                 'form' => $form->createView(),
-                'task' => $task
-            )
+                'task' => $task,
+            ]
         );
 
         return $this->javascript($this->viewContent(
-            array(
+            [
                 'task' => $task,
                 'result' => JsonEncoder::encode($result)
-            ),
+            ],
             'js.twig'
         ));
     }
@@ -148,13 +158,14 @@ class TaskController extends Controller
     public function viewAction(Task $task)
     {
         if ($this->request->isXmlHttpRequest()) {
-            $this->serializer->setGroups(array('details', 'summary'));
+            $this->serializer->setGroups(['details', 'summary']);
             $task->setPurifier($this->htmlPurifier);
             return JsonResponse::createWithSerializer($this->serializer, $task);
         } else {
-            return $this->view(array(
-                'task' => $task
-            ));
+            return $this->view([
+                'task' => $task,
+                'project' => $task->getProject()
+            ]);
         }
     }
 

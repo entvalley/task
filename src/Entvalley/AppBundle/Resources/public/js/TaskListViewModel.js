@@ -25,7 +25,11 @@ jQuery(function ($) {
             });
 
             self.goToTask = function (task) {
-                window.location = Routing.generate('app_task_view', { id: task.id });
+                window.history.pushState(null, '', Routing.generate('app_task_view', {
+                    id: task.id,
+                    project: App.Project.Id,
+                    project_name: App.Project.CanonicalName
+                }));
             };
 
             self.addTask = function (data) {
@@ -52,7 +56,10 @@ jQuery(function ($) {
                 if (self.chosenTask()) {
                     self.lastVisited = self.chosenTask().id;
                 }
-                window.location = Routing.generate('app_task_list');
+                window.history.pushState(null, '', Routing.generate('app_task_list', {
+                    project: App.Project.Id,
+                    project_name: App.Project.CanonicalName
+                }));
             };
 
             self.addTaskComment = function (data) {
@@ -82,7 +89,11 @@ jQuery(function ($) {
 
 
             self.switchToTask = function (id) {
-                $.get(Routing.generate('app_task_view', { id: id }), {}, function (data) {
+                $.get(Routing.generate('app_task_view', {
+                        id: id,
+                        project: App.Project.Id,
+                        project_name: App.Project.CanonicalName
+                    }), {}, function (data) {
                     App.UI.hideStatus();
                     self.chosenTask(new App.Model.Task(data));
                     self.command.setContext('task', id);

@@ -1,0 +1,15 @@
+<ul>
+    <li class="dropdown">
+        <a class="dropdown-toggle" id="drop4" role="button" data-toggle="dropdown" href="{{ path('app_task_list', { project: current_project.id, project_name: current_project.canonicalName }) }}">
+            {{ current_project.name }} <span class="expand">H</span></a>
+        <ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
+            {% for project in projects %}
+                {% if project.name != current_project.name %}
+                    <li><a  href="{{ path('app_task_list', { project: project.id, project_name: project.canonicalName }) }}">{{ project.name }}</a></li>
+                {% endif %}
+            {% endfor %}
+            <li class="divider"></li>
+            <li><a href="#" onclick="App.UI.createProjectWorkspace();">Start a new project</a></li>
+        </ul>
+    </li>
+</ul>

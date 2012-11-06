@@ -1,0 +1,1 @@
+window.location = {{ path('app_task_list', { project: project.id, project_name: project.canonicalName })|json_encode|raw }};

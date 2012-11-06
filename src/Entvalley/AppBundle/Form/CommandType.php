@@ -19,6 +19,9 @@ class CommandType extends AbstractType
             ->add('contextType', 'hidden', array('attr' => array(
                 'data-bind' => 'value: contextType'
             )))
+            ->add('contextProject', 'hidden', array('attr' => array(
+                'data-bind' => 'value: contextProject'
+            )))
         ;
     }
 

@@ -6,14 +6,19 @@ class Project
 {
     private $id;
     private $name;
-    private $inprogressNumber;
-    private $totalNumber;
-    private $unresolvedNumber;
+    private $inprogressNumber = 0;
+    private $totalNumber = 0;
+    private $unresolvedNumber = 0;
     private $createdAt;
 
-    public function __construct()
+    const MAX_CANONICAL_NAME_LENGTH = 20;
+
+    public function __construct($id = null)
     {
         $this->createdAt = new \DateTime();
+        if ($id) {
+            $this->id = $id;
+        }
     }
 
     /**
@@ -85,5 +90,23 @@ class Project
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getCanonicalName()
+    {
+        return $this->generateCanonicalName();
+    }
+
+    public function belongsToCompany(Company $company)
+    {
+        return $company->equals($this->company);
+    }
+
+    private function generateCanonicalName()
+    {
+        $cleanName = preg_replace('/[^a-zа-яё0-9 _-]/ui', '', $this->getName());
+        $finalName = preg_replace('/ {1,}/', '-', mb_strtolower($cleanName));
+
+        return substr(trim($finalName, '-'), 0, self::MAX_CANONICAL_NAME_LENGTH);
     }
 }

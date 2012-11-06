@@ -48,6 +48,11 @@ jQuery(function ($) {
                 $('#status').fadeOut();
             },
 
+            createProjectWorkspace: function () {
+                App.UI._toggle('#page');
+                App.UI._toggle('#new_project');
+            },
+
             showCommandResult: function (text) {
                 $('.command_tooltip').html(text).slideDown(300);
 
@@ -70,7 +75,7 @@ jQuery(function ($) {
             initEvents: function () {
                 var me = this;
 
-                $('.command_form').submit(function (e) {
+                $('.command_form').on('submit', function (e) {
                     var $form = $(this);
 
                     App.UI.showStatus('Sending...');
@@ -103,18 +108,26 @@ jQuery(function ($) {
                 });
 
 
-                $('.sign-in-link').click(function () {
+                $('.sign-in-link').on('click', function () {
                     $('.sign-up-block').fadeOut(200, function () {
                         $('.sign-in-block').fadeIn(200);
                     });
                 });
 
-                $('.sign-up-link').click(function () {
+                $('.sign-up-link').on('click', function () {
                     $('.sign-in-block').fadeOut(200, function () {
                         $('.sign-up-block').fadeIn(200);
                     });
                 });
 
+                $('button[data-role~="cancel"]').on('click', function () {
+                    App.UI._toggle('#page');
+                    var container = $(this).closest('div[data-behaviour~="expandable"]');
+                    container.find('form').each(function () {
+                        this.reset();
+                    });
+                    App.UI._toggle(container);
+                });
             },
 
             initEditBehaviours: function () {
@@ -172,6 +185,14 @@ jQuery(function ($) {
                         });
                     }
                 });
+            },
+
+            _toggle: function (id) {
+                if($(id).is(':hidden')) {
+                    $(id).fadeToggle();
+                } else {
+                    $(id).hide();
+                }
             }
         };
 

@@ -25,17 +25,19 @@ class CreateCommand extends AbstractCommand
     {
         $em = $this->doctrine->getManager();
 
+        $project = $em->getRepository('EntvalleyAppBundle:Project')->findOneById($this->source->getContextProject());
+
         $task = new Task;
         $task->setCreatedAt(new \DateTime());
         $task->setAuthor($this->userContext->getUser());
         $task->setBodyWithTitle($content);
-        $task->setCompany($this->userContext->getUser()->getCompany());
+        $task->setProject($project);
 
         $em->persist($task);
 
-        return array(
+        return [
             'task' => $task
-            );
+            ];
     }
 
     public function getName()

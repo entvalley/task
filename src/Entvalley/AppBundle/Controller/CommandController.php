@@ -58,17 +58,17 @@ class CommandController extends Controller
             return $this->createResponse($this->_prepareCommandsResponse($commandsResults));
         }
 
-        return $this->view(array(
+        return $this->view([
             'form'  => $form->createView(),
-        ));
+        ]);
     }
 
     public function formAction()
     {
         $form = $this->formFactory->create(new CommandType(), new CommandSource());
-        return $this->view(array(
+        return $this->view([
             'form' => $form->createView(),
-        ));
+        ]);
     }
 
     private function _prepareCommandsResponse($commandsResults)
@@ -85,9 +85,9 @@ class CommandController extends Controller
                 }
 
                 if (empty($commandResult)) {
-                    $finalResponse .= $this->renderView('EntvalleyAppBundle:Command:executed/_failed.html.twig', array(
+                    $finalResponse .= $this->renderView('EntvalleyAppBundle:Command:executed/_failed.html.twig', [
                         'command' => $command
-                    ));
+                    ]);
                 } else {
                     $finalResponse .= $this->renderView('EntvalleyAppBundle:Command:executed/' . $command . '.html.twig', $commandResult);
                 }

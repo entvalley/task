@@ -118,6 +118,10 @@
             <argument type="service" id="exercise_html_purifier.default"/>
         </service>
 
+        <service id="entvalley.project_controller" class="Entvalley\AppBundle\Controller\ProjectController" scope="request" parent="entvalley.controller">
+            <argument type="service" id="context.company"/>
+        </service>
+
         <service id="entvalley.command_controller" class="Entvalley\AppBundle\Controller\CommandController" scope="request" parent="entvalley.controller">
             <argument type="service" id="serializer"/>
             <argument type="service" id="entvalley.command_manager"/>

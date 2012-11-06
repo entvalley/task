@@ -22,7 +22,7 @@ class CommandInterpreter
         reset($matches);
 
         if ($this->commandNeedsToBeGuessed($matches)) {
-            $result = array_merge($result, $this->guessCommand($source, current($matches)));
+            $result = $this->guessCommand($source, current($matches));
         }
 
         while (next($matches)) {

@@ -7,6 +7,7 @@ class CommandSource
     private $text;
     private $contextId = 0;
     private $contextType;
+    private $contextProject;
 
     public function __construct($text = null)
     {
@@ -41,5 +42,15 @@ class CommandSource
     public function getText()
     {
         return $this->text;
+    }
+
+    public function setContextProject($contextProject)
+    {
+        $this->contextProject = (int)$contextProject;
+    }
+
+    public function getContextProject()
+    {
+        return $this->contextProject;
     }
 }

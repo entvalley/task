@@ -8,6 +8,13 @@ class Company
     private $name;
     private $owner;
 
+    public function __construct($id = null)
+    {
+        if ($id) {
+            $this->id = $id;
+        }
+    }
+
     public function setOwner($owner)
     {
         $this->owner = $owner;
@@ -28,13 +35,13 @@ class Company
         return $this->name;
     }
 
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
     public function getId()
     {
         return $this->id;
+    }
+
+    public function equals(Company $another = null)
+    {
+        return $another !== null && $another->getId() == $this->id;
     }
 }

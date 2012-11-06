@@ -4,3 +4,5 @@ Entvalley\AppBundle\Entity\Project:
             groups: [summary]
         name:
             groups: [summary]
+        canonicalName:
+            groups: [summary]

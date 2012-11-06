@@ -45,44 +45,28 @@
                         </div>
                         <div class="inprogress">
                             <div class="arrow"></div>
-                            <a href="{{ path('app_task_list', { filter: 'inprogress' }) }}">
+                            <a href="{{ path('app_task_list', { project: project.id, project_name: project.canonicalName, filterByType: 'inprogress' }) }}">
                                 <span data-bind="text: assignedToMe().length">0</span> In progress
                             </a>
                         </div>
                         <div class="unresolved">
                             <div class="arrow"></div>
-                            <a href="{{ path('app_task_list', { filter: 'unresolved' }) }}">
+                            <a href="{{ path('app_task_list', { project: project.id, project_name: project.canonicalName, filterByType: 'unresolved' }) }}">
                                 <span data-bind="text: unassigned().length">0</span> Unresolved
                             </a>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="logo-inner pull-right">
                     <img width="79" height="19" src="/bundles/entvalleyapp/images/logo-inner.png">
                 </div>
+
                 <div class="project pull-right">
-
-
-
-                                <ul class="">
-                                  <li class="dropdown">
-                                    <a class="dropdown-toggle" id="drop4" role="button" data-toggle="dropdown" href="#">
-                                        Our First Project <span class="expand">H</span></a>
-                                    <ul id="menu1" class="dropdown-menu" role="menu" aria-labelledby="drop4">
-                                      <li><a tabindex="-1" href="#">Another Our Project that we have</a></li>
-                                      <li><a tabindex="-1" href="#">Another action</a></li>
-                                      <li><a tabindex="-1" href="#">Something else here</a></li>
-                                    </ul>
-                                  </li>
-                                </ul> <!-- /tabs -->
-
-
-
+                    {% render 'entvalley.project_controller:navigationAction' with { project: project } %}
                 </div>
                 <ul class="nav pull-right">
-                    <li class="active"><a href="{{ path('app_task_list') }}">Tasks</a></li>
+                    <li class="active"><a href="{{ path('app_task_list', { project: project.id, project_name: project.canonicalName }) }}">Tasks</a></li>
                     <!--li><a href="#">Setting</a></li-->
                     <li><a href="{{ path('fos_user_security_logout') }}">Log out</a></li>
                 </ul>
@@ -92,7 +76,16 @@
     </div>
 </div>
 
-<div class="container">
+
+<div class="container" id="new_project" data-behaviour="expandable" style="width: 570px; display: none">
+    <div class="row">
+        <div class="span6">
+            {% render 'entvalley.project_controller:createAction' %}
+        </div>
+    </div>
+</div>
+
+<div class="container" id="page" style="">
 
     <div class="row">
         <div class="span12">
@@ -125,9 +118,16 @@
         id: {{ app.user.id }}
     };
 
+    App.Project = {
+        CanonicalName: {{ project.canonicalName|json_encode|raw }},
+        Id: {{ project.id }}
+    };
+
+    App.Project.FullCanonicalName = App.Project.Id + '-' + App.Project.CanonicalName;
+
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="{{ asset('bundles/entvalleyapp/js/vendor/bootstrap.min.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/bootstrap.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/date-en-US.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/jquery.autocomplete.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/knockout-2.1.0.debug.js') }}"></script>

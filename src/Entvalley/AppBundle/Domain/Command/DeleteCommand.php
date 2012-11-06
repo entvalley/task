@@ -24,7 +24,7 @@ class DeleteCommand extends AbstractCommand
             return array();
         }
 
-      //  $em->remove($task);
+        $em->remove($task);
 
         return array('removedId' => (int)$removedId);
     }
