@@ -74,7 +74,7 @@ class TaskController extends Controller
         if ($this->request->isXmlHttpRequest()) {
             $this->serializer->setGroups(['summary']);
             return JsonResponse::createWithSerializer($this->serializer, array_map(function ($task) {
-                        $task->setPurifier($this->htmlPurifier);
+                        $task->setHtmlPurifier($this->htmlPurifier);
                         return $task;
                     }, $tasks));
         } else {
@@ -159,7 +159,7 @@ class TaskController extends Controller
     {
         if ($this->request->isXmlHttpRequest()) {
             $this->serializer->setGroups(['details', 'summary']);
-            $task->setPurifier($this->htmlPurifier);
+            $task->setHtmlPurifier($this->htmlPurifier);
             return JsonResponse::createWithSerializer($this->serializer, $task);
         } else {
             return $this->view([

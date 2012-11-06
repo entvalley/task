@@ -14,7 +14,6 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Entvalley\AppBundle\Form\CommandType;
 use Entvalley\AppBundle\Domain\Command\CommandSource;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Entvalley\AppBundle\Entity\User;
 
 class CommandController extends Controller
 {

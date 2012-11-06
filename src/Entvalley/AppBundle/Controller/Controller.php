@@ -178,7 +178,7 @@ class Controller
      */
     public function view(array $parameters = array(), Response $response = null, $extension = '')
     {
-        return $this->render($this->resolveViewName($extension), $parameters);
+        return $this->render($this->resolveViewName($extension), $parameters, $response);
     }
 
     /**

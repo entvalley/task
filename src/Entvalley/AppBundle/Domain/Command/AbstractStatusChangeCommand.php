@@ -5,8 +5,6 @@ namespace Entvalley\AppBundle\Domain\Command;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use Entvalley\AppBundle\Domain\UserContext;
 use Entvalley\AppBundle\Entity\Comment;
-use Entvalley\AppBundle\Entity\User;
-use Entvalley\AppBundle\Domain\Status;
 use Entvalley\AppBundle\Entity\Task;
 
 abstract class AbstractStatusChangeCommand extends AbstractCommand
@@ -36,9 +34,11 @@ abstract class AbstractStatusChangeCommand extends AbstractCommand
     public function execute($content)
     {
         $em = $this->doctrine->getManager();
+
+        /** @var $task Task */
         $task = $em->find('EntvalleyAppBundle:Task', $updatedId = $this->source->getContextId());
         if (!$task) {
-            return array();
+            return [];
         }
 
         $task->setStatus($this->userContext->getUser(), $this->getNewStatus());
@@ -54,10 +54,10 @@ abstract class AbstractStatusChangeCommand extends AbstractCommand
         $em->persist($status);
         $em->persist($comment);
 
-        return array(
+        return [
             'comment' => $comment,
             'updatedId' => (int)$updatedId,
-        );
+        ];
     }
 
     public function onStatusChange($task)

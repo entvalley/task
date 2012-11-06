@@ -2,7 +2,6 @@
 
 namespace Entvalley\UserBundle\Controller;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\Security\Core\SecurityContext;
 use FOS\UserBundle\Controller\SecurityController as BaseSecurityController;
 

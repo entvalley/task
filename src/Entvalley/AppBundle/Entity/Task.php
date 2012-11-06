@@ -115,6 +115,12 @@ class Task
         return $this->comments;
     }
 
+    /**
+     * Splits the provided text by a new line character and interpret the first line as
+     * a task title and the rest as a task body
+     *
+     * @param $text
+     */
     public function setBodyWithTitle($text)
     {
         $textParts = preg_split("~(\n|\r)~", $text, 2);
@@ -123,6 +129,14 @@ class Task
         $this->body = isset($textParts[1]) ? trim($textParts[1]) : "";
     }
 
+    /**
+     * Changes the status of the task. All status changes are recorded and must belong to a
+     * specific user.
+     *
+     * @see Task::getLastStatus
+     * @param User $whoUpdated
+     * @param $status
+     */
     public function setStatus(User $whoUpdated, $status)
     {
         $statusChange = new StatusChange();
@@ -151,6 +165,12 @@ class Task
         return $this->numberComments;
     }
 
+    /**
+     * Serializer callback to generate a body with safe HTML tags which can be displayed
+     * in the browser. Requires a link to html purifier service.
+     *
+     * @see Task::setHtmlPurifier
+     */
     public function purifyHtmlTags()
     {
         if ($this->htmlPurifier) {
@@ -158,7 +178,7 @@ class Task
         }
     }
 
-    public function setPurifier($htmlPurifier)
+    public function setHtmlPurifier($htmlPurifier)
     {
         $this->htmlPurifier = $htmlPurifier;
     }

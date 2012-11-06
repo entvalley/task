@@ -9,6 +9,7 @@ class StatusChange
     private $status;
     private $task;
     private $createdAt;
+    private $updatedAt;
 
     public function __construct()
     {

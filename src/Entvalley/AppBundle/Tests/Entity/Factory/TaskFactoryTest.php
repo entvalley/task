@@ -4,7 +4,6 @@ namespace Entvalley\AppBundle\Tests\Entity\Factory;
 
 use Entvalley\AppBundle\Entity\Factory\TaskFactory;
 use Entvalley\AppBundle\Entity\User;
-use Entvalley\AppBundle\Entity\Task;
 use Entvalley\AppBundle\Domain\Status;
 
 class TaskFactoryTest extends \PHPUnit_Framework_TestCase

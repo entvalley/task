@@ -4,7 +4,7 @@ namespace Entvalley\AppBundle\Domain\Command;
 
 class CommandRegistry
 {
-    private $registry = array();
+    private $registry = [];
 
     public function register(Command $command)
     {

@@ -6,15 +6,15 @@ use Entvalley\AppBundle\Entity\Project;
 
 class TaskFilter
 {
-    private $map = array(
-        'unresolved' => array(
+    private $map = [
+        'unresolved' => [
             Status::UNASSIGNED
-        ),
-        'inprogress' => array(
+        ],
+        'inprogress' => [
             Status::REOPENED,
             Status::ACCEPTED
-        )
-    );
+        ]
+    ];
 
     private $project = null;
     private $statusGroup = '';

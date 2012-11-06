@@ -21,12 +21,12 @@ class DeleteCommand extends AbstractCommand
         $em = $this->doctrine->getManager();
         $task = $em->find('EntvalleyAppBundle:Task', $removedId = $this->source->getContextId());
         if (!$task) {
-            return array();
+            return [];
         }
 
         $em->remove($task);
 
-        return array('removedId' => (int)$removedId);
+        return ['removedId' => (int)$removedId];
     }
 
     public function getName()

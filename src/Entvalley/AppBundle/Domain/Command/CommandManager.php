@@ -29,13 +29,12 @@ class CommandManager
     {
         $commands = $this->registry->getAll();
 
-
-        $configs = array();
+        $configs = [];
 
         foreach ($commands as $command) {
-            $configs[Command::PREFIX . $command->getName()] = array(
+            $configs[Command::PREFIX . $command->getName()] = [
                 'is_visible' => $command->isVisible()
-            );
+            ];
         }
 
         return $configs;

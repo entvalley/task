@@ -2,8 +2,6 @@
 
 namespace Entvalley\AppBundle\Domain\Command;
 
-use RuntimeException;
-
 class CommandInterpreter
 {
     private $registry;
@@ -15,7 +13,7 @@ class CommandInterpreter
 
     public function interpret(CommandSource $source)
     {
-        $result = array();
+        $result = [];
 
         $matches = $this->splitCommands($source->getText());
 
@@ -42,7 +40,7 @@ class CommandInterpreter
 
     private function guessCommand(CommandSource $source, $content)
     {
-        $result = array();
+        $result = [];
         foreach ($this->registry->getAll() as $name => $command) {
             if ($command->isGuessableBySource($source)) {
                 $command->setSource($source);

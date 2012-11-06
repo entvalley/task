@@ -41,9 +41,9 @@ class CommentCommand extends AbstractCommand
 
         $em->persist($comment);
 
-        return array(
+        return [
             'comment' => $comment
-            );
+            ];
     }
 
     public function getName()
