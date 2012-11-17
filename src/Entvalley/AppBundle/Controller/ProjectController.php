@@ -3,6 +3,7 @@
 namespace Entvalley\AppBundle\Controller;
 
 use Entvalley\AppBundle\Domain\CompanyContext;
+use Entvalley\AppBundle\Domain\UserContext;
 use Entvalley\AppBundle\Form\ProjectType;
 use Entvalley\AppBundle\Entity\Project;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,10 +22,11 @@ class ProjectController extends Controller
         SessionInterface $session,
         RegistryInterface $doctrine,
         FormFactoryInterface $formFactory,
+        UserContext $userContext,
         CompanyContext $companyContext)
     {
         $this->companyContext = $companyContext;
-        parent::__construct($request, $router, $templating, $session, $doctrine, $formFactory);
+        parent::__construct($request, $router, $templating, $session, $doctrine, $formFactory, $userContext);
     }
 
     public function navigationAction($project = null)
@@ -32,11 +34,23 @@ class ProjectController extends Controller
         $em = $this->doctrine->getManager();
         $projectRepository = $em->getRepository('Entvalley\AppBundle\Entity\Project');
 
-        $projects = $projectRepository->findByCompany($this->companyContext->getCompany());
+        $projects = $projectRepository->findByUser($this->userContext->getUser());
 
         return $this->view([
                 'projects' => $projects,
                 'current_project' => $project
+            ]);
+    }
+
+    public function indexAction()
+    {
+        $em = $this->doctrine->getManager();
+        $projectRepository = $em->getRepository('Entvalley\AppBundle\Entity\Project');
+
+        $projects = $projectRepository->findByUser($this->userContext->getUser());
+
+        return $this->view([
+                'projects' => $projects
             ]);
     }
 
@@ -55,7 +69,6 @@ class ProjectController extends Controller
             if ($form->isValid()) {
                 $em->persist($project);
                 $em->flush();
-                $this->session->getFlashBag()->add('success', 'A new project has been saved!');
 
                 return $this->javascript(
                     $this->renderView('EntvalleyAppBundle:Project:create_success.html.twig', ['project' => $project])

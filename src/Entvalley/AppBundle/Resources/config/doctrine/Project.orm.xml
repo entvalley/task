@@ -12,9 +12,6 @@
 
         <field name="name" length="30" />
 
-        <field name="unresolvedNumber" type="integer" />
-        <field name="totalNumber" type="integer" />
-        <field name="inprogressNumber" type="integer" />
         <field name="createdAt" type="datetime" />
 
         <many-to-one target-entity="Entvalley\AppBundle\Entity\Company" field="company" />

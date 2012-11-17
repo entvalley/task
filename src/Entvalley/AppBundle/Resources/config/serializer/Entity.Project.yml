@@ -6,3 +6,12 @@ Entvalley\AppBundle\Entity\Project:
             groups: [summary]
         canonicalName:
             groups: [summary]
+        inprogressNumber:
+            groups: [summary]
+        unresolvedNumber:
+            groups: [summary]
+        totalNumber:
+            groups: [summary]
+
+    callback_methods:
+        pre_serialize: [loadStats]

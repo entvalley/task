@@ -14,7 +14,7 @@
 
         <field name="numberComments" nullable="true" type="integer" />
         <field name="status" type="smallint" />
-        <field name="body" type="text" />
+        <field name="body" type="text" nullable="true" />
         <field name="createdAt" type="datetime" />
         <field name="lastModification" nullable="true" type="datetime" />
 
@@ -29,6 +29,10 @@
         <many-to-one field="author" target-entity="Entvalley\AppBundle\Entity\User" />
         <many-to-one field="assignedTo" target-entity="Entvalley\AppBundle\Entity\User" />
         <many-to-one field="project" target-entity="Entvalley\AppBundle\Entity\Project" />
+
+        <indexes>
+            <index columns="project_id,assignedTo_id,status"/>
+        </indexes>
 
     </entity>
 </doctrine-mapping>

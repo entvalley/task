@@ -45,6 +45,14 @@ body {
 
 }
 
+.hidden-link {
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+.remove-link {
+    color: #CC0000;
+}
 
 .navbar {
     .topbar {
@@ -174,38 +182,43 @@ body {
         display: table-cell;
     }
 
-    .actions-header {
-        position: absolute;
-        background-image: url(/bundles/entvalleyapp/images/task-status-background.png);
-        height: 16px;
-        font-size: 12px;
-        padding: 4px 8px;
-        margin-bottom: -30px;
-        color: white;
-        font-family: Arial, sans-serif;
-        top: -44px;
-        right: -16px;
-        display: table-cell;
-
-        ul {
-            list-style-type: none;
-        }
-        .action {
-            padding: 0px 10px;
-            background-color: #0f76d5;
-            float: left;
-            font-size: 11px;
-            .border-radius(4px 4px 0 0);
-        }
-
-        .action a {
-            color: white;
-        }
-    }
 
     .status-notify {
         position: fixed;
         top: 66px;
+    }
+}
+
+.task-list {
+    position: relative;
+}
+
+.actions-header {
+    position: absolute;
+    background-image: url(/bundles/entvalleyapp/images/task-status-background.png);
+    height: 16px;
+    font-size: 12px;
+    padding: 4px 8px;
+    margin-bottom: -30px;
+    color: white;
+    font-family: Arial, sans-serif;
+    top: -44px;
+    right: -16px;
+    display: table-cell;
+
+    ul {
+        list-style-type: none;
+    }
+    .action {
+        padding: 0px 10px;
+        background-color: #0f76d5;
+        float: left;
+        font-size: 11px;
+        .border-radius(4px 4px 0 0);
+    }
+
+    .action a {
+        color: white;
     }
 }
 
@@ -732,4 +745,22 @@ label {
 
 form .help {
     font-size: 11px;
+}
+
+.projects_row {
+    .item {
+        border: 0px solid #e0e0e0;
+        padding: 4px 0px;
+        margin-bottom: 20px;
+        .box-shadow(1px 1px 1px rgba(0, 0, 0, 0.15));
+    }
+
+    .create_new {
+        text-align: center;
+        .icon {
+            font-size: 40px;
+            padding: 20px 0;
+            font-weight: bold;
+        }
+    }
 }

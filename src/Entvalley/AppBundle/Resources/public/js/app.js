@@ -73,7 +73,7 @@ jQuery(function ($) {
             },
 
             initEvents: function () {
-                var me = this;
+                var that = this;
 
                 $('.command_form').on('submit', function (e) {
                     var $form = $(this);
@@ -85,18 +85,18 @@ jQuery(function ($) {
                         .addClass('disabled')
                         .html('Sending...');
 
-                    $('#' + me.inputControlId).prop('readonly', true);
+                    $('#' + that.inputControlId).prop('readonly', true);
 
                     $.post($form.prop('action'), $form.serialize(), undefined, 'script')
                         .success(function () {
                             App.UI.hideStatus();
-                            $('#' + me.inputControlId).val('');
+                            $('#' + that.inputControlId).val('');
                         })
                         .error(function () {
                             App.UI.showStatus('Something is broken ;(', true);
                         })
                         .complete(function () {
-                            $('#' + me.inputControlId).prop('readonly', false);
+                            $('#' + that.inputControlId).prop('readonly', false);
                             $('#command_send')
                                 .prop('disabled', false)
                                 .removeClass('disabled')
@@ -128,7 +128,31 @@ jQuery(function ($) {
                     });
                     App.UI._toggle(container);
                 });
+
+                $('body').on('mouseenter mouseleave', 'li[data-role~="hovercontainer"]', function () {
+                    $(this).find('*[data-behaviour~="showonhover"]').toggle();
+                });
+
+                $('body').on('click', '.remove-comment', function (e) {
+                    e.preventDefault();
+
+                    if (!window.confirm("Are you sure you want to delete the comment?")) {
+                        return;
+                    }
+
+                    $.ajax(this.href, {
+                        dataType: "script"
+                    });
+                });
+
+                $('a[data-role~="create_project"]').on('click', function (e) {
+                    e.preventDefault();
+                    App.UI.createProjectWorkspace();
+                });
             },
+
+
+
 
             initEditBehaviours: function () {
                 $('*[data-behaviour~="autosize"]').each(function () {

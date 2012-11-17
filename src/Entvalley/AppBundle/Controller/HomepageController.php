@@ -2,7 +2,7 @@
 
 namespace Entvalley\AppBundle\Controller;
 
-class DefaultController extends Controller
+class HomepageController extends Controller
 {
     public function indexAction()
     {

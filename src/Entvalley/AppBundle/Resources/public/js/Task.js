@@ -11,7 +11,8 @@
         this.assignedTo = ko.observable(data.assigned_to);
         this.status = ko.observable(data.status);
         this.date = ko.observable(Date.parse(data.created_at));
-        this.url = Routing.generate('app_task_view', {id: this.id, project: data.project.id, project_name: App.Project.CanonicalName});
+        this.url = Routing.generate('app_task_view', {id: this.id, project: App.UI.project.id,
+            project_name: App.UI.project.canonicalName});
         this.comments = ko.observableArray([]);
 
         var numberComments = data.number_comments || 0;
@@ -33,6 +34,34 @@
 
         this.addComment = function (data) {
             self.comments.push(new App.Model.Comment(data));
+        };
+
+        this.deleteComment = function (id) {
+            self.comments.remove(function (comment) {
+                return comment.id === parseInt(id, 10);
+            });
+        };
+
+        this.hideComment = function (elem) {
+            if (elem.nodeType === 3) { // skip text nodes
+                return;
+            }
+
+            $(elem).animate({ height: 'toggle', opacity: 'toggle' }, '400', function () {
+                $(this).remove();
+            });
+        };
+
+
+        this.afterCommentAdded = function (elem) {
+            if (elem.nodeType === 3) { // skip text nodes
+                return;
+            }
+            $(elem).filter("li").effect("highlight");
+        };
+
+        this.afterRender = function (elem) {
+            $(elem).find('.timeago').timeago();
         };
 
         this.formatDate = function (date) {
@@ -66,15 +95,15 @@
         this.editTask = function () {
             $.ajax(Routing.generate('app_task_edit', {
                 id: self.id,
-                project: App.Project.Id,
-                project_name: App.Project.CanonicalName
+                project: App.UI.project.id,
+                project_name: App.UI.project.canonicalName
             }), {
                 dataType: "script"
             });
 
             $('#task-' + self.id).one('click', '.cancel', function(e) {
                 e.preventDefault();
-                App.UI.taskListViewModel.switchToTask( self.id);
+                App.UI.project.switchToTask( self.id);
             });
         };
     };

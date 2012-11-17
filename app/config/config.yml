@@ -76,7 +76,6 @@ jms_serializer:
    handlers:
        object_based: false
        datetime:
-           format: "F d, Y H:i:s" # ISO8601
            default_timezone: "UTC"
        array_collection: true
        form_error: true

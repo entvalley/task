@@ -1,0 +1,38 @@
+{% extends 'EntvalleyAppBundle::layout.html.twig' %}
+{% block content %}
+    <div>
+        <h3>Which project do you want to work with?</h3>
+
+        <p>You may need to choose an existing project or create a new one to start working with tasks.</p>
+
+        <div class="row projects_row">
+
+            <div class="span2 item create_new">
+                <p class="icon">
+                    <a href="#" data-role="create_project">+</a>
+                </p>
+                <p><a href="#" data-role="create_project">Start a new project</a></p>
+            </div>
+
+            {% set number = 1 %}
+            {% for project in projects %}
+            <div class="span2 item">
+                <a href="{{ path('app_task_list', { project: project.id, project_name: project.canonicalName }) }}">{{ project.name }}</a>
+
+                <p>
+                    <small>
+                        <span class="label label-info">{{ project.inprogressNumber }}</span> In Progress<br/>
+                        <span class="label label-important">{{ project.unresolvedNumber }}</span> Unassigned<br/>
+                        <span class="label">{{ project.totalNumber }}</span> Total<br/>
+                    </small>
+                </p>
+            </div>
+            {% if number % 4 == 0 %}
+                </div>
+                <div class="row projects_row">
+            {% endif %}
+            {% set number = number + 1 %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -6,10 +6,15 @@
         self.text = data.text;
         self.username = data.author.username;
         self.createdAt = data.created_at;
+        self.id = data.id;
 
         var statusChange = data.status_change || {
             status: null,
             created_at: null
+        };
+
+        self.generateDeletionLink = function () {
+            return Routing.generate('app_comment_delete', { id: self.id });
         };
 
         self.statusChanged = typeof data.status_change !== 'undefined';
@@ -20,6 +25,7 @@
         self.statusName = ko.computed(function () {
             return App.Model.TaskStatus.Names[self.statusChange() - 1];
         });
+
         self.statusNameCapitalized = ko.computed(function () {
             var statusName = self.statusName();
             if (!statusName) {

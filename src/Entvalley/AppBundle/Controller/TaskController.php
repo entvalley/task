@@ -22,7 +22,6 @@ use Entvalley\AppBundle\Entity\Task;
 class TaskController extends Controller
 {
     private $serializer;
-    private $userContext;
     private $negotiator;
     private $htmlPurifier;
 
@@ -32,16 +31,15 @@ class TaskController extends Controller
         SessionInterface $session,
         RegistryInterface $doctrine,
         FormFactoryInterface $formFactory,
-        SerializerInterface $serializer,
         UserContext $userContext,
+        SerializerInterface $serializer,
         ContentNegotiator $negotiator,
         $htmlPurifier)
     {
         $this->serializer = $serializer;
-        $this->userContext = $userContext;
         $this->negotiator = $negotiator;
         $this->htmlPurifier = $htmlPurifier;
-        parent::__construct($request, $router, $templating, $session, $doctrine, $formFactory);
+        parent::__construct($request, $router, $templating, $session, $doctrine, $formFactory, $userContext);
     }
 
     /**
@@ -101,7 +99,6 @@ class TaskController extends Controller
             if ($form->isValid()) {
                 $em->persist($task);
                 $em->flush();
-                $this->session->getFlashBag()->add('success', 'A new task has been saved!');
 
                 return $this->redirect($this->url('app_task_list'));
             }
@@ -125,7 +122,6 @@ class TaskController extends Controller
             $form->bind($this->request);
             if ($form->isValid()) {
                 $em->flush();
-                $this->session->getFlashBag()->add('success', 'A new task has been saved!');
 
                 return $this->redirect($this->url('app_task_view', [
                             'id' => $task->getId(),
@@ -175,8 +171,6 @@ class TaskController extends Controller
 
         $em->remove($task);
         $em->flush();
-
-        $this->session->getFlashBag()->add('success', 'The task has been deleted!');
 
         return $this->redirect($this->url('app_task_list'));
     }

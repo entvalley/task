@@ -2,6 +2,7 @@
 namespace Entvalley\AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use Entvalley\AppBundle\Domain\UserContext;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -42,7 +43,12 @@ class Controller
      */
     protected $formFactory;
 
-    public function __construct(Request $request, RouterInterface $router, $templating, SessionInterface $session, RegistryInterface $doctrine, FormFactoryInterface $formFactory)
+    /**
+     * @var \Entvalley\AppBundle\Domain\UserContext
+     */
+    protected $userContext;
+
+    public function __construct(Request $request, RouterInterface $router, $templating, SessionInterface $session, RegistryInterface $doctrine, FormFactoryInterface $formFactory, UserContext $userContext)
     {
         $this->request = $request;
         $this->router = $router;
@@ -50,6 +56,7 @@ class Controller
         $this->session = $session;
         $this->doctrine = $doctrine;
         $this->formFactory = $formFactory;
+        $this->userContext = $userContext;
     }
 
     /**

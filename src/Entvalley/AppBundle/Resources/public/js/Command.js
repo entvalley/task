@@ -11,7 +11,7 @@
         this.setContext = function (type, id) {
             self.contextType(type);
             self.contextId(id || null);
-            self.contextProject(App.Project.Id);
+            self.contextProject(App.UI.project.id);
         };
     };
 })(window.App = window.App || {});

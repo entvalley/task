@@ -3,6 +3,7 @@
 namespace Entvalley\AppBundle\Controller;
 
 use Entvalley\AppBundle\Domain\JsonEncoder;
+use Entvalley\AppBundle\Domain\UserContext;
 use Entvalley\AppBundle\Domain\Command\CommandInterpreter;
 use Symfony\Component\HttpFoundation\Request;
 use Entvalley\AppBundle\Domain\Command\CommandManager;
@@ -27,6 +28,7 @@ class CommandController extends Controller
         SessionInterface $session,
         RegistryInterface $doctrine,
         FormFactoryInterface $formFactory,
+        UserContext $userContext,
         SerializerInterface $serializer,
         CommandManager $commandManager,
         CommandInterpreter $commandInterpreter)
@@ -34,7 +36,7 @@ class CommandController extends Controller
         $this->serializer = $serializer;
         $this->commandManager = $commandManager;
         $this->commandInterpreter = $commandInterpreter;
-        parent::__construct($request, $router, $templating, $session, $doctrine, $formFactory);
+        parent::__construct($request, $router, $templating, $session, $doctrine, $formFactory, $userContext);
     }
 
     public function listAction()
@@ -54,7 +56,7 @@ class CommandController extends Controller
             $commandsResults = $this->commandInterpreter->interpret($receivedCommand);
             $em->flush();
 
-            return $this->createResponse($this->_prepareCommandsResponse($commandsResults));
+            return $this->javascript($this->_prepareCommandsResponse($commandsResults));
         }
 
         return $this->view([

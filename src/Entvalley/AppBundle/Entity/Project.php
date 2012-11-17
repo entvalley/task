@@ -2,14 +2,17 @@
 
 namespace Entvalley\AppBundle\Entity;
 
+use Entvalley\AppBundle\Service\ProjectStatsService;
+
 class Project
 {
     private $id;
     private $name;
+    private $createdAt;
+    private $projectStatsService;
     private $inprogressNumber = 0;
     private $totalNumber = 0;
     private $unresolvedNumber = 0;
-    private $createdAt;
 
     const MAX_CANONICAL_NAME_LENGTH = 20;
 
@@ -19,6 +22,7 @@ class Project
         if ($id) {
             $this->id = $id;
         }
+        $this->projectStatsService = new ProjectStatsService();
     }
 
     /**
@@ -42,16 +46,6 @@ class Project
         return $this->company;
     }
 
-    public function setInprogressNumber($inprogressNumber)
-    {
-        $this->inprogressNumber = $inprogressNumber;
-    }
-
-    public function getInprogressNumber()
-    {
-        return $this->inprogressNumber;
-    }
-
     public function setName($name)
     {
         $this->name = $name;
@@ -62,24 +56,19 @@ class Project
         return $this->name;
     }
 
-    public function setTotalNumber($totalNumber)
+    public function getInprogressNumber()
     {
-        $this->totalNumber = $totalNumber;
+        return $this->projectStatsService->getInprogressNumber();
     }
 
     public function getTotalNumber()
     {
-        return $this->totalNumber;
-    }
-
-    public function setUnresolvedNumber($unresolvedNumber)
-    {
-        $this->unresolvedNumber = $unresolvedNumber;
+        return $this->projectStatsService->getTotalNumber();
     }
 
     public function getUnresolvedNumber()
     {
-        return $this->unresolvedNumber;
+        return $this->projectStatsService->getUnresolvedNumber();
     }
 
     public function getCreatedAt()
@@ -100,6 +89,21 @@ class Project
     public function belongsToCompany(Company $company)
     {
         return $company->equals($this->company);
+    }
+
+    public function getProjectStatsService()
+    {
+        if (empty($this->projectStatsService)) {
+            $this->projectStatsService = new ProjectStatsService();
+        }
+        return $this->projectStatsService;
+    }
+
+    public function loadStats()
+    {
+        $this->inprogressNumber = $this->projectStatsService->getInprogressNumber();
+        $this->totalNumber = $this->projectStatsService->getTotalNumber();
+        $this->unresolvedNumber = $this->projectStatsService->getUnresolvedNumber();
     }
 
     private function generateCanonicalName()

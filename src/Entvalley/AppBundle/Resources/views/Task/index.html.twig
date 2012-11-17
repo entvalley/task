@@ -42,15 +42,17 @@
         <hr>
 
         <div class="comments">
-            <ul data-bind="foreach: comments" class="separated-list">
-                <li>
+            <ul data-bind="foreach: {data: comments, beforeRemove: hideComment, afterAdd: afterCommentAdded, afterRender: afterRender }" class="separated-list">
+                <li data-role="hovercontainer" data-bind="attr: { id: 'comment-' + id }">
                     <div class="row-fluid">
                         <div class="span10">
                             <p>
                                 <b data-bind="text: username"></b>
-                                <span class="about" data-bind="text: createdAt"></span>
-                            </p>
+                                <time class="about timeago" data-bind="text: createdAt, attr: { datetime: createdAt }"></time>
 
+                                <a href="#" data-behaviour="showonhover" class="hidden-link" style="display: none">Edit</a>
+                                <a data-bind="attr: { href: generateDeletionLink() }" data-behaviour="showonhover" class="hidden-link remove-link remove-comment" style="display: none">Delete</a>
+                            </p>
                             <p data-bind="text: text"></p>
                         </div>
 
@@ -75,6 +77,14 @@
     {% endif %}
 
     <div class="task-list" data-bind="visible: tasks().length && !chosenTask()">
+          <div class="actions-header">
+              <ul>
+                  <li class="action">
+                      <a href="#edit-task" d="click: ">Settings</a>
+                  </li>
+              </ul>
+          </div>
+
         <ul data-bind="foreach: {data: tasks, beforeRemove: hideTask }" class="separated-list">
             <li data-bind="attr: { id: 'task-item-' + id }">
                 <div class="row-fluid">

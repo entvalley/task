@@ -109,17 +109,20 @@
             <argument type="service" id="session"/>
             <argument type="service" id="doctrine"/>
             <argument type="service" id="form.factory"/>
+            <argument type="service" id="context.user"/>
         </service>
 
         <service id="entvalley.task_controller" class="Entvalley\AppBundle\Controller\TaskController" scope="request" parent="entvalley.controller">
             <argument type="service" id="serializer"/>
-            <argument type="service" id="context.user"/>
             <argument type="service" id="entvalley.negotiator"/>
             <argument type="service" id="exercise_html_purifier.default"/>
         </service>
 
         <service id="entvalley.project_controller" class="Entvalley\AppBundle\Controller\ProjectController" scope="request" parent="entvalley.controller">
             <argument type="service" id="context.company"/>
+        </service>
+
+        <service id="entvalley.comment_controller" class="Entvalley\AppBundle\Controller\CommentController" scope="request" parent="entvalley.controller">
         </service>
 
         <service id="entvalley.command_controller" class="Entvalley\AppBundle\Controller\CommandController" scope="request" parent="entvalley.controller">
@@ -133,6 +136,11 @@
 
         <service id="entvalley.negotiator" class="Entvalley\AppBundle\Service\ContentNegotiator">
             <argument type="service" id="badfaith.negotiator" />
+        </service>
+
+        <service id="entvalley.listener.project_listener" class="Entvalley\AppBundle\Listener\ProjectListener">
+            <argument type="service" id="service_container"/>
+            <tag name="doctrine.event_listener" event="postLoad" />
         </service>
     </services>
 

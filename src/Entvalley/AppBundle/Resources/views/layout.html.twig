@@ -39,6 +39,8 @@
                     <a class="username" href="{{ path('app_homepage') }}">{{ app.user.username }}</a>
 
                     </div>
+
+                    {% if project is defined %}
                     <div class="summary pull-left">
                         <div class="done">
                             <div class="arrow"></div>Recent
@@ -56,17 +58,23 @@
                             </a>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
 
                 <div class="logo-inner pull-right">
                     <img width="79" height="19" src="/bundles/entvalleyapp/images/logo-inner.png">
                 </div>
 
+                {% if project is defined %}
                 <div class="project pull-right">
                     {% render 'entvalley.project_controller:navigationAction' with { project: project } %}
                 </div>
+                {% endif %}
                 <ul class="nav pull-right">
+                    {% if project is defined %}
                     <li class="active"><a href="{{ path('app_task_list', { project: project.id, project_name: project.canonicalName }) }}">Tasks</a></li>
+                    {% endif %}
+                    <li {% if project is not defined %}class="active"{% endif %}><a href="{{ path('app_homepage') }}">Projects</a></li>
                     <!--li><a href="#">Setting</a></li-->
                     <li><a href="{{ path('fos_user_security_logout') }}">Log out</a></li>
                 </ul>
@@ -101,9 +109,12 @@
             {% endblock %}
         </div>
     </div>
+
+    {% if project is defined %}
     <div class="tools">
         {% render 'entvalley.command_controller:formAction' %}
     </div>
+    {% endif %}
 </div>
 
 <div id="status" style="display: none;">
@@ -118,13 +129,17 @@
         id: {{ app.user.id }}
     };
 
-    App.Project = {
+    {% if project is defined %}
+    App.CurrentProject = {
         CanonicalName: {{ project.canonicalName|json_encode|raw }},
         Id: {{ project.id }}
     };
-
-    App.Project.FullCanonicalName = App.Project.Id + '-' + App.Project.CanonicalName;
-
+    {% else %}
+    App.CurrentProject = {
+        CanonicalName: null,
+        Id: null
+    };
+    {% endif %}
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/bootstrap.js') }}"></script>
@@ -136,7 +151,7 @@
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/jquery.iframe-auto-height.plugin.1.8.0.min.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/app.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/command.js') }}"></script>
-<script src="{{ asset('bundles/entvalleyapp/js/TaskListViewModel.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/Project.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/Task.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/Comment.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/routes.js') }}"></script>
@@ -144,6 +159,8 @@
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/prettify.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/bootstrap-wysihtml5.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/jquery.autosize.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/jquery-ui-1.9.1.custom.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/jquery.timeago.js') }}"></script>
 <script type="text/javascript">
     $(prettyPrint);
 </script>

@@ -1,6 +1,6 @@
 app_homepage:
     pattern:  /
-    defaults: { _controller: entvalley.task_controller:indexAction }
+    defaults: { _controller: entvalley.project_controller:indexAction }
 
 app_task_view:
     pattern: /{project}-{project_name}/tasks/{id}
@@ -40,6 +40,12 @@ app_task_delete:
     defaults: { _controller: entvalley.task_controller:deleteAction }
     requirements:
         id: \d+
+
+app_comment_delete:
+    pattern:  /comment/{id}/delete
+    defaults: { _controller: entvalley.comment_controller:deleteAction }
+    options:
+        expose: true
 
 app_command_list:
     pattern:  /commands

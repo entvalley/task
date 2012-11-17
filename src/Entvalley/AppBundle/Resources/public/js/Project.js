@@ -1,13 +1,18 @@
 jQuery(function ($) {
     "use strict";
     (function (App, Routing, undefined) {
-        var TaskListViewModel = function () {
+        var Project = function () {
             // Data
             var self = this;
             self.tasks = ko.observableArray([]);
             self.chosenTask = ko.observable();
             self.command = new App.Model.Command();
             self.lastVisited = null;
+            self.id = App.CurrentProject.Id;
+            self.canonicalName = App.CurrentProject.CanonicalName;
+            self.fullCanonicalName = function () {
+                return self.id + '-' + self.canonicalName;
+            };
 
             self.chosenTask.subscribe(function (task) {
                 if (!task) {
@@ -27,8 +32,8 @@ jQuery(function ($) {
             self.goToTask = function (task) {
                 window.history.pushState(null, '', Routing.generate('app_task_view', {
                     id: task.id,
-                    project: App.Project.Id,
-                    project_name: App.Project.CanonicalName
+                    project: self.id,
+                    project_name: self.canonicalName
                 }));
             };
 
@@ -57,8 +62,8 @@ jQuery(function ($) {
                     self.lastVisited = self.chosenTask().id;
                 }
                 window.history.pushState(null, '', Routing.generate('app_task_list', {
-                    project: App.Project.Id,
-                    project_name: App.Project.CanonicalName
+                    project: self.id,
+                    project_name: self.canonicalName
                 }));
             };
 
@@ -91,8 +96,8 @@ jQuery(function ($) {
             self.switchToTask = function (id) {
                 $.get(Routing.generate('app_task_view', {
                         id: id,
-                        project: App.Project.Id,
-                        project_name: App.Project.CanonicalName
+                        project: self.id,
+                        project_name: self.canonicalName
                     }), {}, function (data) {
                     App.UI.hideStatus();
                     self.chosenTask(new App.Model.Task(data));
@@ -144,7 +149,7 @@ jQuery(function ($) {
                     update: update
                 };
         })();
-        ko.applyBindings(App.UI.taskListViewModel = new TaskListViewModel());
+        ko.applyBindings(App.UI.project = new Project(App.CurrentProject));
     })(window.App = window.App || {}, window.Routing = window.Routing || {});
 });
 

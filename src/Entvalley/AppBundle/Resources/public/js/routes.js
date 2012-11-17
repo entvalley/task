@@ -2,8 +2,7 @@ jQuery(function ($) {
     "use strict";
     (function (App, Routing, undefined) {
         $.sammy('body > .container',function () {
-
-            var self = App.UI.taskListViewModel;
+            var self = App.UI.project;
             var loadTasks = function (filter) {
                 var loaded = [];
                 self.tasks([]);
@@ -12,8 +11,8 @@ jQuery(function ($) {
                 });
                 return $.get(Routing.generate('app_task_list', {
                     filterByType: filter,
-                    project: App.Project.Id,
-                    project_name: App.Project.CanonicalName
+                    project: App.UI.project.id,
+                    project_name: App.UI.project.canonicalName
                 }), {}, function (allData) {
                     $.map(allData, function (item) {
                         if (loaded.indexOf(parseInt(item.id, 10)) === -1) {
@@ -59,7 +58,7 @@ jQuery(function ($) {
             });
 
             this.get(/(\d+)-([^\/]+)\/tasks(\/(\w+))?/, function (context) {
-                if (App.Project.FullCanonicalName !== this.params.splat[0] + '-' + this.params.splat[1]) {
+                if (App.UI.project.fullCanonicalName() !== this.params.splat[0] + '-' + this.params.splat[1]) {
                     window.location = Routing.generate('app_task_list', {
                         filterByType: this.params.splat[3],
                         project: this.params.splat[0],
@@ -80,9 +79,6 @@ jQuery(function ($) {
                     self.command.setContext('tasks');
                     self.command.placeholder('Create a new task...');
                 });
-            });
-            this.get('', function () {
-                self.goToTaskList();
             });
         }).run();
     })(window.App = window.App || {}, window.Routing = window.Routing || {});
