@@ -29,7 +29,6 @@ body {
 
 @media (min-width: 980px) {
     body {
-        padding-top: 90px;
     }
 }
 
@@ -54,7 +53,15 @@ body {
     color: #CC0000;
 }
 
+.navbar-inner {
+   .border-radius(0px);
+}
+
+
 .navbar {
+    margin-bottom: 60px;
+
+
     .topbar {
         .border-radius(4px);
         margin: 12px 0 2px;
@@ -334,7 +341,9 @@ body {
     textarea {
         .box-shadow(0px 0px 4px 0px rgba(0, 0, 0, 0.2));
         width: 500px;
-        height: 60px;
+        height: 40px;
+        max-height: 120px;
+        resize: none;
         margin-bottom: 4px;
     }
 

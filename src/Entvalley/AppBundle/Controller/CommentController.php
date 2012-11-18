@@ -10,12 +10,14 @@ class CommentController extends Controller
     {
         $em = $this->doctrine->getManager();
 
-       // $em->remove($comment);
+        $deletedId = $comment->getId();
+
+        $em->remove($comment);
         $em->flush();
 
         return $this->javascript($this->viewContent(
             [
-                'comment' => $comment
+                'commentId' => $deletedId
             ],
             'js.twig'
         ));

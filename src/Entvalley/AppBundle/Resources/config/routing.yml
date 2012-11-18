@@ -3,7 +3,7 @@ app_homepage:
     defaults: { _controller: entvalley.project_controller:indexAction }
 
 app_task_view:
-    pattern: /{project}-{project_name}/tasks/{id}
+    pattern: /projects/{project}-{project_name}/tasks/{id}
     defaults: { _controller: entvalley.task_controller:viewAction }
     options:
         expose: true
@@ -13,7 +13,7 @@ app_task_view:
         project_name: "[^/]+"
 
 app_task_list:
-    pattern:  /{project}-{project_name}/tasks/{filterByType}
+    pattern:  /projects/{project}-{project_name}/tasks/{filterByType}
     defaults: { _controller: entvalley.task_controller:indexAction, filterByType: null }
     options:
         expose: true
@@ -21,12 +21,8 @@ app_task_list:
         project: \d+
         project_name: "[^/]+"
 
-app_task_create:
-    pattern:  /task/create
-    defaults: { _controller: entvalley.task_controller:createAction }
-
 app_task_edit:
-    pattern: /{project}-{project_name}/tasks/{id}/edit
+    pattern: /projects/{project}-{project_name}/tasks/{id}/edit
     defaults: { _controller: entvalley.task_controller:editAction }
     options:
         expose: true
@@ -36,13 +32,13 @@ app_task_edit:
         project_name: "[^/]+"
 
 app_task_delete:
-    pattern:  /task/{id}/delete
+    pattern:  /tasks/{id}/delete
     defaults: { _controller: entvalley.task_controller:deleteAction }
     requirements:
         id: \d+
 
 app_comment_delete:
-    pattern:  /comment/{id}/delete
+    pattern:  /comments/{id}/delete
     defaults: { _controller: entvalley.comment_controller:deleteAction }
     options:
         expose: true
@@ -54,7 +50,7 @@ app_command_list:
         expose: true
 
 app_command_send:
-    pattern:  /command/send
+    pattern:  /commands/send
     defaults: { _controller: entvalley.command_controller:sendAction }
 
 app_project_create:

@@ -4296,7 +4296,7 @@ wysihtml5.dom.copyAttributes = function(attributesToCopy) {
         for (; i<length; i++) {
           property = stylesToCopy[i];
           if (property == 'overflow-y') {
-              cssText += property + ":scroll;";
+              cssText += property + ":hidden;";
           } else {
               cssText += property + ":" + dom.getStyle(property).from(element) + ";";
           }

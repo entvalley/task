@@ -7,20 +7,12 @@ use Entvalley\AppBundle\Entity\Company;
 
 class ProjectTest extends \PHPUnit_Framework_TestCase
 {
-    public function testShouldGenerateCanonicalNameThatIsUsedAsIdWhenNameIsSet()
+    public function testShouldUseCanonicalGeneratorForCanonicalName()
     {
         $project = new Project();
         $project->setName(" weird  name_ ! 123 #/");
 
         $this->assertEquals("weird-name_-123", $project->getCanonicalName());
-    }
-
-    public function testShouldStripCanonicalNameLongerThan20Characters()
-    {
-        $project = new Project();
-        $project->setName("a ~@#$%%/ long name with special characters");
-
-        $this->assertEquals("a-long-name-with-spe", $project->getCanonicalName());
     }
 
     public function testShouldBelongToCompanyThatProjectWasCreatedIn()

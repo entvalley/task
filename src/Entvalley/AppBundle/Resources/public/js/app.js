@@ -164,15 +164,17 @@ jQuery(function ($) {
                     var iframe = window.editor.currentView.iframe;
                     iframe.height = $(this).height();
                     var body = $(iframe).contents().find('body');
+                    var width = $(this).width();
 
                     var fixHeight = function () {
-                        var contentCopy = $('<div style="position: absolute; left: -9999px; top: -9999px;">').html(body.html());
-                        $('body').append(contentCopy);
+                        var contentCopy = $('<div style="width: ' + width + 'px; position: absolute; left: -9999px; top: -9999px;">').html(body.html());
                         var oldMinHeight = parseInt('0' + iframe.style.minHeight, 10);
-                        if (oldMinHeight !== contentCopy.height()) {
-                            $(iframe).clearQueue().animate({ "min-height": contentCopy.height() }, 'fast');
-                        }
+                        $(body).append(contentCopy);
+                        var newMinHeight = contentCopy.height();
                         contentCopy.remove();
+                        if (oldMinHeight !== newMinHeight) {
+                            $(iframe).css({ "min-height": newMinHeight });
+                        }
                     };
                     window.editor.on('paste:composer', fixHeight);
                     window.editor.on('aftercommand:composer', fixHeight);
@@ -202,6 +204,7 @@ jQuery(function ($) {
                             }
                         });
 
+                        $("#" + me.inputControlId).autosize();
                         $('#' + me.inputControlId).keypress(function (e) {
                             if (e.ctrlKey && e.which === 10) {
                                 $(this).parents('form').submit();

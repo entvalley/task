@@ -3,6 +3,7 @@
 namespace Entvalley\AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Entvalley\AppBundle\Domain\CanonicalNameGenerator;
 use Entvalley\AppBundle\Domain\Status;
 use HTMLPurifier;
 
@@ -21,6 +22,7 @@ class Task
     private $status;
     private $numberComments = 0;
     private $safeBody = '';
+    private $canonicalNameGenerator;
 
     /**
      * @var $htmlPurifier HTMLPurifier
@@ -191,5 +193,18 @@ class Task
     public function getProject()
     {
         return $this->project;
+    }
+
+    public function getCanonicalTitle()
+    {
+        return $this->getCanonicalNameGenerator()->generate($this->getTitle());
+    }
+
+    private function getCanonicalNameGenerator()
+    {
+        if (empty($this->canonicalNameGenerator)) {
+            $this->canonicalNameGenerator = new CanonicalNameGenerator();
+        }
+        return $this->canonicalNameGenerator;
     }
 }

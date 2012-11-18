@@ -3,6 +3,7 @@
 namespace Entvalley\AppBundle\Entity;
 
 use Entvalley\AppBundle\Service\ProjectStatsService;
+use Entvalley\AppBundle\Domain\CanonicalNameGenerator;
 
 class Project
 {
@@ -13,8 +14,7 @@ class Project
     private $inprogressNumber = 0;
     private $totalNumber = 0;
     private $unresolvedNumber = 0;
-
-    const MAX_CANONICAL_NAME_LENGTH = 20;
+    private $canonicalNameGenerator;
 
     public function __construct($id = null)
     {
@@ -83,7 +83,7 @@ class Project
 
     public function getCanonicalName()
     {
-        return $this->generateCanonicalName();
+        return $this->getCanonicalNameGenerator()->generate($this->getName());
     }
 
     public function belongsToCompany(Company $company)
@@ -106,11 +106,11 @@ class Project
         $this->unresolvedNumber = $this->projectStatsService->getUnresolvedNumber();
     }
 
-    private function generateCanonicalName()
+    private function getCanonicalNameGenerator()
     {
-        $cleanName = preg_replace('/[^a-zа-яё0-9 _-]/ui', '', $this->getName());
-        $finalName = preg_replace('/ {1,}/', '-', mb_strtolower($cleanName));
-
-        return substr(trim($finalName, '-'), 0, self::MAX_CANONICAL_NAME_LENGTH);
+        if (empty($this->canonicalNameGenerator)) {
+            $this->canonicalNameGenerator = new CanonicalNameGenerator();
+        }
+        return $this->canonicalNameGenerator;
     }
 }

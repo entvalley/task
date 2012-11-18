@@ -98,4 +98,4 @@ exercise_html_purifier:
         Cache.SerializerPath: '%kernel.cache_dir%/htmlpurifier'
         Core.Encoding: 'UTF-8'
         Core.EscapeInvalidTags: true
-        HTML.Allowed: 'a[href],b,i,u,li,ul,blockquote,ol,br,h1,h2,h3,img[src]'
+        HTML.Allowed: 'a[href],b,i,u,li,ul,blockquote,ol,br,h1,h2,h3,img[src],span,div'

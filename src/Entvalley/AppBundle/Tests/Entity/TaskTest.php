@@ -7,6 +7,14 @@ use Entvalley\AppBundle\Domain\Status;
 
 class TaskTest extends \PHPUnit_Framework_TestCase
 {
+    public function testShouldUseCanonicalGeneratorForCanonicalTitle()
+    {
+        $task = new Task;
+        $task->setTitle(" weird  titile_ ! 123 #/");
+
+        $this->assertEquals("weird-titile_-123", $task->getCanonicalTitle());
+    }
+
     public function testShouldSplitContentIntoTitleAndText()
     {
         $task = new Task;
