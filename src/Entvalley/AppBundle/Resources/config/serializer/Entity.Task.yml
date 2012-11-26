@@ -24,8 +24,14 @@ Entvalley\AppBundle\Entity\Task:
             groups: [summary]
         status:
             groups: [summary]
-        numberComments:
+        numberOfComments:
             groups: [summary]
+        excerpt:
+            groups: [summary]
+            access_type: public_method
+            accessor:
+                getter: getExcerpt
+                setter: setExcerpt
 
     callback_methods:
         pre_serialize: [purifyHtmlTags]

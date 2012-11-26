@@ -20,9 +20,10 @@ class Task
     private $project;
     private $lastStatus;
     private $status;
-    private $numberComments = 0;
+    private $numberOfComments = 0;
     private $safeBody = '';
     private $canonicalNameGenerator;
+    private $excerpt;
 
     /**
      * @var $htmlPurifier HTMLPurifier
@@ -109,7 +110,19 @@ class Task
     public function addComment(Comment $comment)
     {
         $this->comments[] = $comment;
-        $this->numberComments++;
+        $this->numberOfComments++;
+    }
+
+    public function removeComment(Comment $commentToRemove)
+    {
+        foreach ($this->comments as $key => $comment) {
+            if ($comment->equals($commentToRemove)) {
+                unset($this->comments[$key]);
+                $this->numberOfComments--;
+                return true;
+            }
+        }
+        return false;
     }
 
     public function getComments()
@@ -162,9 +175,9 @@ class Task
         return $this->lastStatus;
     }
 
-    public function getNumberComments()
+    public function getNumberOfComments()
     {
-        return $this->numberComments;
+        return $this->numberOfComments;
     }
 
     /**
@@ -198,6 +211,24 @@ class Task
     public function getCanonicalTitle()
     {
         return $this->getCanonicalNameGenerator()->generate($this->getTitle());
+    }
+
+    public function setExcerpt($excerpt)
+    {
+        // does nothing, the excerpt is generated
+    }
+
+    public function getExcerpt()
+    {
+        $body = preg_replace('/<li>/', ' • ', $this->body);
+        $body = preg_replace('/<[^>]*>/', ' ', $body);
+
+        $excerpt = substr($body, 0, 250);
+        if (strlen($body) > strlen($excerpt)) {
+            $excerpt .= '...';
+        }
+
+        return !empty($excerpt) ? $excerpt : '';
     }
 
     private function getCanonicalNameGenerator()

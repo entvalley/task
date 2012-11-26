@@ -43,6 +43,12 @@ app_comment_delete:
     options:
         expose: true
 
+app_comment_edit:
+    pattern:  /comments/{id}/edit
+    defaults: { _controller: entvalley.comment_controller:editAction }
+    options:
+        expose: true
+
 app_command_list:
     pattern:  /commands
     defaults: { _controller: entvalley.command_controller:listAction }

@@ -19,7 +19,7 @@
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.command_delete" class="Entvalley\AppBundle\Domain\Command\DeleteCommand">
+        <service id="entvalley.command_remove" class="Entvalley\AppBundle\Domain\Command\RemoveCommand">
             <argument type="service" id="doctrine" />
             <tag name="entvalley.command" />
         </service>
@@ -31,12 +31,6 @@
         </service>
 
         <service id="entvalley.command_abandon" class="Entvalley\AppBundle\Domain\Command\AbandonCommand">
-            <argument type="service" id="doctrine" />
-            <argument type="service" id="context.user" />
-            <tag name="entvalley.command" />
-        </service>
-
-        <service id="entvalley.command_close" class="Entvalley\AppBundle\Domain\Command\CloseCommand">
             <argument type="service" id="doctrine" />
             <argument type="service" id="context.user" />
             <tag name="entvalley.command" />

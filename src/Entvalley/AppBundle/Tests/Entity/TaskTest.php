@@ -3,6 +3,7 @@
 namespace Entvalley\AppBundle\Tests\Entity;
 
 use Entvalley\AppBundle\Entity\Task;
+use Entvalley\AppBundle\Entity\Comment;
 use Entvalley\AppBundle\Domain\Status;
 
 class TaskTest extends \PHPUnit_Framework_TestCase
@@ -49,4 +50,21 @@ class TaskTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($userMock, $result->getWhoUpdated());
     }
 
+    public function testShouldChangeNumberOfCommentsWhenAddingOrRemovingComments()
+    {
+        $task = new Task();
+
+        $this->assertEquals(0, count($task->getComments()));
+        $this->assertEquals(0, $task->getNumberOfComments());
+
+        $task->addComment($comment = new Comment());
+
+        $this->assertEquals(1, count($task->getComments()));
+        $this->assertEquals(1, $task->getNumberOfComments());
+
+        $task->removeComment($comment);
+
+        $this->assertEquals(0, count($task->getComments()));
+        $this->assertEquals(0, $task->getNumberOfComments());
+    }
 }

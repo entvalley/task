@@ -18,7 +18,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "git://github.com/winmillwill/BadFaith.git"
+            "url": "git://github.com/meze/BadFaith.git"
         }
     ],
 

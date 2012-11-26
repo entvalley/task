@@ -4,7 +4,7 @@
     <div class="message-info">
         <span class="created-at" data-bind="text: createdAt"></span>
         <span class="comments-number"><span
-                data-bind="text: numberComments"></span> answers</span>
+                data-bind="text: numberOfComments"></span> answers</span>
         {% if with_status %}
             <span data-bind="text: statusName, attr: { class: 'status status-' + statusName() }"></span>
         {% endif %}
@@ -93,7 +93,7 @@
                         <a class="message-title"
                            data-bind="text: title, attr: { href: url }"></a>
 
-                        <p data-bind="html: safeBody"></p>
+                        <p class="excerpt" data-bind="html: excerpt"></p>
 
                         <p class="reportedby"><span data-bind="text: author"></span> at
                             <span data-bind="text: formatDate(date)"></span>.

@@ -10,6 +10,10 @@
             <generator strategy="IDENTITY"/>
         </id>
 
+        <lifecycle-callbacks>
+            <lifecycle-callback type="preRemove" method="removeCommentFromTask"/>
+        </lifecycle-callbacks>
+
         <field name="text" type="text" />
         <field name="createdAt" type="datetime" />
 

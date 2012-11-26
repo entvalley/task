@@ -6,6 +6,7 @@
         this.author = data.author.username;
         this.title = data.title;
         this.body = data.body;
+        this.excerpt = data.excerpt;
         this.safeBody = data.safe_body;
         this.id = data.id;
         this.assignedTo = ko.observable(data.assigned_to);
@@ -15,7 +16,7 @@
             project_name: App.UI.project.canonicalName});
         this.comments = ko.observableArray([]);
 
-        var numberComments = data.number_comments || 0;
+        var numberOfComments = data.number_of_comments || 0;
 
         if (data.comments) {
             var mappedComments = $.map(data.comments, function (item) {
@@ -24,8 +25,8 @@
             this.comments(mappedComments);
         }
 
-        this.numberComments = ko.computed(function () {
-            return Math.max(numberComments, self.comments() ? self.comments().length : 0);
+        this.numberOfComments = ko.computed(function () {
+            return Math.max(numberOfComments, self.comments() ? self.comments().length : 0);
         });
 
         this.status.subscribe(function (newStatus) {

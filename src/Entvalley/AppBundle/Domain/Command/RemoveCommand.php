@@ -4,7 +4,7 @@ namespace Entvalley\AppBundle\Domain\Command;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
 
-class DeleteCommand extends AbstractCommand
+class RemoveCommand extends AbstractCommand
 {
     /**
      * @var \Doctrine\Bundle\DoctrineBundle\Registry
@@ -31,6 +31,6 @@ class DeleteCommand extends AbstractCommand
 
     public function getName()
     {
-        return 'delete';
+        return 'remove';
     }
 }

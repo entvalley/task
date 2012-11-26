@@ -8,6 +8,9 @@ class Comment
     private $author;
     private $text;
     private $createdAt;
+    /**
+     * @var Task
+     */
     private $task;
 
     /**
@@ -85,5 +88,15 @@ class Comment
     public function getStatusChange()
     {
         return $this->statusChange;
+    }
+
+    public function equals(Comment $comment)
+    {
+        return $comment === $this || $comment->getId() === $this->getId();
+    }
+
+    public function removeCommentFromTask()
+    {
+        $this->task->removeComment($this);
     }
 }
