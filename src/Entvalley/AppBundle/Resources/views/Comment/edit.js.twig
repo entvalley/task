@@ -1,0 +1,4 @@
+$('.edit-comment').remove();
+$('.comment .text').show();
+$('#comment-{{ comment.id }} .text').hide().after({{ result|raw }});
+App.UI.initEditBehaviours();

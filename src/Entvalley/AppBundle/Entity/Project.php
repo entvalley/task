@@ -3,9 +3,10 @@
 namespace Entvalley\AppBundle\Entity;
 
 use Entvalley\AppBundle\Service\ProjectStatsService;
+use Entvalley\AppBundle\Domain\IHaveOwner;
 use Entvalley\AppBundle\Domain\CanonicalNameGenerator;
 
-class Project
+class Project implements IHaveOwner
 {
     private $id;
     private $name;
@@ -104,6 +105,11 @@ class Project
         $this->inprogressNumber = $this->projectStatsService->getInprogressNumber();
         $this->totalNumber = $this->projectStatsService->getTotalNumber();
         $this->unresolvedNumber = $this->projectStatsService->getUnresolvedNumber();
+    }
+
+    public function isBelongingTo(User $user)
+    {
+        return $user->isUser($this->getCompany()->getOwner());
     }
 
     private function getCanonicalNameGenerator()

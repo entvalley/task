@@ -51,6 +51,9 @@ jQuery(function ($) {
             createProjectWorkspace: function () {
                 App.UI._toggle('#page');
                 App.UI._toggle('#new_project');
+                App.UI.registerEscHandler(function () {
+                    $('#new_project button[data-role~="cancel"]').trigger('click');
+                });
             },
 
             showCommandResult: function (text) {
@@ -120,17 +123,24 @@ jQuery(function ($) {
                     });
                 });
 
-                $('button[data-role~="cancel"]').on('click', function () {
-                    App.UI._toggle('#page');
+                var cancel = function () {
+                    App.UI._toggle('#page', false);
                     var container = $(this).closest('div[data-behaviour~="expandable"]');
                     container.find('form').each(function () {
                         this.reset();
                     });
-                    App.UI._toggle(container);
-                });
+                    App.UI._toggle(container, true);
+                };
 
-                $('body').on('mouseenter mouseleave', 'li[data-role~="hovercontainer"]', function () {
-                    $(this).find('*[data-behaviour~="showonhover"]').toggle();
+                $('button[data-role~="cancel"]').on('click', cancel);
+
+                $('body').on('mouseenter mouseleave', 'li[data-role~="hovercontainer"]', function (e) {
+                    var elms = $(this).find('*[data-behaviour~="showonhover"]');
+                    if (e.type === 'mouseenter') {
+                        elms.show();
+                    } else {
+                        elms.hide();
+                    }
                 });
 
                 $('body').on('click', '.remove-comment', function (e) {
@@ -214,10 +224,24 @@ jQuery(function ($) {
                 });
             },
 
-            _toggle: function (id) {
-                if($(id).is(':hidden')) {
+            removeWYSIWYG: function () {
+                $("iframe.wysihtml5-sandbox, input[name='_wysihtml5_mode'],.wysihtml5-toolbar,.autosizejs").remove();
+                $("body").removeClass("wysihtml5-supported");
+            },
+
+            registerEscHandler: function (handler) {
+                $('body').on('keyup', function cancelWithKeyup(e) {
+                    if (e.which === 27) {
+                        handler(e);
+                        $('body').off('keyup', cancelWithKeyup);
+                    }
+                });
+            },
+
+            _toggle: function (id, hide) {
+                if(!hide && $(id).is(':hidden')) {
                     $(id).fadeToggle();
-                } else {
+                } else if (hide !== false) {
                     $(id).hide();
                 }
             }

@@ -1,0 +1,3 @@
+$('.edit-comment').remove();
+App.UI.project.chosenTask().updateComment({{ comment.id }}, {{ comment_text|raw  }}, {{ comment_safe_text|raw  }});
+$('.comment .text').show();

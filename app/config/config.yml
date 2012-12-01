@@ -52,7 +52,10 @@ doctrine:
 
     orm:
         auto_generate_proxy_classes: %kernel.debug%
-        auto_mapping: true
+
+        entity_managers:
+            default:
+                auto_mapping: true
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -92,6 +95,37 @@ jms_serializer:
            FOSUB:
                namespace_prefix: "FOS\\UserBundle"
                path: "%kernel.root_dir%/serializer/FOSUB"
+
+jms_security_extra:
+  secure_all_services: false
+  expressions: true
+
+services:
+    entvalley.memcache:
+        class: %doctrine.orm.cache.memcache_instance.class%
+        calls:
+            - [ connect, [ "127.0.0.1", "11212" ] ]
+    entvalley.doctrine.memcache:
+        class: %doctrine.orm.cache.memcache.class%
+        calls:
+            - [ setMemcache, [ @entvalley.memcache ] ]
+
+    secdurity.acl.cache:
+        class: "%security.acl.cache.doctrine.class%"
+        arguments: [@entvalley.doctrine.memcache, @security.acl.permission_granting_strategy]
+
+    security.access.owner_voter:
+        class:      Entvalley\AppBundle\Security\Authorization\Voter\OwnerVoter
+        arguments:  [@service_container, @security.acl.permission.map]
+        public:     false
+        tags:
+            -       { name: security.voter }
+
+    security.owner_evaluator:
+        class: Entvalley\AppBundle\Security\OwnerEvaluator
+        arguments:  [@service_container]
+        tags:
+            - { name: security.expressions.function_evaluator, function: belongsTo, method: belongsTo }
 
 exercise_html_purifier:
     default:

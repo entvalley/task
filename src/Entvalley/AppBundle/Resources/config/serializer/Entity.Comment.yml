@@ -4,6 +4,8 @@ Entvalley\AppBundle\Entity\Comment:
             groups: [details]
         text:
             groups: [details]
+        safeText:
+            groups: [details]
         author:
             groups: [details]
         createdAt:
@@ -12,3 +14,7 @@ Entvalley\AppBundle\Entity\Comment:
             groups: [details]
         task:
             exclude: true
+        htmlPurifier:
+            exclude: true
+    callback_methods:
+        pre_serialize: [purifyHtmlTags]

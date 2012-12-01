@@ -3,11 +3,12 @@
 namespace Entvalley\AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Entvalley\AppBundle\Domain\IHaveOwner;
 use Entvalley\AppBundle\Domain\CanonicalNameGenerator;
 use Entvalley\AppBundle\Domain\Status;
 use HTMLPurifier;
 
-class Task
+class Task implements IHaveOwner
 {
     private $id;
     private $title;
@@ -190,6 +191,10 @@ class Task
     {
         if ($this->htmlPurifier) {
             $this->safeBody = $this->htmlPurifier->purify($this->body);
+
+            foreach ($this->comments as $comment) {
+                $comment->setHtmlPurifier($this->htmlPurifier);
+            }
         }
     }
 
@@ -203,6 +208,9 @@ class Task
         $this->project = $project;
     }
 
+    /**
+     * @return Project
+     */
     public function getProject()
     {
         return $this->project;
@@ -229,6 +237,11 @@ class Task
         }
 
         return !empty($excerpt) ? $excerpt : '';
+    }
+
+    public function isBelongingTo(User $user)
+    {
+         return $this->getProject()->isBelongingTo($user);
     }
 
     private function getCanonicalNameGenerator()

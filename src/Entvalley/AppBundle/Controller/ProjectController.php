@@ -3,38 +3,28 @@
 namespace Entvalley\AppBundle\Controller;
 
 use Entvalley\AppBundle\Domain\CompanyContext;
-use Entvalley\AppBundle\Domain\UserContext;
 use Entvalley\AppBundle\Form\ProjectType;
 use Entvalley\AppBundle\Entity\Project;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 
 class ProjectController extends Controller
 {
     private $companyContext;
 
-    public function __construct(Request $request,
-        RouterInterface $router,
-        $templating,
-        SessionInterface $session,
-        RegistryInterface $doctrine,
-        FormFactoryInterface $formFactory,
-        UserContext $userContext,
+    public function __construct(
+        ControllerContainer $container,
         CompanyContext $companyContext)
     {
         $this->companyContext = $companyContext;
-        parent::__construct($request, $router, $templating, $session, $doctrine, $formFactory, $userContext);
+        parent::__construct($container);
     }
 
     public function navigationAction($project = null)
     {
-        $em = $this->doctrine->getManager();
+        $em = $this->container->getDoctrine()->getManager();
         $projectRepository = $em->getRepository('Entvalley\AppBundle\Entity\Project');
 
-        $projects = $projectRepository->findByUser($this->userContext->getUser());
+        $projects = $projectRepository->findByUser($this->container->getUserContext()->getUser());
 
         return $this->view([
                 'projects' => $projects,
@@ -44,10 +34,10 @@ class ProjectController extends Controller
 
     public function indexAction()
     {
-        $em = $this->doctrine->getManager();
+        $em = $this->container->getDoctrine()->getManager();
         $projectRepository = $em->getRepository('Entvalley\AppBundle\Entity\Project');
 
-        $projects = $projectRepository->findByUser($this->userContext->getUser());
+        $projects = $projectRepository->findByUser($this->container->getUserContext()->getUser());
 
         return $this->view([
                 'projects' => $projects
@@ -56,24 +46,20 @@ class ProjectController extends Controller
 
     public function createAction()
     {
-        $em = $this->doctrine->getManager();
+        $em = $this->container->getDoctrine()->getManager();
 
         $project = new Project();
         $project->setCompany($this->companyContext->getCompany());
 
-        $form = $this->formFactory->create(new ProjectType(), $project);
+        $form = $this->container->getFormFactory()->create(new ProjectType(), $project);
 
-        if ('POST' === $this->request->getMethod()) {
-            $form->bind($this->request);
+        if ($this->isValidForm($form)) {
+            $em->persist($project);
+            $em->flush();
 
-            if ($form->isValid()) {
-                $em->persist($project);
-                $em->flush();
-
-                return $this->javascript(
-                    $this->renderView('EntvalleyAppBundle:Project:create_success.html.twig', ['project' => $project])
-                );
-            }
+            return $this->javascript(
+                $this->renderView('EntvalleyAppBundle:Project:create_success.html.twig', ['project' => $project])
+            );
         }
 
         return $this->view([

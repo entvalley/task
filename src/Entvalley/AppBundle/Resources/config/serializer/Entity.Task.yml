@@ -32,6 +32,7 @@ Entvalley\AppBundle\Entity\Task:
             accessor:
                 getter: getExcerpt
                 setter: setExcerpt
-
+        htmlPurifier:
+            exclude: true
     callback_methods:
         pre_serialize: [purifyHtmlTags]

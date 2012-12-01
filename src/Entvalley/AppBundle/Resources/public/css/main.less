@@ -1,5 +1,9 @@
 @import "common.less";
 
+.sf-toolbarreset {
+    bottom: 62px !important;
+}
+
 body {
     padding-bottom: 90px;
     background: url(/bundles/entvalleyapp/images/background.png);
@@ -25,11 +29,7 @@ body {
         width: 1130px;
         padding: 20px;
     }
-}
 
-@media (min-width: 980px) {
-    body {
-    }
 }
 
 @media (max-width: 767px) {
@@ -202,7 +202,6 @@ body {
 
 .actions-header {
     position: absolute;
-    background-image: url(/bundles/entvalleyapp/images/task-status-background.png);
     height: 16px;
     font-size: 12px;
     padding: 4px 8px;
@@ -758,19 +757,47 @@ form .help {
 }
 
 .projects_row {
-    .item {
-        border: 0px solid #e0e0e0;
-        padding: 4px 0px;
+    .project {
+        border: 1px solid #e0e0e0;
+        padding: 4px;
         margin-bottom: 20px;
-        .box-shadow(1px 1px 1px rgba(0, 0, 0, 0.15));
+        .box-shadow(1px 1px 1px rgba(0, 0, 0, 0.10));
+
+
+        .legend {
+            font-size: 12px;
+
+            > div {
+                margin: 2px 0;
+            }
+        }
+    }
+}
+
+
+@media (max-width: 1199px) {
+    .actions-header, .task .status-header {
+        top: -34px;
+    }
+}
+
+@media (max-width: 767px) {
+
+    body {
+        padding-left: 0;
+        padding-right: 0;
     }
 
-    .create_new {
-        text-align: center;
-        .icon {
-            font-size: 40px;
-            padding: 20px 0;
-            font-weight: bold;
+    .projects_row {
+        .project {
+            padding: 5px;
+            border: 1px solid #e0e0e0;
+            .legend {
+                > div {
+                    display: inline;
+                    margin-right: 4px;
+                }
+            }
         }
     }
 }

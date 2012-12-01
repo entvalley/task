@@ -41,10 +41,16 @@ jQuery(function ($) {
                 delete this.params._wysihtml5_mode;
 
                 $.post(context.path, context.params.toHash(), function () {
-                    $("iframe.wysihtml5-sandbox, input[name='_wysihtml5_mode'],.wysihtml5-toolbar,.autosizejs").remove();
-                    $("body").removeClass("wysihtml5-supported");
+                    App.UI.removeWYSIWYG();
                     self.switchToTask(id);
                 });
+            });
+
+            this.post('/comments/:id/edit', function (context) {
+                delete this.params.id;
+                delete this.params._wysihtml5_mode;
+
+                $.post(context.path, context.params.toHash(), App.UI.removeWYSIWYG);
             });
 
 

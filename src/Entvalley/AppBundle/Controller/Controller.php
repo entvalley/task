@@ -2,9 +2,6 @@
 namespace Entvalley\AppBundle\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
-use Entvalley\AppBundle\Domain\UserContext;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -18,45 +15,16 @@ class Controller
     protected $templateExtension = "html.twig";
 
     /**
-     * @var \Symfony\Component\Routing\RouterInterface
+     * @var ControllerContainer
      */
-    protected $router;
-
-    protected $templating;
-    /**
-     * @var \Symfony\Component\HttpFoundation\Request
-     */
-    protected $request;
+    protected $container;
 
     /**
-     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     * @param ControllerContainer $container
      */
-    protected $session;
-
-    /**
-     * @var \Symfony\Bridge\Doctrine\RegistryInterface
-     */
-    protected $doctrine;
-
-    /**
-     * @var \Symfony\Component\Form\FormFactoryInterface
-     */
-    protected $formFactory;
-
-    /**
-     * @var \Entvalley\AppBundle\Domain\UserContext
-     */
-    protected $userContext;
-
-    public function __construct(Request $request, RouterInterface $router, $templating, SessionInterface $session, RegistryInterface $doctrine, FormFactoryInterface $formFactory, UserContext $userContext)
+    public function __construct(ControllerContainer $container)
     {
-        $this->request = $request;
-        $this->router = $router;
-        $this->templating = $templating;
-        $this->session = $session;
-        $this->doctrine = $doctrine;
-        $this->formFactory = $formFactory;
-        $this->userContext = $userContext;
+        $this->container = $container;
     }
 
     /**
@@ -85,10 +53,11 @@ class Controller
      */
     public function url($route, array $parameters = array(), $absolute = false)
     {
-        if (empty($this->router)) {
+        $router = $this->container->getRouter();
+        if (empty($router)) {
             throw new \RuntimeException('The router service should be set to generate a URL');
         }
-        return $this->router->generate($route, $parameters, $absolute);
+        return $router->generate($route, $parameters, $absolute);
     }
 
     /**
@@ -111,10 +80,11 @@ class Controller
      */
     public function renderView($view, array $parameters = array())
     {
-        if (empty($this->templating)) {
+        $templating = $this->container->getTemplating();
+        if (empty($templating)) {
             throw new \RuntimeException('The templating service should be set to render the view');
         }
-        return $this->templating->render($view, $parameters);
+        return $templating->render($view, $parameters);
     }
 
     /**
@@ -128,10 +98,11 @@ class Controller
      */
     public function render($view, array $parameters = array(), Response $response = null)
     {
-        if (empty($this->templating)) {
+        $templating = $this->container->getTemplating();
+        if (empty($templating)) {
             throw new \RuntimeException('The templating service should be set to render the response');
         }
-        return $this->templating->renderResponse($view, $parameters, $response);
+        return $templating->renderResponse($view, $parameters, $response);
     }
 
     /**
@@ -207,19 +178,20 @@ class Controller
      *
      * @param \Symfony\Component\Form\Form $form
      * @param boolean $post_only only do validation if the request method is POST
-     * @return boolean
+     * @return boolean|void
      */
     public function isValidForm($form, $post_only = true)
     {
-        if (empty($this->request)) {
+        $request = $this->container->getRequest();
+        if (empty($request)) {
             throw new \RuntimeException('The request service should be set to validate the form');
         }
 
-        if (($post_only && $this->request->getMethod() !== 'POST') || !$post_only) {
+        if (($post_only && $request->getMethod() !== 'POST') || !$post_only) {
             return;
         }
 
-        $form->bind($this->request);
+        $form->bind($request);
         return $form->isValid();
     }
 
@@ -232,12 +204,13 @@ class Controller
      */
     private function resolveViewName($extension = null)
     {
-        if (empty($this->request)) {
+        $request = $this->container->getRequest();
+        if (empty($request)) {
             throw new \RuntimeException('The request service should be set to render the view');
         }
 
         $extension = !empty($extension) ? $extension : $this->templateExtension;
-        $view = ViewTemplateResolver::resolve($this->request->get('_controller'), get_called_class());
+        $view = ViewTemplateResolver::resolve($request->get('_controller'), get_called_class());
         return $view . '.' . $extension;
     }
 }

@@ -27,6 +27,7 @@
         <service id="entvalley.command_comment" class="Entvalley\AppBundle\Domain\Command\CommentCommand">
             <argument type="service" id="doctrine" />
             <argument type="service" id="context.user" />
+            <argument type="service" id="exercise_html_purifier.default"/>
             <tag name="entvalley.command" />
         </service>
 
@@ -96,7 +97,7 @@
         </service>
 
 
-        <service id="entvalley.controller" class="Entvalley\AppBundle\Controller\Controller" abstract="true" scope="request">
+        <service id="entvalley.controller_container" class="Entvalley\AppBundle\Controller\ControllerContainer" scope="request">
             <argument type="service" id="request"/>
             <argument type="service" id="router"/>
             <argument type="service" id="templating"/>
@@ -104,6 +105,10 @@
             <argument type="service" id="doctrine"/>
             <argument type="service" id="form.factory"/>
             <argument type="service" id="context.user"/>
+        </service>
+
+        <service id="entvalley.controller" class="Entvalley\AppBundle\Controller\Controller" abstract="true" scope="request">
+            <argument type="service" id="entvalley.controller_container"/>
         </service>
 
         <service id="entvalley.task_controller" class="Entvalley\AppBundle\Controller\TaskController" scope="request" parent="entvalley.controller">
@@ -117,6 +122,7 @@
         </service>
 
         <service id="entvalley.comment_controller" class="Entvalley\AppBundle\Controller\CommentController" scope="request" parent="entvalley.controller">
+            <argument type="service" id="exercise_html_purifier.default"/>
         </service>
 
         <service id="entvalley.command_controller" class="Entvalley\AppBundle\Controller\CommandController" scope="request" parent="entvalley.controller">
@@ -135,6 +141,14 @@
         <service id="entvalley.listener.project_listener" class="Entvalley\AppBundle\Listener\ProjectListener">
             <argument type="service" id="service_container"/>
             <tag name="doctrine.event_listener" event="postLoad" />
+        </service>
+
+        <service id="entvalley.listener.acl_listener" class="Entvalley\AppBundle\Listener\AclListener">
+            <argument type="service" id="security.context"/>
+            <argument type="service" id="security.acl.provider"/>
+            <tag name="doctrine.event_listener" event="preUpdate" lazy="true" priority="999" />
+            <tag name="doctrine.event_listener" event="preRemove" lazy="true" priority="999" />
+            <tag name="doctrine.event_listener" event="postLoad" lazy="true" priority="999" />
         </service>
     </services>
 

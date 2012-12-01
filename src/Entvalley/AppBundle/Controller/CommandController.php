@@ -3,15 +3,10 @@
 namespace Entvalley\AppBundle\Controller;
 
 use Entvalley\AppBundle\Domain\JsonEncoder;
-use Entvalley\AppBundle\Domain\UserContext;
 use Entvalley\AppBundle\Domain\Command\CommandInterpreter;
 use Symfony\Component\HttpFoundation\Request;
 use Entvalley\AppBundle\Domain\Command\CommandManager;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use JMS\SerializerBundle\Serializer\SerializerInterface;
-use Symfony\Component\Form\FormFactoryInterface;
 use Entvalley\AppBundle\Form\CommandType;
 use Entvalley\AppBundle\Domain\Command\CommandSource;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,13 +17,8 @@ class CommandController extends Controller
     private $commandManager;
     private $commandInterpreter;
 
-    public function __construct(Request $request,
-        RouterInterface $router,
-        $templating,
-        SessionInterface $session,
-        RegistryInterface $doctrine,
-        FormFactoryInterface $formFactory,
-        UserContext $userContext,
+    public function __construct(
+        ControllerContainer $container,
         SerializerInterface $serializer,
         CommandManager $commandManager,
         CommandInterpreter $commandInterpreter)
@@ -36,7 +26,7 @@ class CommandController extends Controller
         $this->serializer = $serializer;
         $this->commandManager = $commandManager;
         $this->commandInterpreter = $commandInterpreter;
-        parent::__construct($request, $router, $templating, $session, $doctrine, $formFactory, $userContext);
+        parent::__construct($container);
     }
 
     public function listAction()
@@ -47,12 +37,12 @@ class CommandController extends Controller
     public function sendAction()
     {
         $receivedCommand = new CommandSource();
-        $form = $this->formFactory->create(new CommandType(), $receivedCommand);
+        $form = $this->container->getFormFactory()->create(new CommandType(), $receivedCommand);
 
-        if ('POST' === $this->request->getMethod()) {
-            $form->bind($this->request);
+        if ('POST' === $this->container->getRequest()->getMethod()) {
+            $form->bind($this->container->getRequest());
 
-            $em = $this->doctrine->getManager();
+            $em = $this->container->getDoctrine()->getManager();
             $commandsResults = $this->commandInterpreter->interpret($receivedCommand);
             $em->flush();
 
@@ -66,7 +56,7 @@ class CommandController extends Controller
 
     public function formAction()
     {
-        $form = $this->formFactory->create(new CommandType(), new CommandSource());
+        $form = $this->container->getFormFactory()->create(new CommandType(), new CommandSource());
         return $this->view([
             'form' => $form->createView(),
         ]);

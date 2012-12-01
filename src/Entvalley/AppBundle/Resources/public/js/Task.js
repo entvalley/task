@@ -102,9 +102,24 @@
                 dataType: "script"
             });
 
-            $('#task-' + self.id).one('click', '.cancel', function(e) {
-                e.preventDefault();
+            var cancel = function(e) {
+                if (e.type !== 'keyup') {
+                    e.preventDefault();
+                }
                 App.UI.project.switchToTask( self.id);
+                App.UI.removeWYSIWYG();
+            };
+
+            $('#task-' + self.id).one('click', '.cancel', cancel);
+            App.UI.registerEscHandler(cancel);
+        };
+
+        this.updateComment = function (id, text, safeText) {
+            $.grep(self.comments(), function (elm, index) {
+                if (elm.id === id) {
+                    elm.text(text);
+                    elm.safeText(safeText);
+                }
             });
         };
     };

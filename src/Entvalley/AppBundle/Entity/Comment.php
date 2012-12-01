@@ -2,7 +2,10 @@
 
 namespace Entvalley\AppBundle\Entity;
 
-class Comment
+use HTMLPurifier;
+use Entvalley\AppBundle\Domain\IHaveOwner;
+
+class Comment implements IHaveOwner
 {
     private $id;
     private $author;
@@ -17,6 +20,12 @@ class Comment
      * @var StatusChange $statusChange
      */
     private $statusChange;
+
+    /**
+     * @var $htmlPurifier HTMLPurifier
+     */
+    private $htmlPurifier;
+    private $safeText;
 
     public function __construct()
     {
@@ -98,5 +107,33 @@ class Comment
     public function removeCommentFromTask()
     {
         $this->task->removeComment($this);
+    }
+
+    public function getSafeText()
+    {
+        return $this->safeText;
+    }
+
+    /**
+     * Serializer callback to generate a text with safe HTML tags which can be displayed
+     * in the browser. Requires a link to html purifier service.
+     *
+     * @see Task::setHtmlPurifier
+     */
+    public function purifyHtmlTags()
+    {
+        if ($this->htmlPurifier) {
+            $this->safeText = $this->htmlPurifier->purify($this->text);
+        }
+    }
+
+    public function setHtmlPurifier($htmlPurifier)
+    {
+        $this->htmlPurifier = $htmlPurifier;
+    }
+
+    public function isBelongingTo(User $user)
+    {
+        return $this->getTask()->isBelongingTo($user);
     }
 }

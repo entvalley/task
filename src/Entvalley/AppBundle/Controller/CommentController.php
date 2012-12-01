@@ -6,11 +6,20 @@ use Entvalley\AppBundle\Entity\Comment;
 use Entvalley\AppBundle\Domain\JsonEncoder;
 use Entvalley\AppBundle\Form\CommentType;
 
+
 class CommentController extends Controller
 {
+    private $htmlPurifier;
+
+    public function __construct(ControllerContainer $container, $htmlPurifier)
+    {
+        $this->htmlPurifier = $htmlPurifier;
+        parent::__construct($container);
+    }
+
     public function deleteAction(Comment $comment)
     {
-        $em = $this->doctrine->getManager();
+        $em = $this->container->getDoctrine()->getManager();
 
         $deletedId = $comment->getId();
 
@@ -27,15 +36,24 @@ class CommentController extends Controller
 
     public function editAction(Comment $comment)
     {
-        $em = $this->doctrine->getManager();
+        $em = $this->container->getDoctrine()->getManager();
 
-        $form = $this->formFactory->create(new CommentType(), $comment);
+        $form = $this->container->getFormFactory()->create(new CommentType(), $comment);
+        $comment->setHtmlPurifier($this->htmlPurifier);
 
-        if ('POST' === $this->request->getMethod()) {
-            $form->bind($this->request);
-            if ($form->isValid()) {
-                $em->flush();
-            }
+        if ($this->isValidForm($form)) {
+            $em->flush();
+            $comment->purifyHtmlTags();
+            return $this->javascript(
+                $this->renderView(
+                    'EntvalleyAppBundle:Comment:edit_success.html.twig',
+                    array(
+                        'comment' => $comment,
+                        'comment_text' => JsonEncoder::encode($comment->getText()),
+                        'comment_safe_text' => JsonEncoder::encode($comment->getSafeText()),
+                    )
+                )
+            );
         }
 
         $result = $this->viewContent(

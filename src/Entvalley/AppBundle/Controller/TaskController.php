@@ -5,12 +5,6 @@ namespace Entvalley\AppBundle\Controller;
 use Entvalley\AppBundle\Domain\TaskFilter;
 use Entvalley\AppBundle\Entity\Project;
 use Entvalley\AppBundle\Service\ContentNegotiator;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\Form\FormFactoryInterface;
-use Entvalley\AppBundle\Domain\UserContext;
 use JMS\SerializerBundle\Serializer\SerializerInterface;
 use Entvalley\AppBundle\Component\HttpFoundation\JsonResponse;
 use Entvalley\AppBundle\Domain\JsonEncoder;
@@ -25,13 +19,8 @@ class TaskController extends Controller
     private $negotiator;
     private $htmlPurifier;
 
-    public function __construct(Request $request,
-        RouterInterface $router,
-        $templating,
-        SessionInterface $session,
-        RegistryInterface $doctrine,
-        FormFactoryInterface $formFactory,
-        UserContext $userContext,
+    public function __construct(
+        ControllerContainer $container,
         SerializerInterface $serializer,
         ContentNegotiator $negotiator,
         $htmlPurifier)
@@ -39,7 +28,7 @@ class TaskController extends Controller
         $this->serializer = $serializer;
         $this->negotiator = $negotiator;
         $this->htmlPurifier = $htmlPurifier;
-        parent::__construct($request, $router, $templating, $session, $doctrine, $formFactory, $userContext);
+        parent::__construct($container);
     }
 
     /**
@@ -49,9 +38,9 @@ class TaskController extends Controller
      */
     public function indexAction(Project $project, $filterByType = null)
     {
-        $user = $this->userContext->getUser();
+        $user = $this->container->getUserContext()->getUser();
 
-        $em = $this->doctrine->getManager();
+        $em = $this->container->getDoctrine()->getManager();
 
         $taskRepository = $em->getRepository('Entvalley\AppBundle\Entity\Task');
 
@@ -69,7 +58,7 @@ class TaskController extends Controller
         }
 
 
-        if ($this->request->isXmlHttpRequest()) {
+        if ($this->container->getRequest()->isXmlHttpRequest()) {
             $this->serializer->setGroups(['summary']);
             return JsonResponse::createWithSerializer($this->serializer, array_map(function ($task) {
                         $task->setHtmlPurifier($this->htmlPurifier);
@@ -85,23 +74,19 @@ class TaskController extends Controller
 
     public function createAction()
     {
-        $user = $this->userContext->getUser();
-        $em = $this->doctrine->getManager();
+        $user = $this->container->getUserContext()->getUser();
+        $em = $this->container->getDoctrine()->getManager();
 
         $taskFactory = new TaskFactory;
         $task = $taskFactory->createFor($user);
 
-        $form = $this->formFactory->create(new TaskType(), $task);
+        $form = $this->container->getFormFactory()->create(new TaskType(), $task);
 
-        if ('POST' === $this->request->getMethod()) {
-            $form->bind($this->request);
+        if ($this->isValidForm($form)) {
+            $em->persist($task);
+            $em->flush();
 
-            if ($form->isValid()) {
-                $em->persist($task);
-                $em->flush();
-
-                return $this->redirect($this->url('app_task_list'));
-            }
+            return $this->redirect($this->url('app_task_list'));
         }
 
         return $this->view([
@@ -114,21 +99,23 @@ class TaskController extends Controller
     {
         //var_dump($this->negotiator->getPreferredType($this->request->headers->get('accept')));
 
-        $em = $this->doctrine->getManager();
+        $em = $this->container->getDoctrine()->getManager();
 
-        $form = $this->formFactory->create(new TaskType(), $task);
+        $form = $this->container->getFormFactory()->create(new TaskType(), $task);
 
-        if ('POST' === $this->request->getMethod()) {
-            $form->bind($this->request);
-            if ($form->isValid()) {
-                $em->flush();
+        if ($this->isValidForm($form)) {
+            $em->flush();
 
-                return $this->redirect($this->url('app_task_view', [
-                            'id' => $task->getId(),
-                            'project' => $task->getProject()->getId(),
-                            'project_name' => $task->getProject()->getCanonicalName()
-                        ]));
-            }
+            return $this->redirect(
+                $this->url(
+                    'app_task_view',
+                    [
+                        'id' => $task->getId(),
+                        'project' => $task->getProject()->getId(),
+                        'project_name' => $task->getProject()->getCanonicalName()
+                    ]
+                )
+            );
         }
 
         $result = $this->viewContent(
@@ -153,7 +140,7 @@ class TaskController extends Controller
      */
     public function viewAction(Task $task)
     {
-        if ($this->request->isXmlHttpRequest()) {
+        if ($this->container->getRequest()->isXmlHttpRequest()) {
             $this->serializer->setGroups(['details', 'summary']);
             $task->setHtmlPurifier($this->htmlPurifier);
             return JsonResponse::createWithSerializer($this->serializer, $task);
@@ -167,7 +154,7 @@ class TaskController extends Controller
 
     public function deleteAction(Task $task)
     {
-        $em = $this->doctrine->getManager();
+        $em = $this->container->getDoctrine()->getManager();
 
         $em->remove($task);
         $em->flush();

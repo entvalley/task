@@ -2,11 +2,17 @@
 
 namespace Entvalley\AppBundle\Entity;
 
-class StatusChange
+use Entvalley\AppBundle\Domain\IHaveOwner;
+
+class StatusChange implements IHaveOwner
 {
     private $id;
     private $whoUpdated;
     private $status;
+
+    /**
+     * @var Task
+     */
     private $task;
     private $createdAt;
     private $updatedAt;
@@ -61,4 +67,8 @@ class StatusChange
         return $this->whoUpdated;
     }
 
+    public function isBelongingTo(User $user)
+    {
+        return $this->task->isBelongingTo($user);
+    }
 }

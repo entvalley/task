@@ -3,6 +3,7 @@
 namespace Entvalley\AppBundle\Domain\Command;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use HTMLPurifier;
 use Entvalley\AppBundle\Domain\UserContext;
 use Entvalley\AppBundle\Entity\Comment;
 
@@ -13,14 +14,16 @@ class CommentCommand extends AbstractCommand
      */
     private $doctrine;
     private $userContext;
+    private $htmlPurifier;
 
     protected $isVisible = false;
 
 
-    public function __construct(Registry $doctrine, UserContext $userContext)
+    public function __construct(Registry $doctrine, UserContext $userContext, HTMLPurifier $htmlPurifier)
     {
         $this->doctrine = $doctrine;
         $this->userContext = $userContext;
+        $this->htmlPurifier = $htmlPurifier;
     }
 
     public function execute($content)
@@ -38,6 +41,7 @@ class CommentCommand extends AbstractCommand
         $comment->setCreatedAt(new \DateTime());
         $comment->setAuthor($this->userContext->getUser());
         $comment->setTask($task);
+        $comment->setHtmlPurifier($this->htmlPurifier);
 
         $em->persist($comment);
 

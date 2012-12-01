@@ -3,7 +3,8 @@
     App.Model = App.Model || {};
     App.Model.Comment = function (data) {
         var self = this;
-        self.text = data.text;
+        self.text = ko.observable(data.text);
+        self.safeText = ko.observable(data.safe_text);
         self.username = data.author.username;
         self.createdAt = data.created_at;
         self.id = data.id;
@@ -33,5 +34,26 @@
             }
             return statusName.toUpperCase();
         });
+
+        self.edit = function () {
+            $.ajax(Routing.generate('app_comment_edit', {
+                id: self.id
+            }), {
+                dataType: "script"
+            });
+
+            var cancel = function (e) {
+                if (e.type !== 'keyup') {
+                    e.preventDefault();
+                }
+                $('#comment-' + self.id).find('.edit-comment').remove();
+                $('#comment-' + self.id).find('.text').show();
+                App.UI.removeWYSIWYG();
+            };
+
+            $('#comment-' + self.id).one('click', '.cancel', cancel);
+
+            App.UI.registerEscHandler(cancel);
+        };
     };
 })(window.App = window.App || {});
