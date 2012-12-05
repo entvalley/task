@@ -3,7 +3,8 @@
 namespace Entvalley\AppBundle\Component\HttpFoundation;
 
 use Symfony\Component\HttpFoundation\JsonResponse as BaseJsonResponse;
-use JMS\SerializerBundle\Serializer\SerializerInterface;
+use JMS\Serializer\SerializerInterface;
+
 
 class JsonResponse extends BaseJsonResponse
 {

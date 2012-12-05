@@ -112,7 +112,7 @@
         </service>
 
         <service id="entvalley.task_controller" class="Entvalley\AppBundle\Controller\TaskController" scope="request" parent="entvalley.controller">
-            <argument type="service" id="serializer"/>
+            <argument type="service" id="jms_serializer"/>
             <argument type="service" id="entvalley.negotiator"/>
             <argument type="service" id="exercise_html_purifier.default"/>
         </service>
@@ -126,7 +126,7 @@
         </service>
 
         <service id="entvalley.command_controller" class="Entvalley\AppBundle\Controller\CommandController" scope="request" parent="entvalley.controller">
-            <argument type="service" id="serializer"/>
+            <argument type="service" id="jms_serializer"/>
             <argument type="service" id="entvalley.command_manager"/>
             <argument type="service" id="entvalley.command_interpreter"/>
         </service>
@@ -150,6 +150,7 @@
             <tag name="doctrine.event_listener" event="preRemove" lazy="true" priority="999" />
             <tag name="doctrine.event_listener" event="postLoad" lazy="true" priority="999" />
         </service>
+
     </services>
 
 </container>

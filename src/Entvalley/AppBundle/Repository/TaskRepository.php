@@ -4,27 +4,39 @@ namespace Entvalley\AppBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Entvalley\AppBundle\Domain\TaskFilter;
-use Entvalley\AppBundle\Entity\User;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Entvalley\AppBundle\Service\Pagination;
+use Entvalley\AppBundle\Entity\Company;
 
 class TaskRepository extends EntityRepository
 {
-    public function findWithFilterNewOrAssignedTo(TaskFilter $filter, User $user)
+    public function findByFilterAndCompany(Pagination $pagination, TaskFilter $filter, Company $company)
     {
         $query = $this->getEntityManager()
-            ->createQuery("SELECT t
+            ->createQuery("SELECT t, c, sc
                              FROM EntvalleyAppBundle:Task t
                              JOIN t.project p
-                            WHERE (t.assignedTo IS NULL OR t.assignedTo = :user)
-                                  AND p.company = :company_id AND p.id = :project_id
+                             LEFT JOIN t.comments c
+                             LEFT JOIN c.statusChange sc
+                            WHERE p.company = :company_id AND p.id = :project_id
                             ORDER BY t.createdAt DESC")
         ;
 
-        $query->setParameter('user', $user->getId());
-        $query->setParameter('company_id', $user->getCompany()->getId());
+        $query->setParameter('company_id', $company->getId());
         $query->setParameter('project_id', $filter->getWithinProject()->getId());
-        return $query->getResult();
-    }
 
+        $result = new Paginator($query, true);
+        $pagination->setTotal(count($result));
+        $query->setFirstResult($pagination->getOffset());
+        $query->setMaxResults($pagination->getPerPage());
+
+        $tasks = array();
+        foreach ($result as $task) {
+            $tasks[] = $task;
+        }
+        return $tasks;
+    }
+/*
     public function findWithFilterByCompany(TaskFilter $filter, $company)
     {
         $statuses = $filter->getStatuses();
@@ -46,6 +58,6 @@ class TaskRepository extends EntityRepository
         $query = $qb->getQuery();
         $query->setParameter('company_id', $company->getId());
         return $query->getResult();
-    }
+    }*/
 
 }

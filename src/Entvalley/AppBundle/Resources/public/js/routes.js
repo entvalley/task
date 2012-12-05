@@ -2,27 +2,24 @@ jQuery(function ($) {
     "use strict";
     (function (App, Routing, undefined) {
         $.sammy('body > .container',function () {
-            var self = App.UI.project;
+            var currentProject = App.UI.project;
             var loadTasks = function (filter) {
+
                 var loaded = [];
-                self.tasks([]);
-                self.tasks().forEach(function (item) {
-                    loaded.push(item.id);
-                });
-                return $.get(Routing.generate('app_task_list', {
+                return $.get((Routing.generate('app_task_list', {
                     filterByType: filter,
                     project: App.UI.project.id,
                     project_name: App.UI.project.canonicalName
-                }), {}, function (allData) {
-                    $.map(allData, function (item) {
-                        if (loaded.indexOf(parseInt(item.id, 10)) === -1) {
-                            if (loaded.length === 0) {
-                                self.tasks.push(new App.Model.Task(item));
-                            } else {
-                                self.tasks.unshift(new App.Model.Task(item));
-                            }
-                        }
+                }) + window.location.search), {}, function (allData) {
+                   console.log( currentProject.tasks.removeAll());
+                    currentProject.nextPage(allData.pagination.next);
+                    currentProject.previousPage(allData.pagination.previous);
+                    currentProject.currentPage = allData.pagination.currentPage;
+
+                    $.map(allData.tasks, function (item) {
+                        currentProject.tasks.push(new App.Model.Task(item));
                     });
+
                     App.UI.hideStatus();
                 });
             };
@@ -30,7 +27,7 @@ jQuery(function ($) {
 
             this.get(/\/(\d+)-([^\/]+)\/tasks\/(\d+)/, function () {
                 var id = this.params.splat[2];
-                self.switchToTask(id);
+                currentProject.switchToTask(id);
             });
 
             this.post('/:project/tasks/:id/edit', function (context) {
@@ -42,7 +39,7 @@ jQuery(function ($) {
 
                 $.post(context.path, context.params.toHash(), function () {
                     App.UI.removeWYSIWYG();
-                    self.switchToTask(id);
+                    currentProject.switchToTask(id);
                 });
             });
 
@@ -72,8 +69,8 @@ jQuery(function ($) {
                     });
                     return;
                 }
-                self.chosenTask(null);
-                App.UI.scroll('#task-item-' + self.lastVisited, 0);
+                currentProject.chosenTask(null);
+                App.UI.scroll('#task-item-' + currentProject.lastVisited, 0);
                 var dfd;
                 if (this.params.splat[2]) {
                     dfd = loadTasks(this.params.splat[3]);
@@ -82,8 +79,8 @@ jQuery(function ($) {
                 }
                 dfd.done(function () {
                     App.UI.hideStatus();
-                    self.command.setContext('tasks');
-                    self.command.placeholder('Create a new task...');
+                    currentProject.command.setContext('tasks');
+                    currentProject.command.placeholder('Create a new task...');
                 });
             });
         }).run();

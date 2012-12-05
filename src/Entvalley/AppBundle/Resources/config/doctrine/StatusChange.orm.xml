@@ -15,7 +15,7 @@
 
         <many-to-one field="whoUpdated" target-entity="Entvalley\AppBundle\Entity\User" />
         <many-to-one field="task" target-entity="Entvalley\AppBundle\Entity\Task">
-            <join-column on-delete="CASCADE"></join-column>
+            <join-column on-delete="CASCADE" />
         </many-to-one>
 
     </entity>

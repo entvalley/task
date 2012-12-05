@@ -65,6 +65,8 @@ try {
         if (!$this->securityContext->isGranted(new Expression('belongsTo(object, user) or hasPermission(object, "VIEW")'), $args->getEntity())) {
             throw new AccessDeniedException("insufficient privileges to view the object.");
         }
+
+        return $entity;
     }
 
     public function preUpdate(LifecycleEventArgs $args)

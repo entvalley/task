@@ -29,7 +29,7 @@
         "friendsofsymfony/user-bundle": "*",
         "jms/di-extra-bundle": "1.3.*",
         "jms/security-extra-bundle": "1.4.*",
-        "jms/serializer-bundle": "0.*",
+        "jms/serializer-bundle": "dev-master",
         "leafo/lessphp": "*",
         "php": ">=5.3.3",
         "sensio/distribution-bundle": "2.1.*",

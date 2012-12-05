@@ -241,7 +241,10 @@ class Task implements IHaveOwner
 
     public function isBelongingTo(User $user)
     {
-         return $this->getProject()->isBelongingTo($user);
+        if (empty($this->project)) {
+            return true;
+        }
+        return $this->getProject()->isBelongingTo($user);
     }
 
     private function getCanonicalNameGenerator()

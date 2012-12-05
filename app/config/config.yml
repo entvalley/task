@@ -77,12 +77,8 @@ fos_user:
 
 jms_serializer:
    handlers:
-       object_based: false
        datetime:
            default_timezone: "UTC"
-       array_collection: true
-       form_error: true
-       constraint_violation: true
 
    metadata:
        cache: file

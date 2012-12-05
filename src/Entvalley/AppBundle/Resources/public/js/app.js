@@ -180,7 +180,7 @@ jQuery(function ($) {
                         var contentCopy = $('<div style="width: ' + width + 'px; position: absolute; left: -9999px; top: -9999px;">').html(body.html());
                         var oldMinHeight = parseInt('0' + iframe.style.minHeight, 10);
                         $(body).append(contentCopy);
-                        var newMinHeight = contentCopy.height();
+                        var newMinHeight = parseInt(contentCopy.height(), 10);
                         contentCopy.remove();
                         if (oldMinHeight !== newMinHeight) {
                             $(iframe).css({ "min-height": newMinHeight });

@@ -5,16 +5,22 @@ namespace Entvalley\AppBundle\Controller;
 use Entvalley\AppBundle\Domain\TaskFilter;
 use Entvalley\AppBundle\Entity\Project;
 use Entvalley\AppBundle\Service\ContentNegotiator;
-use JMS\SerializerBundle\Serializer\SerializerInterface;
 use Entvalley\AppBundle\Component\HttpFoundation\JsonResponse;
 use Entvalley\AppBundle\Domain\JsonEncoder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Entvalley\AppBundle\Entity\Factory\TaskFactory;
 use Entvalley\AppBundle\Form\TaskType;
 use Entvalley\AppBundle\Entity\Task;
+use Entvalley\AppBundle\Service\Pagination;
+use Symfony\Component\HttpFoundation\Response;
+use JMS\Serializer\SerializerInterface;
+use Entvalley\AppBundle\Service\PaginationRouterUrlGenerator;
 
 class TaskController extends Controller
 {
+    /**
+     * @var \JMS\Serializer\SerializerInterface
+     */
     private $serializer;
     private $negotiator;
     private $htmlPurifier;
@@ -44,26 +50,34 @@ class TaskController extends Controller
 
         $taskRepository = $em->getRepository('Entvalley\AppBundle\Entity\Task');
 
-        if (!$project->belongsToCompany($user->getCompany())) {
-            throw new NotFoundHttpException();
-        }
+        $page = $this->container->getRequest()->query->get('page', 1);
+        $pagination = new Pagination(3, new PaginationRouterUrlGenerator($this->container->getRouter(), $this->container->getRequest()));
+        $pagination->setCurrentPage($page);
 
         $taskFilter = new TaskFilter();
         $taskFilter->withinProject($project);
         if (!is_null($filterByType)) {
             $taskFilter->thatAre($filterByType);
-            $tasks = $taskRepository->findWithFilterByCompany($taskFilter, $user->getCompany());
-        } else {
-            $tasks = $taskRepository->findWithFilterNewOrAssignedTo($taskFilter, $user);
         }
+        $tasks = $taskRepository->findByFilterAndCompany($pagination, $taskFilter, $user->getCompany());
 
 
         if ($this->container->getRequest()->isXmlHttpRequest()) {
             $this->serializer->setGroups(['summary']);
-            return JsonResponse::createWithSerializer($this->serializer, array_map(function ($task) {
-                        $task->setHtmlPurifier($this->htmlPurifier);
-                        return $task;
-                    }, $tasks));
+
+            foreach ($tasks as $task) {
+                $task->setHtmlPurifier($this->htmlPurifier);
+            }
+
+            return JsonResponse::createWithSerializer($this->serializer, [
+                    'tasks' => $tasks,
+                    'pagination' => [
+                        'last' => $pagination->getLastPage(),
+                        'next' => $pagination->getNextUrl(),
+                        'previous' => $pagination->getPreviousUrl(),
+                        'current' => $pagination->getCurrentPage()
+                    ]
+                ]);
         } else {
             return $this->view([
                 'tasks' => $tasks,
@@ -97,8 +111,6 @@ class TaskController extends Controller
 
     public function editAction(Task $task)
     {
-        //var_dump($this->negotiator->getPreferredType($this->request->headers->get('accept')));
-
         $em = $this->container->getDoctrine()->getManager();
 
         $form = $this->container->getFormFactory()->create(new TaskType(), $task);

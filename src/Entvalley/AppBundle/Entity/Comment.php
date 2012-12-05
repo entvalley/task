@@ -134,6 +134,9 @@ class Comment implements IHaveOwner
 
     public function isBelongingTo(User $user)
     {
+        if (empty($this->task)) {
+            return true;
+        }
         return $this->getTask()->isBelongingTo($user);
     }
 }

@@ -39,7 +39,7 @@ class Controller
     public function javascript($content = '', $status = 200, array $headers = array())
     {
      	return $this->createResponse($content, $status,
-     		array_merge(array('Content-Type' => 'application/javascript'), $headers));
+     		array_merge(array('Content-Type' => 'text/javascript'), $headers));
     }
 
     /**

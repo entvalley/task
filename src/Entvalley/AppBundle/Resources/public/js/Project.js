@@ -13,6 +13,13 @@ jQuery(function ($) {
             self.fullCanonicalName = function () {
                 return self.id + '-' + self.canonicalName;
             };
+            self.previousPage = ko.observable(undefined);
+            self.nextPage = ko.observable(undefined);
+            self.showPages = ko.computed(function () {
+                return !self.chosenTask() && self.previousPage !== '' &&  self.nextPage !== '' &&
+                    self.previousPage !== undefined &&  self.nextPage !== undefined;
+            });
+            self.currentPage = 1;
 
             self.chosenTask.subscribe(function (task) {
                 if (!task) {
@@ -52,7 +59,7 @@ jQuery(function ($) {
                     return;
                 }
 
-                $(elem).animate({ height: 'toggle', opacity: 'toggle' }, 'slow', function () {
+                $(elem).animate({ opacity: 'toggle' }, 'slow', function () {
                     $(this).remove();
                 });
             };

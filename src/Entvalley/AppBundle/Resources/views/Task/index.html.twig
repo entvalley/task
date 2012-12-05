@@ -93,16 +93,25 @@
                         <a class="message-title"
                            data-bind="text: title, attr: { href: url }"></a>
 
-                        <p class="excerpt" data-bind="html: excerpt"></p>
-
                         <p class="reportedby"><span data-bind="text: author"></span> at
                             <span data-bind="text: formatDate(date)"></span>.
                             <span data-bind="if: typeof assignedTo() !== 'undefined'">Taken by <b
                                     data-bind="text: assignedTo().username"></b>.</span>
                         </p>
+                        <p class="excerpt" data-bind="html: excerpt"></p>
+
                     </div>
                 </div>
             </li>
         </ul>
     </div>
+
+    <ul class="pager pager-mini" data-bind="visible: showPages()">
+      <li class="previous" data-bind="visible: nextPage()">
+        <a data-bind="attr: { href: nextPage() }">&larr; Older</a>
+      </li>
+      <li class="next" data-bind="visible: previousPage()">
+        <a data-bind="attr: { href: previousPage() }">Newer &rarr;</a>
+      </li>
+    </ul>
 {% endblock %}

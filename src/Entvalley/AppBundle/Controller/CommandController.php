@@ -6,7 +6,7 @@ use Entvalley\AppBundle\Domain\JsonEncoder;
 use Entvalley\AppBundle\Domain\Command\CommandInterpreter;
 use Symfony\Component\HttpFoundation\Request;
 use Entvalley\AppBundle\Domain\Command\CommandManager;
-use JMS\SerializerBundle\Serializer\SerializerInterface;
+use JMS\Serializer\SerializerInterface;
 use Entvalley\AppBundle\Form\CommandType;
 use Entvalley\AppBundle\Domain\Command\CommandSource;
 use Symfony\Component\HttpFoundation\JsonResponse;
