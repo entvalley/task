@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Entvalley\AppBundle\Response\JsonResponseMessage;
 use Symfony\Component\HttpFoundation\Request;
+use Entvalley\AppBundle\Service\AclManager;
 
 /**
  * Container that holds common dependencies for controllers
@@ -53,6 +54,11 @@ class ControllerContainer
     protected $userContext;
 
     /**
+     * @var AclManager
+     */
+    protected $aclManager;
+
+    /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\Routing\RouterInterface $router
      * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
@@ -60,8 +66,9 @@ class ControllerContainer
      * @param \Symfony\Bridge\Doctrine\RegistryInterface $doctrine
      * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
      * @param \Entvalley\AppBundle\Domain\UserContext $userContext
+     * @param AclManager $aclManager
      */
-    public function __construct(Request $request, RouterInterface $router, EngineInterface $templating, SessionInterface $session, RegistryInterface $doctrine, FormFactoryInterface $formFactory, UserContext $userContext)
+    public function __construct(Request $request, RouterInterface $router, EngineInterface $templating, SessionInterface $session, RegistryInterface $doctrine, FormFactoryInterface $formFactory, UserContext $userContext, AclManager $aclManager)
     {
         $this->request = $request;
         $this->router = $router;
@@ -70,6 +77,7 @@ class ControllerContainer
         $this->doctrine = $doctrine;
         $this->formFactory = $formFactory;
         $this->userContext = $userContext;
+        $this->aclManager = $aclManager;
     }
 
     /**
@@ -126,5 +134,13 @@ class ControllerContainer
     public function getUserContext()
     {
         return $this->userContext;
+    }
+
+    /**
+     * @return \Entvalley\AppBundle\Service\AclManager
+     */
+    public function getAclManager()
+    {
+        return $this->aclManager;
     }
 }

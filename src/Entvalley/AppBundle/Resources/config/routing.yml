@@ -62,3 +62,39 @@ app_command_send:
 app_project_create:
     pattern:  /projects/create
     defaults: { _controller: entvalley.project_controller:createAction }
+
+app_project_settings:
+    pattern:  /projects/{project}-{project_name}/settings
+    defaults: { _controller: entvalley.project_controller:settingsAction }
+    options:
+        expose: true
+    requirements:
+        project: \d+
+        project_name: "[^/]+"
+
+app_project_collaborators:
+    pattern:  /projects/{project}-{project_name}/collaborators
+    defaults: { _controller: entvalley.project_controller:collaboratorsAction }
+    options:
+        expose: true
+    requirements:
+        project: \d+
+        project_name: "[^/]+"
+
+app_project_collaborators_invite:
+    pattern:  /projects/{project}-{project_name}/collaborators/invite
+    defaults: { _controller: entvalley.project_controller:inviteCollaboratorsAction }
+    options:
+        expose: true
+    requirements:
+        project: \d+
+        project_name: "[^/]+"
+
+app_project_accept_invitation:
+    pattern:  /projects/{project}-{project_name}/acceptInvitation
+    defaults: { _controller: entvalley.project_controller:acceptInvitationAction }
+    options:
+        expose: true
+    requirements:
+        project: \d+
+        project_name: "[^/]+"

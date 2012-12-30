@@ -3,19 +3,15 @@
     App.Model = App.Model || {};
     App.Model.Comment = function (data) {
         var self = this;
-        self.text = ko.observable(data.text);
-        self.safeText = ko.observable(data.safe_text);
+        self.text = ko.observable(data['text']);
+        self.safeText = ko.observable(data['safe_text']);
         self.username = data.author.username;
-        self.createdAt = data.created_at;
+        self.createdAt = data['created_at'];
         self.id = data.id;
 
-        var statusChange = data.status_change || {
+        var statusChange = data['status_change'] || {
             status: null,
             created_at: null
-        };
-
-        self.generateDeletionLink = function () {
-            return Routing.generate('app_comment_delete', { id: self.id });
         };
 
         self.statusChanged = typeof data.status_change !== 'undefined';
@@ -36,12 +32,11 @@
         });
 
         self.edit = function () {
-            $.ajax(Routing.generate('app_comment_edit', {
+            var dfd = $.ajax(Routing.generate('app_comment_edit', {
                 id: self.id
             }), {
                 dataType: "script"
             });
-
             var cancel = function (e) {
                 if (e.type !== 'keyup') {
                     e.preventDefault();
@@ -51,9 +46,18 @@
                 App.UI.removeWYSIWYG();
             };
 
-            $('#comment-' + self.id).one('click', '.cancel', cancel);
+            dfd.done(function () {
+                $('#comment-' + self.id).one('click', '.cancel', cancel);
+                App.UI.registerEscHandler(cancel);
+            });
+        };
 
-            App.UI.registerEscHandler(cancel);
+        self.remove = function () {
+            if (!window.confirm("Are you sure you want to delete the comment?")) {
+                return;
+            }
+
+            $.ajax(Routing.generate('app_comment_delete', { id: self.id }), { dataType: "script" });
         };
     };
 })(window.App = window.App || {});

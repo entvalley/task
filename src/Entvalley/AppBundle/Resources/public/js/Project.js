@@ -8,16 +8,16 @@ jQuery(function ($) {
             self.chosenTask = ko.observable();
             self.command = new App.Model.Command();
             self.lastVisited = null;
-            self.id = App.CurrentProject.Id;
-            self.canonicalName = App.CurrentProject.CanonicalName;
+            self.id = App.CurrentProject.id;
+            self.canonicalName = App.CurrentProject.canonicalName;
             self.fullCanonicalName = function () {
                 return self.id + '-' + self.canonicalName;
             };
             self.previousPage = ko.observable(undefined);
             self.nextPage = ko.observable(undefined);
             self.showPages = ko.computed(function () {
-                return !self.chosenTask() && self.previousPage !== '' &&  self.nextPage !== '' &&
-                    self.previousPage !== undefined &&  self.nextPage !== undefined;
+                return !self.chosenTask() && self.previousPage !== '' && self.nextPage !== '' &&
+                    self.previousPage !== undefined && self.nextPage !== undefined;
             });
             self.currentPage = 1;
 
@@ -84,7 +84,7 @@ jQuery(function ($) {
             };
 
             self.assignedToMe = ko.computed(function () {
-                return ko.utils.arrayFilter(self.tasks(), function(task) {
+                return ko.utils.arrayFilter(self.tasks(), function (task) {
                     if (!task.assignedTo()) {
                         return false;
                     }
@@ -94,7 +94,7 @@ jQuery(function ($) {
             });
 
             self.unassigned = ko.computed(function () {
-                return ko.utils.arrayFilter(self.tasks(), function(task) {
+                return ko.utils.arrayFilter(self.tasks(), function (task) {
                     return task.hasStatus('unassigned') || task.hasStatus('reopened');
                 });
             });
@@ -102,10 +102,10 @@ jQuery(function ($) {
 
             self.switchToTask = function (id) {
                 $.get(Routing.generate('app_task_view', {
-                        id: id,
-                        project: self.id,
-                        project_name: self.canonicalName
-                    }), {}, function (data) {
+                    id: id,
+                    project: self.id,
+                    project_name: self.canonicalName
+                }), {}, function (data) {
                     App.UI.hideStatus();
                     self.chosenTask(new App.Model.Task(data));
                     self.command.setContext('task', id);
@@ -122,11 +122,11 @@ jQuery(function ($) {
             var _duration = 150;
             var _classPrefix = 'status-';
 
-            var init = function(element, valueAccessor, allBindingsAccessor, viewModel) {
+            var init = function (element, valueAccessor) {
                     var status = valueAccessor();
                     _oldValue = status();
                 },
-                update = function(element, valueAccessor, allBindingsAccessor, viewModel) {
+                update = function (element, valueAccessor) {
                     var status = valueAccessor();
                     if (status() < 1 || status() > App.Model.TaskStatus.Names.length) {
                         return;
@@ -151,12 +151,16 @@ jQuery(function ($) {
                     });
                     _oldValue = status();
                 };
-                return {
-                    init: init,
-                    update: update
-                };
+            return {
+                init: init,
+                update: update
+            };
         })();
-        ko.applyBindings(App.UI.project = new Project(App.CurrentProject));
+
+        var project = document.getElementById('project');
+        if (project) {
+            ko.applyBindings(App.UI.project = new Project(App.CurrentProject), project);
+        }
     })(window.App = window.App || {}, window.Routing = window.Routing || {});
 });
 

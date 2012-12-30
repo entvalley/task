@@ -1,17 +1,15 @@
 jQuery(function ($) {
     "use strict";
     (function (App, Routing, undefined) {
-        $.sammy('body > .container',function () {
+        $.sammy('body > section > .container', function () {
             var currentProject = App.UI.project;
             var loadTasks = function (filter) {
-
-                var loaded = [];
                 return $.get((Routing.generate('app_task_list', {
                     filterByType: filter,
                     project: App.UI.project.id,
                     project_name: App.UI.project.canonicalName
                 }) + window.location.search), {}, function (allData) {
-                   console.log( currentProject.tasks.removeAll());
+                    currentProject.tasks.removeAll();
                     currentProject.nextPage(allData.pagination.next);
                     currentProject.previousPage(allData.pagination.previous);
                     currentProject.currentPage = allData.pagination.currentPage;
@@ -23,6 +21,18 @@ jQuery(function ($) {
                     App.UI.hideStatus();
                 });
             };
+            var loadSettings = function () {
+                currentProject = currentProject || App.CurrentProject;
+                return $.get((Routing.generate('app_project_collaborators', {
+                    project: currentProject.id,
+                    project_name: currentProject.canonicalName
+                })), {}, function (projectUsers) {
+                    $.map(projectUsers.invitations, function (invitation) {
+                        App.UI.settings.invitations.push(new App.Model.ProjectInvitation(invitation));
+                    });
+                    App.UI.settings.collaborators(projectUsers.collaborators);
+                });
+            };
 
 
             this.get(/\/(\d+)-([^\/]+)\/tasks\/(\d+)/, function () {
@@ -30,12 +40,11 @@ jQuery(function ($) {
                 currentProject.switchToTask(id);
             });
 
-            this.post('/:project/tasks/:id/edit', function (context) {
-                var id = this.params.id;
-                var project = this.params.project;
+            this.post(/\/(\d+)-([^\/]+)\/tasks\/(\d+)\/edit/, function (context) {
+                var id = this.params.splat[2];
                 delete this.params.id;
                 delete this.params.project;
-                delete this.params._wysihtml5_mode;
+                delete this.params['_wysihtml5_mode'];
 
                 $.post(context.path, context.params.toHash(), function () {
                     App.UI.removeWYSIWYG();
@@ -45,7 +54,7 @@ jQuery(function ($) {
 
             this.post('/comments/:id/edit', function (context) {
                 delete this.params.id;
-                delete this.params._wysihtml5_mode;
+                delete this.params['_wysihtml5_mode'];
 
                 $.post(context.path, context.params.toHash(), App.UI.removeWYSIWYG);
             });
@@ -54,13 +63,16 @@ jQuery(function ($) {
             this.post('/projects/create', function (context) {
                 $.post(context.path, context.params.toHash(), function (data, status, xhr) {
                     var type = xhr.getResponseHeader("content-type");
-                    if(type !== "application/javascript") {
+                    if (type !== "application/javascript") {
                         $('#new_project form').replaceWith(data);
                     }
                 });
             });
 
-            this.get(/(\d+)-([^\/]+)\/tasks(\/(\w+))?/, function (context) {
+            this.get(/(\d+)-([^\/]+)\/tasks(\/(\w+))?/, function () {
+                if (!App.UI.project) {
+                    window.location = window.location;
+                }
                 if (App.UI.project.fullCanonicalName() !== this.params.splat[0] + '-' + this.params.splat[1]) {
                     window.location = Routing.generate('app_task_list', {
                         filterByType: this.params.splat[3],
@@ -81,6 +93,31 @@ jQuery(function ($) {
                     App.UI.hideStatus();
                     currentProject.command.setContext('tasks');
                     currentProject.command.placeholder('Create a new task...');
+                });
+            });
+
+            this.get(/(\d+)-([^\/]+)\/settings/, function () {
+                if (!App.UI.settings) {
+                    window.location = window.location;
+                }
+                var dfd = loadSettings();
+                dfd.done(function () {
+                    App.UI.hideStatus();
+                });
+            });
+
+            this.post(/\/(\d+)-([^\/]+)\/collaborators\/invite/, function (context) {
+                $('.project-invitation .alert').fadeOut();
+                $.post(context.path, context.params.toHash(), function (response) {
+                    var invitees = [];
+                    $.map(response.invitees, function (invitee) {
+                        invitees.push(new App.Model.ProjectInvitation(invitee));
+                    });
+
+                    App.UI.settings.updateInvitations(invitees);
+                    $('.project-invitation .control-group').not(':last').fadeOut(function () {
+                        $(this).remove();
+                    });
                 });
             });
         }).run();

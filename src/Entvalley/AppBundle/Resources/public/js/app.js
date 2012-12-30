@@ -33,6 +33,33 @@ jQuery(function ($) {
                         }
                     }
                 });
+
+                ko.bindingHandlers.dateString = {
+                    update: function (element, valueAccessor) {
+                        var value = valueAccessor(), valueUnwrapped;
+                        value['type'] = value.type || 'calendar';
+
+                        valueUnwrapped = ko.utils.unwrapObservable(value.date);
+                        if (element.tagName === 'TIME') {
+                            element.setAttribute('datetime', valueUnwrapped);
+                        }
+                        element.setAttribute('title', valueUnwrapped);
+                        var newValue = valueUnwrapped;
+                        switch (value.type.toLowerCase()) {
+                            case "calendar":
+                                newValue = moment(valueUnwrapped).calendar();
+                                break;
+                            case "fromnow":
+                                newValue = moment(valueUnwrapped).fromNow();
+                                break;
+                            case "format":
+                                value['format'] = value.format || 'L';
+                                newValue = moment(valueUnwrapped).format(value.format);
+                                break;
+                        }
+                        ko.utils.setTextContent(element, newValue);
+                    }
+                }
             },
 
             showStatus: function (text, isError) {
@@ -49,8 +76,8 @@ jQuery(function ($) {
             },
 
             createProjectWorkspace: function () {
-                App.UI._toggle('#page');
-                App.UI._toggle('#new_project');
+                App.UI.toggle('#page');
+                App.UI.toggle('#new_project');
                 App.UI.registerEscHandler(function () {
                     $('#new_project button[data-role~="cancel"]').trigger('click');
                 });
@@ -59,8 +86,8 @@ jQuery(function ($) {
             showCommandResult: function (text) {
                 $('.command_tooltip').html(text).slideDown(300);
 
-                var tooltipTimeout;
-                var closeTooltip = function () {
+                var tooltipTimeout, closeTooltip;
+                closeTooltip = function () {
                     $('.command_tooltip').slideUp(300).empty();
                     if (tooltipTimeout !== null) {
                         clearTimeout(tooltipTimeout);
@@ -123,18 +150,51 @@ jQuery(function ($) {
                     });
                 });
 
+                $('body').on('keydown mousedown', '.project-invitation input[type="email"]', function (e) {
+                    var INVITEE_SELECTOR = 'input[type="email"]',
+                        $self = $(this),
+                        $container = $self.parents('.control-group'),
+                        $next = $container.next().find(INVITEE_SELECTOR),
+                        $prev = $container.prev().find(INVITEE_SELECTOR),
+                        $last = $container.parent().find(INVITEE_SELECTOR).last();
+
+                    var applyPrototype = function () {
+                        var $form = $self.parents('form');
+                        var count = parseInt('0' + $form.data('invitee-count'), 10);
+                        var proto = $self.parents('form').data('invitee-email-prototype');
+                        var $proto = $(proto.replace(/__name__/g, ++count));
+                        $form.data('invitee-count', count);
+                        //$container.parent().append(proto);
+                        $proto.css('display', 'none');
+
+                        $proto.insertBefore($form.find('input[type="submit"]')).fadeIn();
+                    };
+
+                    var noPrevOrPrevHasValue = ($prev.length === 0 || $.trim($prev.val()) !== '');
+                    if ($.trim($last.val()) !== '' || (($next.length === 0) && noPrevOrPrevHasValue)) {
+                        applyPrototype();
+                        return;
+                    }
+
+                    // for TAB-key
+                    var nextIsLastAndHasNoValue = ($last.get(0) === $next.get(0) || $.trim($last.val()) !== '');
+                    if (e.which === 9 && $.trim($self.val()) !== '' && nextIsLastAndHasNoValue) {
+                        applyPrototype();
+                    }
+                });
+
                 var cancel = function () {
-                    App.UI._toggle('#page', false);
+                    App.UI.toggle('#page', false);
                     var container = $(this).closest('div[data-behaviour~="expandable"]');
                     container.find('form').each(function () {
                         this.reset();
                     });
-                    App.UI._toggle(container, true);
+                    App.UI.toggle(container, true);
                 };
 
                 $('button[data-role~="cancel"]').on('click', cancel);
 
-                $('body').on('mouseenter mouseleave', 'li[data-role~="hovercontainer"]', function (e) {
+                $('body').on('mouseenter mouseleave', '*[data-role~="hovercontainer"]', function (e) {
                     var elms = $(this).find('*[data-behaviour~="showonhover"]');
                     if (e.type === 'mouseenter') {
                         elms.show();
@@ -143,26 +203,11 @@ jQuery(function ($) {
                     }
                 });
 
-                $('body').on('click', '.remove-comment', function (e) {
-                    e.preventDefault();
-
-                    if (!window.confirm("Are you sure you want to delete the comment?")) {
-                        return;
-                    }
-
-                    $.ajax(this.href, {
-                        dataType: "script"
-                    });
-                });
-
                 $('a[data-role~="create_project"]').on('click', function (e) {
                     e.preventDefault();
                     App.UI.createProjectWorkspace();
                 });
             },
-
-
-
 
             initEditBehaviours: function () {
                 $('*[data-behaviour~="autosize"]').each(function () {
@@ -204,7 +249,7 @@ jQuery(function ($) {
                                     for (var command in commands) {
 
                                         if (command.toLowerCase().indexOf(text.toLowerCase()) === 0 &&
-                                            commands[command].is_visible) {
+                                            commands[command]['is_visible']) {
                                             words.push(command);
                                         }
                                     }
@@ -238,8 +283,8 @@ jQuery(function ($) {
                 });
             },
 
-            _toggle: function (id, hide) {
-                if(!hide && $(id).is(':hidden')) {
+            toggle: function (id, hide) {
+                if (!hide && $(id).is(':hidden')) {
                     $(id).fadeToggle();
                 } else if (hide !== false) {
                     $(id).hide();

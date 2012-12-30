@@ -9,23 +9,24 @@ body {
     background: url(/bundles/entvalleyapp/images/background.png);
     overflow-y: scroll;
 
-    > .container > .row > .span12,  > .container > .row > .span6 {
+    > section > .container > .row > .span12, > .container > .row > .span6 {
         background-color: #ffffff;
         padding: 10px;
-        .box-shadow(1px 1px 7px 0px rgba(0, 0, 0, 0.2));
+        /**.box-shadow(1px 1px 7px 0px rgba(0, 0, 0, 0.2));*/
+        .box-shadow(1px 1px 3px 1px rgba(0,0,0,0.1));
     }
 
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 @media (min-width: 768px) and (max-width: 979px) {
-    body > .container > .row  >.span12 {
+    body > section > .container > .row  >.span12 {
         width: 704px;
     }
 }
 
 @media (min-width: 1200px) {
-    body > .container > .row  >.span12 {
+    body > section > .container > .row  >.span12 {
         width: 1130px;
         padding: 20px;
     }
@@ -634,6 +635,36 @@ label {
     filter: none;
 }
 
+.btn-primary {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #77af3a;
+  *background-color: #77af3a;
+  background-image: none;
+  background-repeat: repeat-x;
+  border-color: #008000 #008000 #008000;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  filter: none;
+}
+
+
+
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary.active,
+.btn-primary.disabled,
+.btn-primary[disabled] {
+  color: #ffffff;
+  background-color: #659135;
+  *background-color: #659135;
+}
+
+.btn-primary:active,
+.btn-primary.active {
+  background-color: #659135 \9;
+}
+
+
 .form-page {
 
     .row-separator {
@@ -799,7 +830,7 @@ form .help {
 }
 
 .pager-mini {
-    a, span {
+    li > a, li > span {
         font-size: 12px;
         color: black;
         border: none;
@@ -807,7 +838,7 @@ form .help {
         padding: 2px 8px;
         border-radius: 0;
     }
-    a:hover {
+    li > a:hover {
         font-size: 12px;
         color: white;
         border: none;
@@ -815,4 +846,65 @@ form .help {
         padding: 2px 8px;
         border-radius: 0;
     }
+}
+
+.project-invitation {
+    border: 4px solid #eff1e8;
+    padding: 0 10px;
+    .box-shadow(inset 0px 0px 0px 1px rgba(0,0,0, 0.1));
+
+    .control-group {
+        margin-bottom: 0px;
+        > div:before {
+            width: 14px;
+            height: 14px;
+            content: " ";
+            font-size: small;
+            color: red;
+            position: absolute;
+            margin: 8px 0 0 8px;
+            background-image: url('/bundles/entvalleyapp/images/glyphicons-halflings.png');
+            background-repeat: no-repeat;
+            background-position: -168px 0;
+        }
+
+        input {
+            margin-left: 28px;
+        }
+    }
+}
+
+td.actions {
+    text-align: right;
+}
+
+
+textarea,
+input[type="text"],
+input[type="password"],
+input[type="datetime"],
+input[type="datetime-local"],
+input[type="date"],
+input[type="month"],
+input[type="time"],
+input[type="week"],
+input[type="number"],
+input[type="email"],
+input[type="url"],
+input[type="search"],
+input[type="tel"],
+input[type="color"],
+.uneditable-input {
+    .box-shadow(inset 1px 2px 2px rgba(0, 0, 0, 0.075));
+    background-color: #fdfdfd;
+    .border-radius(2px);
+}
+
+.btn {
+    .border-radius(2px);
+}
+
+.alert {
+    .border-radius(0px);
+    border-width: 2px;
 }

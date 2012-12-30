@@ -1,0 +1,13 @@
+Entvalley\AppBundle\Entity\ProjectInvitation:
+    exclusion_policy: ALL
+    properties:
+        id:
+          expose: true
+        invitedBy:
+          expose: true
+        createdAt:
+          expose: true
+        isAccepted:
+          expose: true
+        inviteeEmail:
+          expose: true

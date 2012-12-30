@@ -22,7 +22,8 @@ class User extends BaseUser implements IHaveOwner
 
     public function isBelongingTo(User $user)
     {
-        return $this->isUser($user);
+        // since users are owners of all objects, they don't have owners and belong to anyone
+        return true;
     }
 
     /**

@@ -1,0 +1,9 @@
+Entvalley\AppBundle\Entity\ProjectCollaborator:
+    exclusion_policy: ALL
+    properties:
+       id:
+          expose: true
+       collaborator:
+          expose: true
+       createdAt:
+          expose: true

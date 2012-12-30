@@ -2,7 +2,7 @@
 
 {% macro message_summary(with_status) %}
     <div class="message-info">
-        <span class="created-at" data-bind="text: createdAt"></span>
+        <span class="created-at" data-bind="text: shortCreatedOnDate"></span>
         <span class="comments-number"><span
                 data-bind="text: numberOfComments"></span> answers</span>
         {% if with_status %}
@@ -11,8 +11,8 @@
     </div>
 {% endmacro %}
 
+{% set section = 'project' %}
 {% block content %}
-
     <div class="task" data-bind="with: chosenTask, attr: { id: chosenTask() ? 'task-' + chosenTask().id : null }" xmlns="http://www.w3.org/1999/html">
         <div class="status-header" data-bind="toggleStatusIcon: status"></div>
         <div class="actions-header">
@@ -25,7 +25,7 @@
         <div class="row-fluid">
             <div class="message">
                 <p>
-                    <span class="created-at" data-bind="text: createdAt"></span>
+                    <span class="created-at" data-bind="dateString: { date: date, type: 'format', format: 'LL' }"></span>
                     <span class="message-title" data-bind="text: title"></span>
                 </p>
 
@@ -48,10 +48,10 @@
                         <div class="span10">
                             <p>
                                 <b data-bind="text: username"></b>
-                                <time class="about timeago" data-bind="text: createdAt, attr: { datetime: createdAt }"></time>
+                                <time class="about" data-bind="dateString: { date: createdAt, type: 'fromnow' }"></time>
 
-                                <a data-bind="click: edit" href="#" data-behaviour="showonhover" class="hidden-link" style="display: none">Edit</a>
-                                <a data-bind="attr: { href: generateDeletionLink() }" data-behaviour="showonhover" class="hidden-link remove-link remove-comment" style="display: none">Delete</a>
+                                <a data-bind="click: edit" href="#edit-comment" data-behaviour="showonhover" class="hidden-link" style="display: none">Edit</a>
+                                <a data-bind="click: remove" href="#remove-comment" data-behaviour="showonhover" class="hidden-link remove-link remove-comment" style="display: none">Remove</a>
                             </p>
                             <p class="text" data-bind="html: safeText"></p>
                         </div>
@@ -80,7 +80,7 @@
           <div class="actions-header">
               <ul>
                   <li class="action">
-                      <a href="#edit-task" d="click: ">Settings</a>
+                      <a href="{{ path('app_project_settings', { project: project.id, project_name: project.canonicalName }) }}">Settings</a>
                   </li>
               </ul>
           </div>
@@ -114,4 +114,5 @@
         <a data-bind="attr: { href: previousPage() }">Newer &rarr;</a>
       </li>
     </ul>
+
 {% endblock %}

@@ -29,10 +29,6 @@
             return Math.max(numberOfComments, self.comments() ? self.comments().length : 0);
         });
 
-        this.status.subscribe(function (newStatus) {
-            console.log('STATUS HAS CHANGES');
-        });
-
         this.addComment = function (data) {
             self.comments.push(new App.Model.Comment(data));
         };
@@ -62,7 +58,6 @@
         };
 
         this.afterRender = function (elem) {
-            $(elem).find('.timeago').timeago();
         };
 
         this.formatDate = function (date) {
@@ -71,9 +66,9 @@
             return (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
         };
 
-        this.createdAt = ko.computed(function () {
-            return ko.utils.unwrapObservable(self.date).getDate() + ' ' +
-                App.AbbrMonthNames[ko.utils.unwrapObservable(self.date).getMonth()] + ' ' +
+        this.shortCreatedOnDate = ko.computed(function () {
+            return App.AbbrMonthNames[ko.utils.unwrapObservable(self.date).getMonth()] + ' ' +
+                ko.utils.unwrapObservable(self.date).getDate() + ' ' +
                 ko.utils.unwrapObservable(self.date).getFullYear();
         });
 
@@ -102,11 +97,11 @@
                 dataType: "script"
             });
 
-            var cancel = function(e) {
+            var cancel = function (e) {
                 if (e.type !== 'keyup') {
                     e.preventDefault();
                 }
-                App.UI.project.switchToTask( self.id);
+                App.UI.project.switchToTask(self.id);
                 App.UI.removeWYSIWYG();
             };
 
@@ -115,7 +110,7 @@
         };
 
         this.updateComment = function (id, text, safeText) {
-            $.grep(self.comments(), function (elm, index) {
+            $.grep(self.comments(), function (elm) {
                 if (elm.id === id) {
                     elm.text(text);
                     elm.safeText(safeText);

@@ -91,29 +91,30 @@
     </div>
 </div>
 
-<div class="container" id="page" style="">
-
-    <div class="row">
-        <div class="span12">
-            {% for type, flashMessages in app.session.flashbag.all() %}
-                {% for flashMessage in flashMessages %}
-                    <div class="alert alert-{{ type }}">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        {{ flashMessage }}
-                    </div>
+<section id="{{ section|default('common') }}">
+    <div class="container" id="page" style="">
+        <div class="row">
+            <div class="span12">
+                {% for type, flashMessages in app.session.flashbag.all() %}
+                    {% for flashMessage in flashMessages %}
+                        <div class="alert alert-{{ type }}">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            {{ flashMessage }}
+                        </div>
+                    {% endfor %}
                 {% endfor %}
-            {% endfor %}
-            {% block content %}
-            {% endblock %}
+                {% block content %}
+                {% endblock %}
+            </div>
         </div>
-    </div>
 
-    {% if project is defined %}
-    <div class="tools">
-        {% render 'entvalley.command_controller:formAction' %}
+        {% if project is defined %}
+        <div class="tools">
+            {% render 'entvalley.command_controller:formAction' %}
+        </div>
+        {% endif %}
     </div>
-    {% endif %}
-</div>
+</section>
 
 <div id="status" style="display: none;">
     <div class="text"></div>
@@ -129,19 +130,21 @@
 
     {% if project is defined %}
     App.CurrentProject = {
-        CanonicalName: {{ project.canonicalName|json_encode|raw }},
-        Id: {{ project.id }}
+        canonicalName: {{ project.canonicalName|json_encode|raw }},
+        id: {{ project.id }}
     };
     {% else %}
     App.CurrentProject = {
-        CanonicalName: null,
-        Id: null
+        canonicalName: null,
+        id: null
     };
     {% endif %}
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/bootstrap.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/twitter-bootstrap-hover-dropdown.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/date-en-US.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/vendor/moment.min.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/jquery.autocomplete.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/knockout-2.1.0.debug.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/sammy-latest.min.js') }}"></script>
@@ -152,13 +155,14 @@
 <script src="{{ asset('bundles/entvalleyapp/js/Project.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/Task.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/Comment.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/ProjectInvitation.js') }}"></script>
+<script src="{{ asset('bundles/entvalleyapp/js/Settings.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/routes.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/wysihtml5-0.3.0.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/prettify.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/bootstrap-wysihtml5.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/jquery.autosize.js') }}"></script>
 <script src="{{ asset('bundles/entvalleyapp/js/vendor/jquery-ui-1.9.1.custom.js') }}"></script>
-<script src="{{ asset('bundles/entvalleyapp/js/vendor/jquery.timeago.js') }}"></script>
 <script type="text/javascript">
     $(prettyPrint);
 </script>

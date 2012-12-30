@@ -5,6 +5,11 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="entvalley.acl_manager" class="Entvalley\AppBundle\Service\AclManager">
+            <argument type="service" id="security.acl.provider" />
+            <argument type="service" id="security.context" />
+        </service>
+
         <service id="context.user" class="Entvalley\AppBundle\Domain\UserContext">
             <argument type="service" id="security.context" />
         </service>
@@ -105,6 +110,7 @@
             <argument type="service" id="doctrine"/>
             <argument type="service" id="form.factory"/>
             <argument type="service" id="context.user"/>
+            <argument type="service" id="entvalley.acl_manager" />
         </service>
 
         <service id="entvalley.controller" class="Entvalley\AppBundle\Controller\Controller" abstract="true" scope="request">
@@ -118,6 +124,7 @@
         </service>
 
         <service id="entvalley.project_controller" class="Entvalley\AppBundle\Controller\ProjectController" scope="request" parent="entvalley.controller">
+            <argument type="service" id="jms_serializer"/>
             <argument type="service" id="context.company"/>
         </service>
 

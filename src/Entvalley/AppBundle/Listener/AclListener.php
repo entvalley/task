@@ -63,7 +63,7 @@ try {
 */
 
         if (!$this->securityContext->isGranted(new Expression('belongsTo(object, user) or hasPermission(object, "VIEW")'), $args->getEntity())) {
-            throw new AccessDeniedException("insufficient privileges to view the object.");
+            throw new AccessDeniedException("insufficient privileges to view the object of class: " . get_class($entity));
         }
 
         return $entity;

@@ -1,0 +1,80 @@
+{% extends 'EntvalleyAppBundle::layout.html.twig' %}
+
+{% form_theme invitation_form _self %}
+
+
+{% block form_widget_compound %}
+    {% spaceless %}
+        <div class="control-group" {{ block('widget_container_attributes') }}>
+            {% if form.parent is empty %}
+                {{ form_errors(form) }}
+            {% endif %}
+            {{ block('form_rows') }}
+            {{ form_rest(form) }}
+        </div>
+    {% endspaceless %}
+{% endblock form_widget_compound %}
+
+{% block form_label %}
+{% endblock form_label %}
+{% set section = 'settings' %}
+{% block content %}
+    <div class="row">
+        <div class="span7">
+            <h3>{{ project.name }}</h3>
+            <h5>Active Collaborators </h5>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th colspan="2">Name</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr data-bind="foreach: collaborators">
+                        <td data-bind="text: collaborator.username"></td>
+                        <td class="span2 actions">
+                            <a href="#remove">Remove</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h5>Invited People (but they haven't confirmed yet)</h5>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Email</th>
+                    <th>Invited</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody data-bind="foreach: invitations">
+                    <tr>
+                        <td class="muted" data-bind="text: inviteeEmail"></td>
+                        <td class="muted span2"><time data-bind="dateString: { date: createdAt, type: 'calendar' }"></time></td>
+                        <td class="span2 actions">
+                            <a href="#remove">Remove</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="span4 project-invitation">
+            <h5>Invite collaborators to this project</h5>
+            <div class="alert alert-success" style="display: none">
+            </div>
+            <p>Type email addresses of people you want to invite:</p>
+            {% set invite_email_prototype %}
+            {{ form_widget(invitation_form.invitations.vars.prototype) }}
+            {% endset %}
+
+            <form method="post" id="invitation" action="{{ path('app_project_collaborators_invite', { project: project.id, project_name: project.canonicalName }) }}" data-invitee-email-prototype="{{ invite_email_prototype|e }}">
+                {{ form_widget(invitation_form._token) }}
+                {{ invite_email_prototype|replace({'__name__': 0})|raw }}
+
+                <input class="btn btn-primary" type="submit" value="Send Invites">
+            </form>
+
+        </div>
+    </div>
+{% endblock %}
