@@ -64,4 +64,9 @@ abstract class AbstractStatusChangeCommand extends AbstractCommand
     {
         return $task;
     }
+
+    public function getApplicableInText()
+    {
+        return 'a task';
+    }
 }

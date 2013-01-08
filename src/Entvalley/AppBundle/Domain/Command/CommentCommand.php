@@ -59,4 +59,9 @@ class CommentCommand extends AbstractCommand
     {
         return ($source->getContextType() == 'task' && $source->getContextId() > 0);
     }
+
+    public function getApplicableInText()
+    {
+        return 'a task';
+    }
 }

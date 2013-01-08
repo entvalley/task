@@ -85,6 +85,8 @@
               </ul>
           </div>
 
+        <h4>Tasks of {{ project.getName() }}</h4>
+
         <ul data-bind="foreach: {data: tasks, beforeRemove: hideTask }" class="separated-list">
             <li data-bind="attr: { id: 'task-item-' + id }">
                 <div class="row-fluid">

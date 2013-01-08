@@ -27,4 +27,16 @@ abstract class AbstractCommand implements Command
     {
         return $this->isVisible;
     }
+
+    /**
+     * Return a hint that will help a user to understand where he/she
+     * can apply this command in.
+     * Must be redefined in every command.
+     *
+     * @return string
+     */
+    public function getApplicableInText()
+    {
+        return 'a task or project';
+    }
 }

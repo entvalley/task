@@ -21,4 +21,9 @@ class CreateCommandStub extends AbstractCommand
     {
         return true;
     }
+
+    public function getApplicableInText()
+    {
+        return 'a task';
+    }
 }

@@ -15,4 +15,9 @@ class CloseCommandStub extends AbstractCommand
     {
         return 'close';
     }
+
+    public function getApplicableInText()
+    {
+        return 'a task';
+    }
 }

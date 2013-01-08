@@ -32,11 +32,26 @@ class CommandManager
         $configs = [];
 
         foreach ($commands as $command) {
-            $configs[Command::PREFIX . $command->getName()] = [
-                'is_visible' => $command->isVisible()
-            ];
+            $configs[Command::PREFIX . $command->getName()] = $this->extractConfig($command);
         }
 
         return $configs;
+    }
+
+    public function getCommandConfig($commandName)
+    {
+        return $this->extractConfig($this->registry->get($commandName));
+    }
+
+    /**
+     * @param $command
+     * @return array
+     */
+    private function extractConfig($command)
+    {
+        return [
+            'is_visible' => $command->isVisible(),
+            'applicable_in' => $command->getApplicableInText()
+        ];
     }
 }

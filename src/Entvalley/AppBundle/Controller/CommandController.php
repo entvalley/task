@@ -77,7 +77,8 @@ class CommandController extends Controller
 
                 if (empty($commandResult)) {
                     $finalResponse .= $this->renderView('EntvalleyAppBundle:Command:executed/_failed.html.twig', [
-                        'command' => $command
+                        'command' => $command,
+                        'command_config' => $this->commandManager->getCommandConfig($command)
                     ]);
                 } else {
                     $finalResponse .= $this->renderView('EntvalleyAppBundle:Command:executed/' . $command . '.html.twig', $commandResult);
