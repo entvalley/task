@@ -3,6 +3,7 @@ web/css/
 app/bootstrap.php.cache
 app/cache/*
 app/logs/*
+app/mail/*
 build/
 /vendor
 bin
