@@ -5,7 +5,7 @@ Entvalley\AppBundle\Entity\ProjectInvitation:
           expose: true
         invitedBy:
           expose: true
-        createdAt:
+        invitedAt:
           expose: true
         isAccepted:
           expose: true

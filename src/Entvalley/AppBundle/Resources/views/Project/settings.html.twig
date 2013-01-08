@@ -51,7 +51,7 @@
                 <tbody data-bind="foreach: invitations">
                     <tr>
                         <td class="muted" data-bind="text: inviteeEmail"></td>
-                        <td class="muted span2"><time data-bind="dateString: { date: createdAt, type: 'calendar' }"></time></td>
+                        <td class="muted span3"><time data-bind="dateString: { date: invitedAt, type: 'calendar' }"></time></td>
                         <td class="span2 actions">
                             <a href="#remove">Remove</a>
                         </td>
@@ -71,8 +71,9 @@
             <form method="post" id="invitation" action="{{ path('app_project_collaborators_invite', { project: project.id, project_name: project.canonicalName }) }}" data-invitee-email-prototype="{{ invite_email_prototype|e }}">
                 {{ form_widget(invitation_form._token) }}
                 {{ invite_email_prototype|replace({'__name__': 0})|raw }}
-
-                <input class="btn btn-primary" type="submit" value="Send Invites">
+                <div class="submit">
+                    <input class="btn btn-primary" type="submit" value="Send Invites">
+                </div>
             </form>
 
         </div>

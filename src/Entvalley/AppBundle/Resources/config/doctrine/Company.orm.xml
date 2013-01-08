@@ -12,6 +12,8 @@
 
         <field name="name" length="140" />
 
+        <field name="emailQuota" length="9" type="integer" nullable="true" />
+
         <one-to-one field="owner" target-entity="Entvalley\AppBundle\Entity\User" />
     </entity>
 </doctrine-mapping>

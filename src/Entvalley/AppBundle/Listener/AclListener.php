@@ -40,29 +40,8 @@ class AclListener
         if ($entity instanceof UserInterface && $user->isUser($entity)) {
             return $entity;
         }
-        $aclProvider = $this->aclProvider;
 
-        $entityManager = $args->getEntityManager();
-/*
-try {
-        // creating the ACL
-        $objectIdentity = ObjectIdentity::fromDomainObject($entity);
-        $acl = $aclProvider->createAcl($objectIdentity);
-
-
-        $securityIdentity = UserSecurityIdentity::fromAccount($user);
-
-        // grant owner access
-        $acl->insertObjectAce($securityIdentity, MaskBuilder::MASK_OWNER);
-        $aclProvider->updateAcl($acl);
-
-        return $entity;
-} catch (AclAlreadyExistsException $e) {
-    // continue;
-}
-*/
-
-        if (!$this->securityContext->isGranted(new Expression('belongsTo(object, user) or hasPermission(object, "VIEW")'), $args->getEntity())) {
+        if (!$this->securityContext->isGranted(new Expression('belongsTo(object, user) or invitedTo(object, user)'), $args->getEntity())) {
             throw new AccessDeniedException("insufficient privileges to view the object of class: " . get_class($entity));
         }
 

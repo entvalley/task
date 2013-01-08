@@ -102,6 +102,11 @@
         </service>
 
 
+        <service id="entvalley.templated_mailer" class="Entvalley\AppBundle\Service\TemplatedMailer">
+            <argument type="service" id="templating"/>
+            <argument type="service" id="mailer"/>
+        </service>
+
         <service id="entvalley.controller_container" class="Entvalley\AppBundle\Controller\ControllerContainer" scope="request">
             <argument type="service" id="request"/>
             <argument type="service" id="router"/>
@@ -126,6 +131,7 @@
         <service id="entvalley.project_controller" class="Entvalley\AppBundle\Controller\ProjectController" scope="request" parent="entvalley.controller">
             <argument type="service" id="jms_serializer"/>
             <argument type="service" id="context.company"/>
+            <argument type="service" id="entvalley.templated_mailer"/>
         </service>
 
         <service id="entvalley.comment_controller" class="Entvalley\AppBundle\Controller\CommentController" scope="request" parent="entvalley.controller">

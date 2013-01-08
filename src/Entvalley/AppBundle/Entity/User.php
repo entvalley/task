@@ -33,4 +33,10 @@ class User extends BaseUser implements IHaveOwner
     {
         return $this->company;
     }
+
+    public function getCompanyId()
+    {
+        $company = $this->getCompany();
+        return $company ? $company->getId() : null;
+    }
 }

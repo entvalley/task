@@ -7,6 +7,17 @@ class Company
     private $id;
     private $name;
     private $owner;
+    private $emailQuota;
+
+    public function setEmailQuota($emailQuota)
+    {
+        $this->emailQuota = $emailQuota;
+    }
+
+    public function getEmailQuota()
+    {
+        return $this->emailQuota;
+    }
 
     public function __construct($id = null)
     {

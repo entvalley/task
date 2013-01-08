@@ -2,10 +2,11 @@
 
 namespace Entvalley\AppBundle\Entity;
 
+use Entvalley\AppBundle\Domain\IHaveProject;
 use HTMLPurifier;
 use Entvalley\AppBundle\Domain\IHaveOwner;
 
-class Comment implements IHaveOwner
+class Comment implements IHaveOwner, IHaveProject
 {
     private $id;
     private $author;
@@ -138,5 +139,10 @@ class Comment implements IHaveOwner
             return true;
         }
         return $this->getTask()->isBelongingTo($user);
+    }
+
+    public function getProject()
+    {
+        return $this->task->getProject();
     }
 }

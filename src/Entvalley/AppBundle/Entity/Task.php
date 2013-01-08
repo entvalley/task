@@ -5,10 +5,11 @@ namespace Entvalley\AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Entvalley\AppBundle\Domain\IHaveOwner;
 use Entvalley\AppBundle\Domain\CanonicalNameGenerator;
+use Entvalley\AppBundle\Domain\IHaveProject;
 use Entvalley\AppBundle\Domain\Status;
 use HTMLPurifier;
 
-class Task implements IHaveOwner
+class Task implements IHaveOwner, IHaveProject
 {
     private $id;
     private $title;

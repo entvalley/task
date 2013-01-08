@@ -103,41 +103,6 @@ jQuery(function ($) {
             },
 
             initEvents: function () {
-                var that = this;
-
-                $('.command_form').on('submit', function (e) {
-                    var $form = $(this);
-
-                    App.UI.showStatus('Sending...');
-
-                    $('#command_send')
-                        .prop('disabled', true)
-                        .addClass('disabled')
-                        .html('Sending...');
-
-                    $('#' + that.inputControlId).prop('readonly', true);
-
-                    $.post($form.prop('action'), $form.serialize(), undefined, 'script')
-                        .success(function () {
-                            App.UI.hideStatus();
-                            $('#' + that.inputControlId).val('');
-                        })
-                        .error(function () {
-                            App.UI.showStatus('Something is broken ;(', true);
-                        })
-                        .complete(function () {
-                            $('#' + that.inputControlId).prop('readonly', false);
-                            $('#command_send')
-                                .prop('disabled', false)
-                                .removeClass('disabled')
-                                .html('Send');
-                        });
-
-                    e.stopPropagation();
-                    e.preventDefault();
-                });
-
-
                 $('.sign-in-link').on('click', function () {
                     $('.sign-up-block').fadeOut(200, function () {
                         $('.sign-in-block').fadeIn(200);
@@ -167,7 +132,7 @@ jQuery(function ($) {
                         //$container.parent().append(proto);
                         $proto.css('display', 'none');
 
-                        $proto.insertBefore($form.find('input[type="submit"]')).fadeIn();
+                        $proto.insertBefore($form.find('div.submit')).fadeIn();
                     };
 
                     var noPrevOrPrevHasValue = ($prev.length === 0 || $.trim($prev.val()) !== '');
@@ -212,6 +177,18 @@ jQuery(function ($) {
             initEditBehaviours: function () {
                 $('*[data-behaviour~="autosize"]').each(function () {
                     $(this).autosize();
+                });
+                $('textarea[data-behaviour~="singleline"]').each(function () {
+                    $(this).on('keypress', function(e) {
+                        if (e.which === 13) {
+                            e.preventDefault();
+                            var next = $(this).parents().nextAll(':input:first');
+                            if (next.height() === 0 && window.editor) {
+                                next = $(window.editor.currentView.iframe).contents().find('body');
+                            }
+                            next.focus();
+                        }
+                    });
                 });
 
                 $('textarea[data-behaviour~="wysiwyg"]').each(function () {

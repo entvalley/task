@@ -63,7 +63,9 @@ swiftmailer:
     host:      %mailer_host%
     username:  %mailer_user%
     password:  %mailer_password%
-    spool:     { type: memory }
+    spool:
+        type: file
+        path: "%kernel.root_dir%/mail"
 
 fos_user:
     db_driver: orm
@@ -119,9 +121,13 @@ services:
 
     security.owner_evaluator:
         class: Entvalley\AppBundle\Security\OwnerEvaluator
-        arguments:  [@service_container]
         tags:
             - { name: security.expressions.function_evaluator, function: belongsTo, method: belongsTo }
+    security.invited_to_evaluator:
+        class: Entvalley\AppBundle\Security\InvitedToEvaluator
+        arguments:  [@service_container]
+        tags:
+            - { name: security.expressions.function_evaluator, function: invitedTo, method: invitedTo }
 
 exercise_html_purifier:
     default:

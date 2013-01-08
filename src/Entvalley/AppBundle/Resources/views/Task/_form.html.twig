@@ -2,7 +2,7 @@
     <div class="control-group">
         {{ form_label(form.title, {}, { label_attr: { class: "control-label" } }) }}
         <div class="controls">
-            {{ form_widget(form.title, { attr: { 'data-behaviour': 'autosize', 'class': 'span6', rows: 1 } }) }}
+            {{ form_widget(form.title, { attr: {  'data-behaviour': 'autosize singleline', 'class': 'span6', rows: 1 } }) }}
         </div>
     </div>
     <div class="control-group">
@@ -11,13 +11,16 @@
     <div class="control-group">
         {{ form_label(form.body, {}, { label_attr: { class: "control-label" } }) }}
         <div class="controls">
-            {{ form_widget(form.body, { attr: { 'data-behaviour': 'autosize wysiwyg', 'class': 'span6'} }) }}
+            {{ form_widget(form.body, { attr: { 'data-behaviour': 'autosize wysiwyg', 'style': 'width: 100%'} }) }}
         </div>
+    </div>
+    <div class="control-group">
+        <div class="row-separator"></div>
     </div>
     <div class="control-group">
         <div class="controls">
             {{ form_widget(form._token) }}
-            <input class="btn" type="submit" value="Save Task"/>
+            <input class="btn btn-primary" type="submit" value="Save Task"/>
             <a class="btn cancel" href="#cancel">Cancel</a
         </div>
     </div>

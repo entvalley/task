@@ -2,9 +2,9 @@
 
 namespace Entvalley\AppBundle\Entity;
 
-use Entvalley\AppBundle\Domain\IHaveOwner;
+use Entvalley\AppBundle\Service\SecureRandom;
 
-class ProjectInvitation implements IHaveOwner
+class ProjectInvitation
 {
     private $id;
 
@@ -17,23 +17,30 @@ class ProjectInvitation implements IHaveOwner
      * @var User $invitedBy
      */
     private $invitedBy;
-    private $createdAt;
+    private $invitedAt;
     private $isAccepted = false;
     private $inviteeEmail;
+    private $publicHash;
 
     public function __construct()
     {
-        $this->createdAt = new \DateTime();
+        $this->updateInvitedAtDate();
+        $this->publicHash = bin2hex(SecureRandom::rand(16));
     }
 
-    public function getCreatedAt()
+    public function updateInvitedAtDate()
     {
-        return $this->createdAt;
+        $this->invitedAt = new \DateTime();
+    }
+
+    public function getInvitedAt()
+    {
+        return $this->invitedAt;
     }
 
     public function setInviteeEmail($inviteeEmail)
     {
-        $this->inviteeEmail = $inviteeEmail;
+        $this->inviteeEmail = strtolower($inviteeEmail);
     }
 
     public function getInviteeEmail()
@@ -88,8 +95,26 @@ class ProjectInvitation implements IHaveOwner
         return $this->id;
     }
 
-    public function isBelongingTo(User $user)
+    public function getProjectName()
     {
-        return $this->getProject()->isBelongingTo($user);
+        $project = $this->getProject();
+        return $project ? $project->getName() : '';
+    }
+
+    public function getInvitedByName()
+    {
+        $invitedBy = $this->getInvitedBy();
+        return $invitedBy ? $invitedBy->getEmail() : '';
+    }
+
+    public function getPublicHash()
+    {
+        return $this->publicHash;
+    }
+
+    public function equals(ProjectInvitation $another)
+    {
+        return $this->getInviteeEmail() === $another->getInviteeEmail()
+            && $this->getProject()->getId() === $another->getProject()->getId();
     }
 }

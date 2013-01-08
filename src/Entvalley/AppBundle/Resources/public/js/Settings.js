@@ -13,7 +13,7 @@ jQuery(function () {
                     ko.utils.arrayForEach(self.invitations(), function (invitee) {
                         if (invitee.isSameAs(newInvitee)) {
                             exists = true;
-                            invitee.createdAt(newInvitee.createdAt());
+                            invitee.invitedAt(newInvitee.invitedAt());
                         }
                     });
 

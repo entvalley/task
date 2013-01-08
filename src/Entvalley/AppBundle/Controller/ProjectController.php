@@ -3,11 +3,15 @@
 namespace Entvalley\AppBundle\Controller;
 
 use Entvalley\AppBundle\Domain\CompanyContext;
+use Entvalley\AppBundle\Entity\Company;
 use Entvalley\AppBundle\Form\ProjectType;
 use Entvalley\AppBundle\Entity\Project;
+use Entvalley\AppBundle\Service\ProjectInviter;
+use Entvalley\AppBundle\Service\TemplatedMailer;
 use Symfony\Component\HttpFoundation\Request;
 use Entvalley\AppBundle\Entity\ProjectInvitation;
 use Entvalley\AppBundle\Form\ProjectInvitationType;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Acl\Permission\MaskBuilder;
 use JMS\Serializer\SerializerInterface;
 use Entvalley\AppBundle\Component\HttpFoundation\JsonResponse;
@@ -17,14 +21,20 @@ class ProjectController extends Controller
 {
     private $companyContext;
     private $serializer;
+    /**
+     * @var \Entvalley\AppBundle\Service\TemplatedMailer
+     */
+    private $templatedMailer;
 
     public function __construct(
         ControllerContainer $container,
         SerializerInterface $serializer,
-        CompanyContext $companyContext
+        CompanyContext $companyContext,
+        TemplatedMailer $templatedMailer
     ) {
         $this->serializer = $serializer;
         $this->companyContext = $companyContext;
+        $this->templatedMailer = $templatedMailer;
         parent::__construct($container);
     }
 
@@ -116,7 +126,7 @@ class ProjectController extends Controller
         );
     }
 
-    public function inviteCollaboratorsAction()
+    public function inviteCollaboratorsAction(Project $project)
     {
         $invitationForm = $this->container->getFormFactory()->create(
             new ProjectInvitationType(),
@@ -129,6 +139,11 @@ class ProjectController extends Controller
 
             $invitations = $invitationList->getInvitations();
 
+            $em = $this->container->getDoctrine()->getManager();
+            $inviter = new ProjectInviter($em, $this->templatedMailer, $this->container->getRouter());
+            $inviter->invite($project, $invitations, $this->container->getUserContext()->getUser());
+            $em->flush();
+
             return JsonResponse::createWithSerializer(
                 $this->serializer,
                 [
@@ -136,16 +151,22 @@ class ProjectController extends Controller
                 ]
             );
         }
-        /*
-                return JsonResponse::createWithSerializer($this->serializer, [
-                        'collaborators' => $collaborators,
-                        'invitations' => $invitations,
-                    ]);*/
     }
 
-    public function acceptInvitationAction(Project $project)
+    public function acceptInvitationAction(Company $company, $hash)
     {
-        return;
+        $em = $this->container->getDoctrine()->getManager();
+        $inviter = new ProjectInviter($em, $this->templatedMailer, $this->container->getRouter());
+
+
+        $invitationRepository = $this->container->getDoctrine()->getRepository('EntvalleyAppBundle:ProjectInvitation');
+        $invitation = $invitationRepository->findByHash($company, $hash);
+
+        $inviter->accept($invitation, $this->container->getUserContext()->getUser());
+
+        $em->flush();
+
+        return new Response("thanks!");
         $userRepository = $this->container->getDoctrine()->getRepository('EntvalleyUserBundle:User');
         $user = $userRepository->find(7);
         $to = $userRepository->find(1);

@@ -209,27 +209,28 @@ body {
     position: absolute;
     height: 16px;
     font-size: 12px;
-    padding: 4px 8px;
+    padding: 0 8px;
     margin-bottom: -30px;
-    color: white;
     font-family: Arial, sans-serif;
-    top: -44px;
+    top: 0px !important;
     right: -16px;
     display: table-cell;
+    color: #0088cc;
 
     ul {
         list-style-type: none;
     }
     .action {
-        padding: 0px 10px;
-        background-color: #0f76d5;
+        padding-bottom: 2px;
         float: left;
-        font-size: 11px;
+        border-bottom: 1px solid #d5d5d5;
+        width: 70px;
+        font-size: 14px;
+        i {
+            margin-right: 4px;
+            text-decoration: none;
+        }
         .border-radius(4px 4px 0 0);
-    }
-
-    .action a {
-        color: white;
     }
 }
 
@@ -775,7 +776,7 @@ label {
     }
 
     textarea {
-        padding: 0px;
+        padding-left: 0px;
     }
 }
 
@@ -907,4 +908,13 @@ input[type="color"],
 .alert {
     .border-radius(0px);
     border-width: 2px;
+}
+
+.submit.busy {
+    background: url('/bundles/entvalleyapp/images/busy.gif') left center no-repeat;
+    text-indent: -100000px;
+
+    * {
+        visibility: hidden;
+    }
 }

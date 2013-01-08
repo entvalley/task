@@ -106,9 +106,37 @@ jQuery(function ($) {
                 });
             });
 
+            this.post('/commands/send', function (context) {
+                App.UI.showStatus('Sending...');
+
+                $('#command_send')
+                    .prop('disabled', true)
+                    .addClass('disabled')
+                    .html('Sending...');
+
+                $('#' + App.UI.inputControlId).prop('readonly', true);
+
+                $.post(context.path, context.params.toHash(), undefined, 'script')
+                    .success(function () {
+                        App.UI.hideStatus();
+                        $('#' + App.UI.inputControlId).val('');
+                    })
+                    .error(function () {
+                        App.UI.showStatus('Something is broken ;(', true);
+                    })
+                    .complete(function () {
+                        $('#' + App.UI.inputControlId).prop('readonly', false);
+                        $('#command_send')
+                            .prop('disabled', false)
+                            .removeClass('disabled')
+                            .html('Send');
+                    });
+            });
+
             this.post(/\/(\d+)-([^\/]+)\/collaborators\/invite/, function (context) {
                 $('.project-invitation .alert').fadeOut();
-                $.post(context.path, context.params.toHash(), function (response) {
+               // $('.project-invitation .submit').addClass('busy');
+                var dfd = $.post(context.path, context.params.toHash(), function (response) {
                     var invitees = [];
                     $.map(response.invitees, function (invitee) {
                         invitees.push(new App.Model.ProjectInvitation(invitee));
@@ -118,6 +146,10 @@ jQuery(function ($) {
                     $('.project-invitation .control-group').not(':last').fadeOut(function () {
                         $(this).remove();
                     });
+                });
+
+                dfd.done(function () {
+                    $('.project-invitation .submit').removeClass('busy');
                 });
             });
         }).run();

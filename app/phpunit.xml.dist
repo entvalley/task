@@ -20,6 +20,12 @@
         </testsuite>
     </testsuites>
 
+    <groups>
+      <exclude>
+        <group>web</group>
+      </exclude>
+    </groups>
+
     <!--
     <php>
         <server name="KERNEL_DIR" value="/path/to/your/app/" />
@@ -34,6 +40,7 @@
                 <directory>../src/*/*Bundle/Tests</directory>
                 <directory>../src/*/Bundle/*Bundle/Resources</directory>
                 <directory>../src/*/Bundle/*Bundle/Tests</directory>
+                <directory>../src/*/*Bundle/Tests/Functional</directory>
             </exclude>
         </whitelist>
     </filter>
