@@ -13,7 +13,7 @@ SHARED OBJECTS.
 Sometimes two users may have access to the same object, if the owner let them share it.
  We need to link an object to two users (or at least one, because one of them is the owner of an object).
 
- We purpose use acl for that?
-
 
  1) Spam protection in invitation system;;
+
+ 2) json -> generic serialization

@@ -11,7 +11,7 @@ class Status
     const REJECTED = 5;
     const WONTFIX = 6;
 
-    public static function supports($name)
+    public static function isStatus($name)
     {
         return defined('self::' . strtoupper($name));
     }

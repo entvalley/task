@@ -53,17 +53,18 @@ class CommandManagerTest extends \PHPUnit_Framework_TestCase
     {
         $close = new CloseCommandStub();
         $create = new CreateCommandStub();
-        $regsitryMock = $this->getMock('\Entvalley\AppBundle\Domain\Command\CommandRegistry');
-        $regsitryMock->expects($this->once())
-            ->method('getAll')
-            ->will($this->returnValue(array(
-            $create,
+        $registryMock = $this->getMock('\Entvalley\AppBundle\Domain\Command\CommandRegistry');
+
+        $registryMock->expects($this->once())
+            ->method('get')
+            ->with($this->equalTo('close'))
+            ->will($this->returnValue(
             $close
-        )));
+        ));
 
-        $interpreterMock = $this->getMock('\Entvalley\AppBundle\Domain\Command\CommandInterpreter', array(), array($regsitryMock));
+        $interpreterMock = $this->getMock('\Entvalley\AppBundle\Domain\Command\CommandInterpreter', array(), array($registryMock));
 
-        $manager = new CommandManager($interpreterMock, $regsitryMock);
+        $manager = new CommandManager($interpreterMock, $registryMock);
 
         $this->assertEquals([
             'is_visible' => true,

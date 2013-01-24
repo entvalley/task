@@ -8,8 +8,8 @@ class StatusTest extends \PHPUnit_Framework_TestCase
 {
     public function testShouldSupportKnownStatuses()
     {
-        $this->assertTrue(Status::supports('wontfix'));
-        $this->assertTrue(Status::supports('CLOSED'));
-        $this->assertFalse(Status::supports('_teststatus'));
+        $this->assertTrue(Status::isStatus('wontfix'));
+        $this->assertTrue(Status::isStatus('CLOSED'));
+        $this->assertFalse(Status::isStatus('_teststatus'));
     }
 }
