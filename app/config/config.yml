@@ -14,8 +14,9 @@ framework:
     validation:      { enable_annotations: true }
     templating:      { engines: ['twig'] } #assets_version: SomeVersionScheme
     default_locale:  %locale%
-    trust_proxy_headers: false # Whether or not the Request object should trust proxy headers (X_FORWARDED_FOR/HTTP_CLIENT_IP)
+    trusted_proxies: ~
     session:         ~
+    router_proxy:   { path: /_proxy }
 
 # Twig Configuration
 twig:
@@ -71,11 +72,6 @@ fos_user:
     db_driver: orm
     firewall_name: main
     user_class: Entvalley\AppBundle\Entity\User
-    service:
-        user_manager: entvalley.user_mananger
-    registration:
-        form:
-            handler: entvalley.form.handler.registration
 
 jms_serializer:
    handlers:
@@ -99,6 +95,12 @@ jms_security_extra:
   expressions: true
 
 services:
+    entvalley_user.registration_completed:
+        class: Entvalley\UserBundle\EventListener\UserRegistrationCompletedListener
+        arguments: ["@fos_user.entity_manager"]
+        tags:
+            - { name: kernel.event_subscriber }
+
     entvalley.memcache:
         class: %doctrine.orm.cache.memcache_instance.class%
         calls:

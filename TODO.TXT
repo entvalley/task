@@ -1,0 +1,19 @@
+By default an author has full access to an entity he or she creates.
+
+The author of a project can invite other people to that project.
+
+Those people can add new entitis within a project and have access to objects that they create.
+
+The author of a project can change any data within his project. We can use the relation table to store levels of access
+for every person including authors instead of relying on authors in the future.
+
+
+SHARED OBJECTS.
+
+Sometimes two users may have access to the same object, if the owner let them share it.
+ We need to link an object to two users (or at least one, because one of them is the owner of an object).
+
+ We purpose use acl for that?
+
+
+ 1) Spam protection in invitation system;;

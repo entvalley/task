@@ -4,12 +4,12 @@ namespace Entvalley\UserBundle\Controller;
 
 use Symfony\Component\Security\Core\SecurityContext;
 use FOS\UserBundle\Controller\SecurityController as BaseSecurityController;
+use Symfony\Component\HttpFoundation\Request;
 
 class SecurityController extends BaseSecurityController
 {
-    public function loginAction($standalone = false)
+    public function loginAction(Request $request, $standalone = false)
     {
-        $request = $this->container->get('request');
         /* @var $request \Symfony\Component\HttpFoundation\Request */
         $session = $request->getSession();
         /* @var $session \Symfony\Component\HttpFoundation\Session */

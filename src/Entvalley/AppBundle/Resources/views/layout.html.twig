@@ -67,7 +67,7 @@
 
                 {% if project is defined %}
                 <div class="project pull-right">
-                    {% render 'entvalley.project_controller:navigationAction' with { project: project } %}
+                    {% render path('app_project_navigation', { project: project.id }) %}
                 </div>
                 {% endif %}
                 <ul class="nav pull-right">
@@ -87,7 +87,7 @@
 <div class="container" id="new_project" data-behaviour="expandable" style="width: 570px; display: none">
     <div class="row">
         <div class="span6">
-            {% render 'entvalley.project_controller:createAction' %}
+            {% render controller('entvalley.project_controller:createAction') %}
         </div>
     </div>
 </div>
@@ -111,7 +111,7 @@
 
         {% if project is defined %}
         <div class="tools">
-            {% render 'entvalley.command_controller:formAction' %}
+            {% render controller('entvalley.command_controller:formAction') %}
         </div>
         {% endif %}
     </div>

@@ -2,6 +2,12 @@ app_homepage:
     pattern:  /
     defaults: { _controller: entvalley.project_controller:indexAction }
 
+app_project_navigation:
+    pattern:  /projects/{project}/navigation
+    defaults: { _controller: entvalley.project_controller:navigationAction }
+    requirements:
+        project: \d+
+
 app_task_view:
     pattern: /projects/{project}-{project_name}/tasks/{id}
     defaults: { _controller: entvalley.task_controller:viewAction }

@@ -84,24 +84,6 @@
             <argument type="service" id="entvalley.command_registry" />
         </service>
 
-        <service id="entvalley.user_mananger" class="Entvalley\UserBundle\Doctrine\UserManager">
-            <argument type="service" id="security.encoder_factory" />
-            <argument type="service" id="fos_user.util.username_canonicalizer" />
-            <argument type="service" id="fos_user.util.email_canonicalizer" />
-            <argument type="service" id="fos_user.entity_manager" />
-            <argument>%fos_user.model.user.class%</argument>
-        </service>
-
-
-        <service id="entvalley.form.handler.registration" class="Entvalley\UserBundle\Form\Handler\RegistrationFormHandler" scope="request" public="false">
-            <argument type="service" id="fos_user.registration.form" />
-            <argument type="service" id="request" />
-            <argument type="service" id="fos_user.user_manager" />
-            <argument type="service" id="fos_user.mailer" />
-            <argument type="service" id="fos_user.util.token_generator" />
-        </service>
-
-
         <service id="entvalley.templated_mailer" class="Entvalley\AppBundle\Service\TemplatedMailer">
             <argument type="service" id="templating"/>
             <argument type="service" id="mailer"/>

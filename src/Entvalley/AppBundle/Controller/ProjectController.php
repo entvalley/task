@@ -38,7 +38,7 @@ class ProjectController extends Controller
         parent::__construct($container);
     }
 
-    public function navigationAction($project = null)
+    public function navigationAction(Project $project = null)
     {
         $em = $this->container->getDoctrine()->getManager();
         $projectRepository = $em->getRepository('Entvalley\AppBundle\Entity\Project');
