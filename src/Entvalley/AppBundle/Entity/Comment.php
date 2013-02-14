@@ -77,6 +77,7 @@ class Comment implements IHaveOwner, IHaveProject
     public function setText($text)
     {
         $this->text = $text;
+        $this->safeText = null;
     }
 
     public function getText()
@@ -112,6 +113,9 @@ class Comment implements IHaveOwner, IHaveProject
 
     public function getSafeText()
     {
+        if (empty($this->safeText)) {
+            $this->purifyHtmlTags();
+        }
         return $this->safeText;
     }
 

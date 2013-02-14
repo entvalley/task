@@ -92,6 +92,7 @@ class Task implements IHaveOwner, IHaveProject
     public function setBody($body)
     {
         $this->body = $body;
+        $this->safeBody = null;
     }
 
     public function getBody()

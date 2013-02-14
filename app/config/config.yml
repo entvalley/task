@@ -16,7 +16,6 @@ framework:
     default_locale:  %locale%
     trusted_proxies: ~
     session:         ~
-    router_proxy:   { path: /_proxy }
 
 # Twig Configuration
 twig:
@@ -53,7 +52,6 @@ doctrine:
 
     orm:
         auto_generate_proxy_classes: %kernel.debug%
-
         entity_managers:
             default:
                 auto_mapping: true
@@ -120,6 +118,12 @@ services:
         public:     false
         tags:
             -       { name: security.voter }
+
+    entvalley.event_listener.api_listener:
+        class: Entvalley\AppBundle\EventListener\ApiListener
+        arguments: [['json'], "@jms_serializer"]
+        tags:
+            - { name: kernel.event_listener, event: kernel.view, method: onKernelView }
 
     security.owner_evaluator:
         class: Entvalley\AppBundle\Security\OwnerEvaluator

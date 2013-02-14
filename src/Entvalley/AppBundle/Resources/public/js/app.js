@@ -18,207 +18,20 @@ jQuery(function ($) {
         App.WeekdayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday',
             'Thursday', 'Friday', 'Saturday'];
 
-        App.UI.prototype = {
-            run: function () {
-                this.initCommands();
-                this.initEvents();
+        App.Utils = App.Utils || {};
 
-                $.ajaxSetup({
-                    beforeSend: function () {
-                        App.UI.showStatus('Loading...');
-                    },
-                    complete: function () {
-                        if (!$('#status').hasClass('error')) {
-                            App.UI.hideStatus();
-                        }
-                    }
-                });
+        App.Utils.parseNumber = function (number) {
+            return parseInt('0' + number, 10);
+        };
 
-                ko.bindingHandlers.dateString = {
-                    update: function (element, valueAccessor) {
-                        var value = valueAccessor(), valueUnwrapped;
-                        value['type'] = value.type || 'calendar';
+        App.UI.prototype = (function () {
+            var initGlobalEvents,
+                initCommands;
 
-                        valueUnwrapped = ko.utils.unwrapObservable(value.date);
-                        if (element.tagName === 'TIME') {
-                            element.setAttribute('datetime', valueUnwrapped);
-                        }
-                        element.setAttribute('title', valueUnwrapped);
-                        var newValue = valueUnwrapped;
-                        switch (value.type.toLowerCase()) {
-                            case "calendar":
-                                newValue = moment(valueUnwrapped).calendar();
-                                break;
-                            case "fromnow":
-                                newValue = moment(valueUnwrapped).fromNow();
-                                break;
-                            case "format":
-                                value['format'] = value.format || 'L';
-                                newValue = moment(valueUnwrapped).format(value.format);
-                                break;
-                        }
-                        ko.utils.setTextContent(element, newValue);
-                    }
-                }
-            },
-
-            showStatus: function (text, isError) {
-                $('#status').fadeIn().find('.text').html(text);
-                if (isError) {
-                    $('#status').addClass('error');
-                } else {
-                    $('#status').removeClass('error');
-                }
-            },
-
-            hideStatus: function () {
-                $('#status').fadeOut();
-            },
-
-            createProjectWorkspace: function () {
-                App.UI.toggle('#page');
-                App.UI.toggle('#new_project');
-                App.UI.registerEscHandler(function () {
-                    $('#new_project button[data-role~="cancel"]').trigger('click');
-                });
-            },
-
-            showCommandResult: function (text) {
-                $('.command_tooltip').html(text).slideDown(300);
-
-                var tooltipTimeout, closeTooltip;
-                closeTooltip = function () {
-                    $('.command_tooltip').slideUp(300).empty();
-                    if (tooltipTimeout !== null) {
-                        clearTimeout(tooltipTimeout);
-                    }
-                };
-                tooltipTimeout = setTimeout(closeTooltip, 5000);
-
-                $('.command_tooltip').one('click', closeTooltip);
-            },
-
-            scroll: function (elm, duration) {
-                $.scrollTo(elm, duration, { offset: {left: 0, top: -60 } });
-            },
-
-            initEvents: function () {
-                $('.sign-in-link').on('click', function () {
-                    $('.sign-up-block').fadeOut(200, function () {
-                        $('.sign-in-block').fadeIn(200);
-                    });
-                });
-
-                $('.sign-up-link').on('click', function () {
-                    $('.sign-in-block').fadeOut(200, function () {
-                        $('.sign-up-block').fadeIn(200);
-                    });
-                });
-
-                $('body').on('keydown mousedown', '.project-invitation input[type="email"]', function (e) {
-                    var INVITEE_SELECTOR = 'input[type="email"]',
-                        $self = $(this),
-                        $container = $self.parents('.control-group'),
-                        $next = $container.next().find(INVITEE_SELECTOR),
-                        $prev = $container.prev().find(INVITEE_SELECTOR),
-                        $last = $container.parent().find(INVITEE_SELECTOR).last();
-
-                    var applyPrototype = function () {
-                        var $form = $self.parents('form');
-                        var count = parseInt('0' + $form.data('invitee-count'), 10);
-                        var proto = $self.parents('form').data('invitee-email-prototype');
-                        var $proto = $(proto.replace(/__name__/g, ++count));
-                        $form.data('invitee-count', count);
-                        //$container.parent().append(proto);
-                        $proto.css('display', 'none');
-
-                        $proto.insertBefore($form.find('div.submit')).fadeIn();
-                    };
-
-                    var noPrevOrPrevHasValue = ($prev.length === 0 || $.trim($prev.val()) !== '');
-                    if ($.trim($last.val()) !== '' || (($next.length === 0) && noPrevOrPrevHasValue)) {
-                        applyPrototype();
-                        return;
-                    }
-
-                    // for TAB-key
-                    var nextIsLastAndHasNoValue = ($last.get(0) === $next.get(0) || $.trim($last.val()) !== '');
-                    if (e.which === 9 && $.trim($self.val()) !== '' && nextIsLastAndHasNoValue) {
-                        applyPrototype();
-                    }
-                });
-
-                var cancel = function () {
-                    App.UI.toggle('#page', false);
-                    var container = $(this).closest('div[data-behaviour~="expandable"]');
-                    container.find('form').each(function () {
-                        this.reset();
-                    });
-                    App.UI.toggle(container, true);
-                };
-
-                $('button[data-role~="cancel"]').on('click', cancel);
-
-                $('body').on('mouseenter mouseleave', '*[data-role~="hovercontainer"]', function (e) {
-                    var elms = $(this).find('*[data-behaviour~="showonhover"]');
-                    if (e.type === 'mouseenter') {
-                        elms.show();
-                    } else {
-                        elms.hide();
-                    }
-                });
-
-                $('a[data-role~="create_project"]').on('click', function (e) {
-                    e.preventDefault();
-                    App.UI.createProjectWorkspace();
-                });
-            },
-
-            initEditBehaviours: function () {
-                $('*[data-behaviour~="autosize"]').each(function () {
-                    $(this).autosize();
-                });
-                $('textarea[data-behaviour~="singleline"]').each(function () {
-                    $(this).on('keypress', function(e) {
-                        if (e.which === 13) {
-                            e.preventDefault();
-                            var next = $(this).parents().nextAll(':input:first');
-                            if (next.height() === 0 && window.editor) {
-                                next = $(window.editor.currentView.iframe).contents().find('body');
-                            }
-                            next.focus();
-                        }
-                    });
-                });
-
-                $('textarea[data-behaviour~="wysiwyg"]').each(function () {
-                    $(this).wysihtml5();
-                    var iframe = window.editor.currentView.iframe;
-                    iframe.height = $(this).height();
-                    var body = $(iframe).contents().find('body');
-                    var width = $(this).width();
-
-                    var fixHeight = function () {
-                        var contentCopy = $('<div style="width: ' + width + 'px; position: absolute; left: -9999px; top: -9999px;">').html(body.html());
-                        var oldMinHeight = parseInt('0' + iframe.style.minHeight, 10);
-                        $(body).append(contentCopy);
-                        var newMinHeight = parseInt(contentCopy.height(), 10);
-                        contentCopy.remove();
-                        if (oldMinHeight !== newMinHeight) {
-                            $(iframe).css({ "min-height": newMinHeight });
-                        }
-                    };
-                    window.editor.on('paste:composer', fixHeight);
-                    window.editor.on('aftercommand:composer', fixHeight);
-                    body.on('keyup', fixHeight);
-                });
-            },
-
-            initCommands: function () {
-                var me = this;
+            initCommands = function (inputControlId) {
                 $.ajax(Routing.generate('app_command_list'), {
                     success: function (commands) {
-                        $("#" + me.inputControlId).autocomplete({
+                        $("#" + inputControlId).autocomplete({
                             wordCount: 1,
                             on: {
                                 query: function (text, cb) {
@@ -236,36 +49,209 @@ jQuery(function ($) {
                             }
                         });
 
-                        $("#" + me.inputControlId).autosize();
-                        $('#' + me.inputControlId).keypress(function (e) {
+                        $("#" + inputControlId).autosize();
+                        $('#' + inputControlId).keypress(function (e) {
                             if (e.ctrlKey && e.which === 10) {
                                 $(this).parents('form').submit();
                             }
                         });
                     }
                 });
-            },
+            };
 
-            removeWYSIWYG: function () {
-                $("iframe.wysihtml5-sandbox, input[name='_wysihtml5_mode'],.wysihtml5-toolbar,.autosizejs").remove();
-                $("body").removeClass("wysihtml5-supported");
-            },
+            initGlobalEvents = function () {
+                var cancel = function () {
+                    App.UI.toggle('#page', false);
+                    var container = $(this).closest('div[data-behaviour~="expandable"]');
+                    container.find('form').each(function () {
+                        this.reset();
+                    });
+                    App.UI.toggle(container, true);
+                };
+                $('button[data-role~="cancel"]').on('click', cancel);
 
-            registerEscHandler: function (handler) {
-                $('body').on('keyup', function cancelWithKeyup(e) {
-                    if (e.which === 27) {
-                        handler(e);
-                        $('body').off('keyup', cancelWithKeyup);
+                $('.sign-in-link').on('click', function () {
+                    $('.sign-up-block').fadeOut(200, function () {
+                        $('.sign-in-block').fadeIn(200);
+                    });
+                });
+
+                $('.sign-up-link').on('click', function () {
+                    $('.sign-in-block').fadeOut(200, function () {
+                        $('.sign-up-block').fadeIn(200);
+                    });
+                });
+
+                $('body').on('mouseenter mouseleave', '*[data-role~="hovercontainer"]', function (e) {
+                    var elms = $(this).find('*[data-behaviour~="showonhover"]');
+                    if (e.type === 'mouseenter') {
+                        elms.show();
+                    } else {
+                        elms.hide();
                     }
                 });
-            },
 
-            toggle: function (id, hide) {
-                if (!hide && $(id).is(':hidden')) {
-                    $(id).fadeToggle();
-                } else if (hide !== false) {
-                    $(id).hide();
+                $('a[data-role~="create_project"]').on('click', function (e) {
+                    e.preventDefault();
+                    App.UI.createProjectWorkspace();
+                });
+            };
+
+            return {
+                run: function () {
+                    initCommands(this.inputControlId);
+                    initGlobalEvents();
+
+                    $.ajaxSetup({
+                        beforeSend: function () {
+                            App.UI.showStatus('Loading...');
+                        },
+                        complete: function () {
+                            if (!$('#status').hasClass('error')) {
+                                App.UI.hideStatus();
+                            }
+                        }
+                    });
+                },
+
+                showStatus: function (text, isError) {
+                    $('#status').fadeIn().find('.text').html(text);
+                    if (isError) {
+                        $('#status').addClass('error');
+                    } else {
+                        $('#status').removeClass('error');
+                    }
+                },
+
+                hideStatus: function () {
+                    $('#status').fadeOut();
+                },
+
+                createProjectWorkspace: function () {
+                    App.UI.toggle('#page');
+                    App.UI.toggle('#new_project');
+                    App.UI.registerEscHandler(function () {
+                        $('#new_project button[data-role~="cancel"]').trigger('click');
+                    });
+                },
+
+                showCommandResult: function (text) {
+                    $('.command_tooltip').html(text).slideDown(300);
+
+                    var tooltipTimeout, closeTooltip;
+                    closeTooltip = function () {
+                        $('.command_tooltip').slideUp(300).empty();
+                        if (tooltipTimeout !== null) {
+                            clearTimeout(tooltipTimeout);
+                        }
+                    };
+                    tooltipTimeout = setTimeout(closeTooltip, 5000);
+
+                    $('.command_tooltip').one('click', closeTooltip);
+                },
+
+                scroll: function (elm, duration) {
+                    $.scrollTo(elm, duration, { offset: {left: 0, top: -60 } });
+                },
+
+                initEditBehaviours: function () {
+                    $('*[data-behaviour~="autosize"]').each(function () {
+                        $(this).autosize();
+                    });
+                    $('textarea[data-behaviour~="singleline"]').each(function () {
+                        $(this).on('keypress', function(e) {
+                            var next,
+                                ENTER_KEY = 13,
+                                visibility_threshold = 5;
+                            if (e.which === ENTER_KEY) {
+                                e.preventDefault();
+                                next = $(this).parents().nextAll(':input:first');
+                                // "invisible" input/textarea may have borders/paddings
+                                if (next.height() < visibility_threshold && window.editor) {
+                                    next = $(window.editor.currentView.iframe).contents().find('body');
+                                }
+                                next.focus();
+                            }
+                        });
+                    });
+
+                    $('textarea[data-behaviour~="wysiwyg"]').each(function () {
+                        $(this).wysihtml5();
+                        var iframe = window.editor.currentView.iframe,
+                            body,
+                            width,
+                            fixHeight;
+                        iframe.height = $(this).height();
+                        body = $(iframe).contents().find('body');
+                        width = $(this).width();
+
+                        fixHeight = function () {
+                            var contentCopy = $('<div style="width: ' + width + 'px; position: absolute; left: -9999px; top: -9999px;">').html(body.html()),
+                                oldMinHeight = parseInt('0' + iframe.style.minHeight, 10),
+                                newMinHeight;
+                            $(body).append(contentCopy);
+                            newMinHeight = parseInt(contentCopy.height(), 10);
+                            contentCopy.remove();
+                            if (oldMinHeight !== newMinHeight) {
+                                $(iframe).css({ "min-height": newMinHeight });
+                            }
+                        };
+                        window.editor.on('paste:composer', fixHeight);
+                        window.editor.on('aftercommand:composer', fixHeight);
+                        body.on('keyup', fixHeight);
+                    });
+                },
+
+                removeWYSIWYG: function () {
+                    $("iframe.wysihtml5-sandbox, input[name='_wysihtml5_mode'],.wysihtml5-toolbar,.autosizejs").remove();
+                    $("body").removeClass("wysihtml5-supported");
+                },
+
+                registerEscHandler: function (handler) {
+                    $('body').on('keyup', function cancelWithKeyup(e) {
+                        if (e.which === 27) {
+                            handler(e);
+                            $('body').off('keyup', cancelWithKeyup);
+                        }
+                    });
+                },
+
+                toggle: function (id, hide) {
+                    if (!hide && $(id).is(':hidden')) {
+                        $(id).fadeToggle();
+                    } else if (hide !== false) {
+                        $(id).hide();
+                    }
                 }
+            }
+        }());
+
+        ko.bindingHandlers.dateString = {
+            update: function (element, valueAccessor) {
+                var value = valueAccessor(),
+                    valueUnwrapped,
+                    newValue;
+                value['type'] = value.type || 'calendar';
+
+                valueUnwrapped = ko.utils.unwrapObservable(value.date);
+                if (element.tagName === 'TIME') {
+                    element.setAttribute('datetime', valueUnwrapped);
+                }
+                element.setAttribute('title', valueUnwrapped);
+                newValue = valueUnwrapped;
+                switch (value.type.toLowerCase()) {
+                    case "calendar":
+                        newValue = moment(valueUnwrapped).calendar();
+                        break;
+                    case "fromnow":
+                        newValue = moment(valueUnwrapped).fromNow();
+                        break;
+                    case "format":
+                        value['format'] = value.format || 'L';
+                        newValue = moment(valueUnwrapped).format(value.format);
+                        break;
+                }
+                ko.utils.setTextContent(element, newValue);
             }
         };
 

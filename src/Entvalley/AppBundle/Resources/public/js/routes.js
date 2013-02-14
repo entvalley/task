@@ -2,8 +2,11 @@ jQuery(function ($) {
     "use strict";
     (function (App, Routing, undefined) {
         $.sammy('body > section > .container', function () {
-            var currentProject = App.UI.project;
-            var loadTasks = function (filter) {
+            var currentProject = App.UI.project,
+                loadSettings,
+                loadTasks;
+
+            loadTasks = function (filter) {
                 return $.get((Routing.generate('app_task_list', {
                     filterByType: filter,
                     project: App.UI.project.id,
@@ -21,7 +24,8 @@ jQuery(function ($) {
                     App.UI.hideStatus();
                 });
             };
-            var loadSettings = function () {
+
+            loadSettings = function () {
                 currentProject = currentProject || App.CurrentProject;
                 return $.get((Routing.generate('app_project_collaborators', {
                     project: currentProject.id,
@@ -116,15 +120,16 @@ jQuery(function ($) {
 
                 $('#' + App.UI.inputControlId).prop('readonly', true);
 
-                $.post(context.path, context.params.toHash(), undefined, 'script')
-                    .success(function () {
+                $.post(context.path, context.params.toHash(), undefined)
+                    .done(function (response) {
+                        currentProject.command.handle(response);
                         App.UI.hideStatus();
                         $('#' + App.UI.inputControlId).val('');
                     })
-                    .error(function () {
+                    .fail(function () {
                         App.UI.showStatus('Something is broken ;(', true);
                     })
-                    .complete(function () {
+                    .always(function () {
                         $('#' + App.UI.inputControlId).prop('readonly', false);
                         $('#command_send')
                             .prop('disabled', false)

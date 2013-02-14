@@ -19,14 +19,17 @@ abstract class AbstractStatusChangeCommand extends AbstractCommand
      */
     protected $userContext;
 
+    protected $htmlPurifier;
+
     /**
      * @param \Doctrine\Bundle\DoctrineBundle\Registry $doctrine
      * @param UserContext $userContext
      */
-    public function __construct(Registry $doctrine, UserContext $userContext)
+    public function __construct(Registry $doctrine, UserContext $userContext, $htmlPurifier)
     {
         $this->doctrine = $doctrine;
         $this->userContext = $userContext;
+        $this->htmlPurifier = $htmlPurifier;
     }
 
     abstract public function getNewStatus();
@@ -48,6 +51,7 @@ abstract class AbstractStatusChangeCommand extends AbstractCommand
         $comment->setText($content);
         $comment->setAuthor($this->userContext->getUser());
         $comment->setTask($task);
+        $comment->setHtmlPurifier($this->htmlPurifier);
         $status = $task->getLastStatus();
         $comment->setStatusChange($status);
 
@@ -55,7 +59,8 @@ abstract class AbstractStatusChangeCommand extends AbstractCommand
         $em->persist($comment);
 
         return [
-            'comment' => $comment,
+            'status' => $this->getNewStatus(),
+            'content' => $comment->getSafeText(),
             'updatedId' => (int)$updatedId,
         ];
     }

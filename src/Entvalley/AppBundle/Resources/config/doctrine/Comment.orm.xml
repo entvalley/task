@@ -15,7 +15,7 @@
         </lifecycle-callbacks>
 
         <field name="text" type="text" />
-        <field name="createdAt" type="datetime" />
+        <field column-definition="" name="createdAt" type="datetime" />
 
         <many-to-one field="author" target-entity="Entvalley\AppBundle\Entity\User" />
         <many-to-one field="statusChange" target-entity="Entvalley\AppBundle\Entity\StatusChange" />

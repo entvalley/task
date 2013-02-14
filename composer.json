@@ -10,7 +10,8 @@
     "description": "The \"Symfony Standard Edition\" distribution",
     "extra": {
         "symfony-app-dir": "app",
-        "symfony-web-dir": "web"
+        "symfony-web-dir": "web",
+        "symfony-assets-install": "symlink"
     },
     "minimum-stability": "dev",
     "name": "symfony/framework-standard-edition",

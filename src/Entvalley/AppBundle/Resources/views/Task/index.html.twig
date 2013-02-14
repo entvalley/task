@@ -42,7 +42,7 @@
         <hr>
 
         <div class="comments">
-            <ul data-bind="foreach: {data: comments, beforeRemove: hideComment, afterAdd: afterCommentAdded, afterRender: afterRender }" class="separated-list">
+            <ul data-bind="foreach: {data: comments, beforeRemove: hideComment, afterAdd: afterCommentAdded }" class="separated-list">
                 <li class="comment" data-role="hovercontainer" data-bind="attr: { id: 'comment-' + id }">
                     <div class="row-fluid">
                         <div class="span10">

@@ -69,7 +69,7 @@ class TaskController extends Controller
                 $task->setHtmlPurifier($this->htmlPurifier);
             }
 
-            return JsonResponse::createWithSerializer($this->serializer, [
+            return [
                     'tasks' => $tasks,
                     'pagination' => [
                         'last' => $pagination->getLastPage(),
@@ -77,7 +77,7 @@ class TaskController extends Controller
                         'previous' => $pagination->getPreviousUrl(),
                         'current' => $pagination->getCurrentPage()
                     ]
-                ]);
+                ];
         } else {
             return $this->view([
                 'tasks' => $tasks,

@@ -30,34 +30,38 @@
             }
             return statusName.toUpperCase();
         });
-
-        self.edit = function () {
-            var dfd = $.ajax(Routing.generate('app_comment_edit', {
-                id: self.id
-            }), {
-                dataType: "script"
-            });
-            var cancel = function (e) {
-                if (e.type !== 'keyup') {
-                    e.preventDefault();
-                }
-                $('#comment-' + self.id).find('.edit-comment').remove();
-                $('#comment-' + self.id).find('.text').show();
-                App.UI.removeWYSIWYG();
-            };
-
-            dfd.done(function () {
-                $('#comment-' + self.id).one('click', '.cancel', cancel);
-                App.UI.registerEscHandler(cancel);
-            });
-        };
-
-        self.remove = function () {
-            if (!window.confirm("Are you sure you want to delete the comment?")) {
-                return;
-            }
-
-            $.ajax(Routing.generate('app_comment_delete', { id: self.id }), { dataType: "script" });
-        };
     };
+
+    App.Model.Comment.prototype = (function () {
+        return {
+            edit: function () {
+                var dfd = $.ajax(Routing.generate('app_comment_edit', {
+                        id: this.id
+                    }), {
+                        dataType: "script"
+                    }),
+                    cancel = function (e) {
+                        if (e.type !== 'keyup') {
+                            e.preventDefault();
+                        }
+                        $('#comment-' + this.id).find('.edit-comment').remove();
+                        $('#comment-' + this.id).find('.text').show();
+                        App.UI.removeWYSIWYG();
+                    };
+
+                dfd.done(function () {
+                    $('#comment-' + this.id).one('click', '.cancel', cancel);
+                    App.UI.registerEscHandler(cancel);
+                });
+            },
+
+            remove:  function () {
+                if (!window.confirm("Are you sure you want to delete the comment?")) {
+                    return;
+                }
+
+                $.ajax(Routing.generate('app_comment_delete', { id: this.id }), { dataType: "script" });
+            }
+        };
+    }());
 })(window.App = window.App || {});

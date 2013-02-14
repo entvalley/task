@@ -25,8 +25,10 @@ jQuery(function ($) {
                 if (!task) {
                     return;
                 }
-                var tasks = self.tasks();
-                for (var i = 0; i < tasks.length; i++) {
+                var tasks = self.tasks(),
+                    length = tasks.length,
+                    i;
+                for (i = 0; i < length; i++) {
                     if (tasks[i].id === task.id) {
                         self.tasks().splice(i, 1, task);
                         break;
@@ -113,28 +115,29 @@ jQuery(function ($) {
                     App.UI.scroll('0', 50);
                 });
             };
-
-
         };
 
         ko.bindingHandlers.toggleStatusIcon = (function () {
-            var _oldValue = null;
-            var _duration = 150;
-            var _classPrefix = 'status-';
+            var _oldValue = null,
+                _duration = 150,
+                _classPrefix = 'status-';
 
             var init = function (element, valueAccessor) {
                     var status = valueAccessor();
                     _oldValue = status();
                 },
                 update = function (element, valueAccessor) {
-                    var status = valueAccessor();
+                    var status = valueAccessor(),
+                        $element,
+                        storedValue,
+                        duration;
                     if (status() < 1 || status() > App.Model.TaskStatus.Names.length) {
                         return;
                     }
 
-                    var $element = $(element);
-                    var storedValue = _oldValue;
-                    var duration = _oldValue === status() ? 0 : _duration;
+                    $element = $(element);
+                    storedValue = _oldValue;
+                    duration = _oldValue === status() ? 0 : _duration;
                     $element.removeClass(_classPrefix + App.Model.TaskStatus.Names[_oldValue - 1]);
                     $element.slideUp(duration, function () {
                         $element.html(App.Model.TaskStatus.Names[status() - 1].toUpperCase())

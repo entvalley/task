@@ -36,39 +36,34 @@
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.command_abandon" class="Entvalley\AppBundle\Domain\Command\AbandonCommand">
+        <service id="entvalley.abstrac_status_change_command" class="Entvalley\AppBundle\Domain\AbstractStatusChangeCommand" abstract="true">
             <argument type="service" id="doctrine" />
             <argument type="service" id="context.user" />
+            <argument type="service" id="exercise_html_purifier.default"/>
+        </service>
+
+
+        <service id="entvalley.command_abandon" class="Entvalley\AppBundle\Domain\Command\AbandonCommand" parent="entvalley.abstrac_status_change_command">
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.command_open" class="Entvalley\AppBundle\Domain\Command\OpenCommand">
-            <argument type="service" id="doctrine" />
-            <argument type="service" id="context.user" />
+        <service id="entvalley.command_open" class="Entvalley\AppBundle\Domain\Command\OpenCommand" parent="entvalley.abstrac_status_change_command">
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.command_reject" class="Entvalley\AppBundle\Domain\Command\RejectCommand">
-            <argument type="service" id="doctrine" />
-            <argument type="service" id="context.user" />
+        <service id="entvalley.command_reject" class="Entvalley\AppBundle\Domain\Command\RejectCommand" parent="entvalley.abstrac_status_change_command">
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.command_wontfix" class="Entvalley\AppBundle\Domain\Command\WontfixCommand">
-            <argument type="service" id="doctrine" />
-            <argument type="service" id="context.user" />
+        <service id="entvalley.command_wontfix" class="Entvalley\AppBundle\Domain\Command\WontfixCommand" parent="entvalley.abstrac_status_change_command">
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.command_take" class="Entvalley\AppBundle\Domain\Command\TakeCommand">
-            <argument type="service" id="doctrine" />
-            <argument type="service" id="context.user" />
+        <service id="entvalley.command_take" class="Entvalley\AppBundle\Domain\Command\TakeCommand" parent="entvalley.abstrac_status_change_command">
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.command_done" class="Entvalley\AppBundle\Domain\Command\DoneCommand">
-            <argument type="service" id="doctrine" />
-            <argument type="service" id="context.user" />
+        <service id="entvalley.command_done" class="Entvalley\AppBundle\Domain\Command\DoneCommand" parent="entvalley.abstrac_status_change_command">
             <tag name="entvalley.command" />
         </service>
 

@@ -31,7 +31,7 @@ class CommandController extends Controller
 
     public function listAction()
     {
-        return new JsonResponse($this->commandManager->getCommandsConfigs());
+        return $this->commandManager->getCommandsConfigs();
     }
 
     public function sendAction()
@@ -46,7 +46,7 @@ class CommandController extends Controller
             $commandsResults = $this->commandInterpreter->interpret($receivedCommand);
             $em->flush();
 
-            return $this->javascript($this->_prepareCommandsResponse($commandsResults));
+            return $commandsResults;
         }
 
         return $this->view([
@@ -72,7 +72,7 @@ class CommandController extends Controller
                     /**
                      * Serializing object requires complicated logic
                      */
-                    $commandResult[$commandResultKey] = is_object($commandResultItem) ? $this->serializer->serialize($commandResultItem, 'json') : JsonEncoder::encode($commandResultItem);
+                 //  $commandResult[$commandResultKey] = is_object($commandResultItem) ? $this->serializer->serialize($commandResultItem, 'json') : JsonEncoder::encode($commandResultItem);
                 }
 
                 if (empty($commandResult)) {

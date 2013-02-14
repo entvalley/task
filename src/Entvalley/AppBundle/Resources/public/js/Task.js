@@ -2,7 +2,11 @@
     "use strict";
     App.Model = App.Model || {};
     App.Model.Task = function (data) {
-        var self = this;
+
+        var numberOfComments,
+            self;
+
+        self = this;
         this.author = data.author.username;
         this.title = data.title;
         this.body = data.body;
@@ -16,7 +20,7 @@
             project_name: App.UI.project.canonicalName});
         this.comments = ko.observableArray([]);
 
-        var numberOfComments = data.number_of_comments || 0;
+        numberOfComments = data.number_of_comments || 0;
 
         if (data.comments) {
             var mappedComments = $.map(data.comments, function (item) {
@@ -28,43 +32,6 @@
         this.numberOfComments = ko.computed(function () {
             return Math.max(numberOfComments, self.comments() ? self.comments().length : 0);
         });
-
-        this.addComment = function (data) {
-            self.comments.push(new App.Model.Comment(data));
-        };
-
-        this.deleteComment = function (id) {
-            self.comments.remove(function (comment) {
-                return comment.id === parseInt(id, 10);
-            });
-        };
-
-        this.hideComment = function (elem) {
-            if (elem.nodeType === 3) { // skip text nodes
-                return;
-            }
-
-            $(elem).animate({ height: 'toggle', opacity: 'toggle' }, '400', function () {
-                $(this).remove();
-            });
-        };
-
-
-        this.afterCommentAdded = function (elem) {
-            if (elem.nodeType === 3) { // skip text nodes
-                return;
-            }
-            $(elem).filter("li").effect("highlight");
-        };
-
-        this.afterRender = function (elem) {
-        };
-
-        this.formatDate = function (date) {
-            var hours = date().getHours();
-            var minutes = date().getMinutes();
-            return (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
-        };
 
         this.shortCreatedOnDate = ko.computed(function () {
             return App.AbbrMonthNames[ko.utils.unwrapObservable(self.date).getMonth()] + ' ' +
@@ -83,42 +50,7 @@
         this.statusName = ko.computed(function () {
             return App.Model.TaskStatus.Names[this.status() - 1];
         }, this);
-
-        this.hasStatus = function (statusName) {
-            return self.status() - 1 === App.Model.TaskStatus.Names.indexOf(statusName);
-        };
-
-        this.editTask = function () {
-            $.ajax(Routing.generate('app_task_edit', {
-                id: self.id,
-                project: App.UI.project.id,
-                project_name: App.UI.project.canonicalName
-            }), {
-                dataType: "script"
-            });
-
-            var cancel = function (e) {
-                if (e.type !== 'keyup') {
-                    e.preventDefault();
-                }
-                App.UI.project.switchToTask(self.id);
-                App.UI.removeWYSIWYG();
-            };
-
-            $('#task-' + self.id).one('click', '.cancel', cancel);
-            App.UI.registerEscHandler(cancel);
-        };
-
-        this.updateComment = function (id, text, safeText) {
-            $.grep(self.comments(), function (elm) {
-                if (elm.id === id) {
-                    elm.text(text);
-                    elm.safeText(safeText);
-                }
-            });
-        };
     };
-
 
     App.Model.TaskStatus = {
         UNASSIGNED: 1,
@@ -130,4 +62,76 @@
 
         Names: ['unassigned', 'accepted', 'closed', 'reopened', 'rejected', 'wontfix']
     };
+
+    App.Model.Task.prototype = (function () {
+        return {
+            hasStatus: function (statusName) {
+                return this.status() - 1 === App.Model.TaskStatus.Names.indexOf(statusName);
+            },
+
+            editTask: function () {
+                $.ajax(Routing.generate('app_task_edit', {
+                    id: this.id,
+                    project: App.UI.project.id,
+                    project_name: App.UI.project.canonicalName
+                }), {
+                    dataType: "script"
+                });
+
+                var me = this,
+                    cancel = function (e) {
+                        if (e.type !== 'keyup') {
+                            e.preventDefault();
+                        }
+                        App.UI.project.switchToTask(me.id);
+                        App.UI.removeWYSIWYG();
+                    };
+
+                $('#task-' + this.id).one('click', '.cancel', cancel);
+                App.UI.registerEscHandler(cancel);
+            },
+
+            addComment: function (data) {
+                this.comments.push(new App.Model.Comment(data));
+            },
+
+            deleteComment: function (id) {
+                this.comments.remove(function (comment) {
+                    return comment.id === parseInt(id, 10);
+                });
+            },
+
+            hideComment: function (elem) {
+                if (elem.nodeType === 3) { // skip text nodes
+                    return;
+                }
+
+                $(elem).animate({ height: 'toggle', opacity: 'toggle' }, '400', function () {
+                    $(this).remove();
+                });
+            },
+
+            afterCommentAdded: function (elem) {
+                if (elem.nodeType === 3) { // skip text nodes
+                    return;
+                }
+                $(elem).filter("li").effect("highlight");
+            },
+
+            formatDate: function (date) {
+                var hours = date().getHours(),
+                    minutes = date().getMinutes();
+                return (hours < 10 ? '0' : '') + hours + ':' + (minutes < 10 ? '0' : '') + minutes;
+            },
+
+            updateComment: function (id, text, safeText) {
+                $.grep(this.comments(), function (elm) {
+                    if (elm.id === id) {
+                        elm.text(text);
+                        elm.safeText(safeText);
+                    }
+                });
+            }
+        };
+    }());
 })(window.App = window.App || {});
