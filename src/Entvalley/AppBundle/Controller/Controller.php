@@ -173,14 +173,15 @@ class Controller
     }
 
     /**
-     * Binds the current request to a form and validates the given form
+     * Binds the current request to the given form and validates it.
+     * This method is just a shortcut for a common action and its purpose is to write less code
      *
      *
      * @param \Symfony\Component\Form\Form $form
      * @param boolean $post_only only do validation if the request method is POST
      * @return boolean|void
      */
-    public function isValidForm($form, $post_only = true)
+    public function bindRequestToFormAndValidateIt($form, $post_only = true)
     {
         $request = $this->container->getRequest();
         if (empty($request)) {

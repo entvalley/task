@@ -55,7 +55,7 @@ class CommentCommand extends AbstractCommand
         return 'comment';
     }
 
-    public function isGuessableBySource(CommandSource $source)
+    public function isSatisfiedBySource(CommandSource $source)
     {
         return ($source->getContextType() == 'task' && $source->getContextId() > 0);
     }

@@ -1,3 +1,0 @@
-App.UI.project.chosenTask().status(App.Model.TaskStatus.ACCEPTED);
-App.UI.project.chosenTask().assignedTo({"username": {{ app.user.username|json_encode|raw }}, "id": {{ app.user.id }}});
-{% include "EntvalleyAppBundle:Command:executed/comment.html.twig" %}

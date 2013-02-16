@@ -76,7 +76,7 @@ class ProjectController extends Controller
 
         $form = $this->container->getFormFactory()->create(new ProjectType(), $project);
 
-        if ($this->isValidForm($form)) {
+        if ($this->bindRequestToFormAndValidateIt($form)) {
             $em->persist($project);
             $em->flush();
 

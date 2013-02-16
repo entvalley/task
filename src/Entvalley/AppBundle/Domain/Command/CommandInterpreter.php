@@ -42,7 +42,7 @@ class CommandInterpreter
     {
         $result = [];
         foreach ($this->registry->getAll() as $name => $command) {
-            if ($command->isGuessableBySource($source)) {
+            if ($command->isSatisfiedBySource($source)) {
                 $command->setSource($source);
                 $result[$name][] = $command->execute(trim($content));
             }

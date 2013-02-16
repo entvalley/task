@@ -45,7 +45,7 @@ class CreateCommand extends AbstractCommand
         return 'create';
     }
 
-    public function isGuessableBySource(CommandSource $source)
+    public function isSatisfiedBySource(CommandSource $source)
     {
         return ($source->getContextType() == 'tasks' && $source->getContextId() == '');
     }

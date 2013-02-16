@@ -48,7 +48,7 @@ class ProjectInviter
             }
         }
 
-        // create only new invitation
+        // If a user hasn't been invited, create a new invitation and send an email
         foreach ($invitations as $invitation) {
             $this->sendMail($invitation);
             $this->em->persist($invitation);
@@ -60,13 +60,12 @@ class ProjectInviter
         if ($invitation->isAccepted()) {
             return false;
         }
+
         // create a collaborator;
         // set invitation as accepted.
         $collaborator = new ProjectCollaborator();
-
         $collaborator->setProject($invitation->getProject());
         $collaborator->setCollaborator($user);
-
         $this->em->persist($collaborator);
 
         $invitation->accept();

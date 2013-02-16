@@ -126,7 +126,8 @@
 <script type="text/javascript">
     var App = App || {};
     App.Me = {
-        id: {{ app.user.id }}
+        id: {{ app.user.id }},
+        username: {{ app.user.username|json_encode|raw }}
     };
 
     {% if project is defined %}

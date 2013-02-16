@@ -44,6 +44,7 @@ class CommandController extends Controller
 
             $em = $this->container->getDoctrine()->getManager();
             $commandsResults = $this->commandInterpreter->interpret($receivedCommand);
+            $this->setCommandsErrors($commandsResults);
             $em->flush();
 
             return $commandsResults;
@@ -62,29 +63,24 @@ class CommandController extends Controller
         ]);
     }
 
-    private function _prepareCommandsResponse($commandsResults)
+    /**
+     * Sets the default error message when a command does not return any result,
+     * which means it doesn't know how to handle a request.
+     *
+     * @param $commandsResults
+     */
+    private function setCommandsErrors(&$commandsResults)
     {
-        $finalResponse = '';
-
-        foreach ($commandsResults as $command => $commandResults) {
-            foreach ($commandResults as $commandResult) {
-                foreach ($commandResult as $commandResultKey => $commandResultItem) {
-                    /**
-                     * Serializing object requires complicated logic
-                     */
-                 //  $commandResult[$commandResultKey] = is_object($commandResultItem) ? $this->serializer->serialize($commandResultItem, 'json') : JsonEncoder::encode($commandResultItem);
-                }
-
+        $iteratedCommandsResults = $commandsResults;
+        foreach ($iteratedCommandsResults as $command => $commandResults) {
+            foreach ($commandResults as $commandNumber => $commandResult) {
                 if (empty($commandResult)) {
-                    $finalResponse .= $this->renderView('EntvalleyAppBundle:Command:executed/_failed.html.twig', [
+                    $commandsResults[$command][$commandNumber]['error'] = $this->renderView('EntvalleyAppBundle:Command:executed/_failed.html.twig', [
                         'command' => $command,
                         'command_config' => $this->commandManager->getCommandConfig($command)
                     ]);
-                } else {
-                    $finalResponse .= $this->renderView('EntvalleyAppBundle:Command:executed/' . $command . '.html.twig', $commandResult);
                 }
             }
         }
-        return $finalResponse;
     }
 }

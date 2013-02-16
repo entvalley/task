@@ -113,7 +113,7 @@ class CommandInterpreterTest extends \PHPUnit_Framework_TestCase
             ->method('getName')
             ->will($this->returnValue('create'));
         $expectedCreateCommand->expects($this->any())
-            ->method('isGuessableBySource')
+            ->method('isSatisfiedBySource')
             ->will($this->returnValue(true));
 
         $expectedCloseCommand = $this->getMock('Entvalley\AppBundle\Tests\Domain\Command\CloseCommandStub');

@@ -13,27 +13,36 @@ abstract class AbstractCommand implements Command
 
     protected $isVisible = true;
 
+    /**
+     * {@inheritDoc}
+     */
     public function setSource(CommandSource $source)
     {
         $this->source = $source;
     }
 
-    public function isGuessableBySource(CommandSource $source)
+    /**
+     * If a given input doesn't include command name, the interpreter will try to guess
+     * the command name based on the execution context
+     *
+     * @param CommandSource $source
+     * @return bool
+     */
+    public function isSatisfiedBySource(CommandSource $source)
     {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function isVisible()
     {
         return $this->isVisible;
     }
 
     /**
-     * Return a hint that will help a user to understand where he/she
-     * can apply this command in.
-     * Must be redefined in every command.
-     *
-     * @return string
+     * {@inheritDoc}
      */
     public function getApplicableInText()
     {

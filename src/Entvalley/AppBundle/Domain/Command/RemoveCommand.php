@@ -26,7 +26,7 @@ class RemoveCommand extends AbstractCommand
 
         $em->remove($task);
 
-        return ['removedId' => (int)$removedId];
+        return ['removed_id' => (int)$removedId];
     }
 
     public function getName()

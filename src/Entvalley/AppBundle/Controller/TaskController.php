@@ -96,7 +96,7 @@ class TaskController extends Controller
 
         $form = $this->container->getFormFactory()->create(new TaskType(), $task);
 
-        if ($this->isValidForm($form)) {
+        if ($this->bindRequestToFormAndValidateIt($form)) {
             $em->persist($task);
             $em->flush();
 
@@ -115,7 +115,7 @@ class TaskController extends Controller
 
         $form = $this->container->getFormFactory()->create(new TaskType(), $task);
 
-        if ($this->isValidForm($form)) {
+        if ($this->bindRequestToFormAndValidateIt($form)) {
             $em->flush();
 
             return $this->redirect(

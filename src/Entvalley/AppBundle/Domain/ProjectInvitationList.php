@@ -9,7 +9,7 @@ class ProjectInvitationList
     private $invitations = array();
 
     /**
-     * Adds invitations to the list. Duplicated emails and empty invitiation aren't added.
+     * Adds invitations to the list. Duplicated emails and empty invitiation are skipped
      *
      * @param array $invitations
      */

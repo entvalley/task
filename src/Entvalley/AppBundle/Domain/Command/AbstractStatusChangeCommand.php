@@ -60,7 +60,7 @@ abstract class AbstractStatusChangeCommand extends AbstractCommand
 
         return [
             'status' => $this->getNewStatus(),
-            'content' => $comment->getSafeText(),
+            'comment' => $comment,
             'updatedId' => (int)$updatedId,
         ];
     }

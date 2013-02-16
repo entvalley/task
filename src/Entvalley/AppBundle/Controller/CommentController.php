@@ -41,7 +41,7 @@ class CommentController extends Controller
         $form = $this->container->getFormFactory()->create(new CommentType(), $comment);
         $comment->setHtmlPurifier($this->htmlPurifier);
 
-        if ($this->isValidForm($form)) {
+        if ($this->bindRequestToFormAndValidateIt($form)) {
             $em->flush();
             $comment->purifyHtmlTags();
             return $this->javascript(

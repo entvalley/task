@@ -38,9 +38,9 @@ jQuery(function ($) {
                 self.tasks.valueHasMutated();
             });
 
-            self.goToTask = function (task) {
+            self.goToTask = function (id) {
                 window.history.pushState(null, '', Routing.generate('app_task_view', {
-                    id: task.id,
+                    id: id,
                     project: self.id,
                     project_name: self.canonicalName
                 }));
