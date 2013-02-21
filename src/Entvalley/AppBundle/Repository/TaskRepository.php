@@ -36,6 +36,7 @@ class TaskRepository extends EntityRepository
         }
         return $tasks;
     }
+
 /*
     public function findWithFilterByCompany(TaskFilter $filter, $company)
     {

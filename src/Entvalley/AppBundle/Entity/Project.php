@@ -100,6 +100,11 @@ class Project implements IHaveOwner
         return $this->projectStatsService;
     }
 
+    /**
+     * Called on pre-serializer event.
+     *
+     * The values of the project's stats are copied and serialized as a part of the project object.
+     */
     public function loadStats()
     {
         $this->inprogressNumber = $this->projectStatsService->getInprogressNumber();

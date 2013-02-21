@@ -44,6 +44,10 @@ jQuery(function ($) {
                     project: self.id,
                     project_name: self.canonicalName
                 }));
+
+                window.setTimeout(function() {
+                  $(window).trigger('hashchange', [true]);
+                }, 0);
             };
 
             self.addTask = function (data) {

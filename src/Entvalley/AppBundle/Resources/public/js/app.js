@@ -190,7 +190,7 @@ jQuery(function ($) {
                                 oldMinHeight = parseInt('0' + iframe.style.minHeight, 10),
                                 newMinHeight;
                             $(body).append(contentCopy);
-                            newMinHeight = parseInt(contentCopy.height(), 10);
+                            newMinHeight = parseInt(contentCopy.height(), 10) + 20;
                             contentCopy.remove();
                             if (oldMinHeight !== newMinHeight) {
                                 $(iframe).css({ "min-height": newMinHeight });
@@ -208,11 +208,17 @@ jQuery(function ($) {
                 },
 
                 registerEscHandler: function (handler) {
-                    $('body').on('keyup', function cancelWithKeyup(e) {
+                    var bodies = [$('body'), $('iframe.wysihtml5-sandbox').contents().find('body')];
+                    var cancelFunc = function cancelWithKeyup(e) {
                         if (e.which === 27) {
                             handler(e);
-                            $('body').off('keyup', cancelWithKeyup);
+                            $.each(bodies, function (index, body) {
+                                body.off('keyup', cancelWithKeyup);
+                            });
                         }
+                    };
+                    $.each(bodies, function (index, body) {
+                        body.on('keyup', cancelFunc);
                     });
                 },
 
@@ -234,6 +240,10 @@ jQuery(function ($) {
                 value['type'] = value.type || 'calendar';
 
                 valueUnwrapped = ko.utils.unwrapObservable(value.date);
+                if (!valueUnwrapped) {
+                    // can't convert emptiness to a date
+                    return valueUnwrapped;
+                }
                 if (element.tagName === 'TIME') {
                     element.setAttribute('datetime', valueUnwrapped);
                 }
@@ -247,6 +257,7 @@ jQuery(function ($) {
                         newValue = moment(valueUnwrapped).fromNow();
                         break;
                     case "format":
+                        console.log(valueUnwrapped)
                         value['format'] = value.format || 'L';
                         newValue = moment(valueUnwrapped).format(value.format);
                         break;
@@ -257,6 +268,7 @@ jQuery(function ($) {
 
         App.UI = new App.UI("command_text");
         App.UI.run();
+
     })(window.App = window.App || {}, window.Routing = window.Routing || {});
 });
 

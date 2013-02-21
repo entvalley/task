@@ -16,4 +16,10 @@ class CanonicalNameGeneratorTest extends \PHPUnit_Framework_TestCase
         $generator = new CanonicalNameGenerator();
         $this->assertEquals("a-long-name-with-spe", $generator->generate("a ~@#$%%/ long name with special characters"));
     }
+
+    public function testShouldRemoveAllSpaceCharacters()
+    {
+        $generator = new CanonicalNameGenerator();
+        $this->assertEquals('name', $generator->generate("name \t" . json_decode('"\u200b"')));
+    }
 }

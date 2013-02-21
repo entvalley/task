@@ -28,7 +28,11 @@
             </cascade>
         </one-to-one>
 
-        <one-to-many field="comments" orphan-removal="true" target-entity="Entvalley\AppBundle\Entity\Comment" mapped-by="task" />
+        <one-to-many field="comments" orphan-removal="true" target-entity="Entvalley\AppBundle\Entity\Comment" mapped-by="task">
+            <order-by>
+                <order-by-field name="createdAt" direction="ASC"/>
+            </order-by>
+        </one-to-many>
 
         <many-to-one field="author" target-entity="Entvalley\AppBundle\Entity\User" />
         <many-to-one field="assignedTo" target-entity="Entvalley\AppBundle\Entity\User" />

@@ -18,7 +18,7 @@
         <div class="actions-header">
             <ul>
                 <li class="action">
-                    <a href="#edit-task" data-bind="click: editTask"><i class="icon-pencil"></i>Edit</a>
+                    <a class="btn" href="#edit-task" data-bind="click: editTask"><i class="icon-pencil"></i>Edit</a>
                 </li>
             </ul>
         </div>
@@ -57,7 +57,8 @@
                         </div>
 
                         <div class="span2 status-change" data-bind="visible: statusChanged">
-                            <p data-bind="text: statusNameCapitalized() + ' ' + statusChangeDate()"></p>
+                            <p data-bind="text: statusNameCapitalized()"></p>
+                            <p data-bind="dateString: { date: statusChangeDate, type: 'format', format: 'LLL' }"></p>
 
                             <p data-bind="attr: { class: 'status-line status-'  + statusName() }"></p>
                         </div>
@@ -80,7 +81,7 @@
           <div class="actions-header">
               <ul>
                   <li class="action">
-                      <a href="{{ path('app_project_settings', { project: project.id, project_name: project.canonicalName }) }}">Settings</a>
+                      <a class="btn" href="{{ path('app_project_settings', { project: project.id, project_name: project.canonicalName }) }}"><i class="icon-cogs"></i>Settings</a>
                   </li>
               </ul>
           </div>

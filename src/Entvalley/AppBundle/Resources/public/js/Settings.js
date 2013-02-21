@@ -22,10 +22,10 @@ jQuery(function () {
                     }
                 });
                 var result;
-                if (invitees.length === 1) {
+                if (invitees.length === 0) {
+                    result = 'No invitation has been sent. Please type in at least one email.';
+                } else if (invitees.length === 1) {
                     result = 'The invitation has been sent to ' + invitees[0].inviteeEmail() + '.';
-                } else if (invitees.length === 0) {
-                    result = 'No invitation has been sent. Please type at least one email.';
                 } else {
                     result = 'The invitations have been sent to ' + invitees.length + ' people.';
                 }

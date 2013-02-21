@@ -1,15 +1,10 @@
-<div style="
-border: 1px solid #fff;
-margin-left: 0;
-padding: 4px;
-box-shadow: 0px 0px 0px 3px rgba(0, 0, 0, 0.1);
-background-color: #fbfbfb;" class="span8 edit-comment">
+<div class="edit-comment">
 <form method="post" class="form-page form-horizontal" action="{{ path("app_comment_edit", { id: comment.id }) }}" xmlns="http://www.w3.org/1999/html">
-    <div style="background-color: white;border: 1px dashed #c0c0c0;padding: 10px; margin-bottom: 10px">
-{{ form_errors(form) }}
-    <div class="control-group">
-            {{ form_widget(form.text, { attr: { 'data-behaviour': 'autosize wysiwyg', 'class': 'span12'} }) }}
-    </div>
+    <div class="editable-area">
+        {{ form_errors(form) }}
+        <div class="control-group">
+                {{ form_widget(form.text, { attr: { 'data-behaviour': 'autosize wysiwyg', 'class': 'span12'} }) }}
+        </div>
     </div>
 
     <div class="control-group">

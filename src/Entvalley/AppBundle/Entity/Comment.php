@@ -18,6 +18,8 @@ class Comment implements IHaveOwner, IHaveProject
     private $task;
 
     /**
+     * Status change that the comment belongs to (if any)
+     *
      * @var StatusChange $statusChange
      */
     private $statusChange;
@@ -148,5 +150,10 @@ class Comment implements IHaveOwner, IHaveProject
     public function getProject()
     {
         return $this->task->getProject();
+    }
+
+    public function hasStatusChange()
+    {
+        return !empty($this->statusChange);
     }
 }

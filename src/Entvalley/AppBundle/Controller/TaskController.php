@@ -4,7 +4,6 @@ namespace Entvalley\AppBundle\Controller;
 
 use Entvalley\AppBundle\Domain\TaskFilter;
 use Entvalley\AppBundle\Entity\Project;
-use Entvalley\AppBundle\Service\ContentNegotiator;
 use Entvalley\AppBundle\Component\HttpFoundation\JsonResponse;
 use Entvalley\AppBundle\Domain\JsonEncoder;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -22,17 +21,14 @@ class TaskController extends Controller
      * @var \JMS\Serializer\SerializerInterface
      */
     private $serializer;
-    private $negotiator;
     private $htmlPurifier;
 
     public function __construct(
         ControllerContainer $container,
         SerializerInterface $serializer,
-        ContentNegotiator $negotiator,
         $htmlPurifier)
     {
         $this->serializer = $serializer;
-        $this->negotiator = $negotiator;
         $this->htmlPurifier = $htmlPurifier;
         parent::__construct($container);
     }
@@ -155,7 +151,7 @@ class TaskController extends Controller
         if ($this->container->getRequest()->isXmlHttpRequest()) {
             $this->serializer->setGroups(['details', 'summary']);
             $task->setHtmlPurifier($this->htmlPurifier);
-            return JsonResponse::createWithSerializer($this->serializer, $task);
+            return $task;
         } else {
             return $this->view([
                 'task' => $task,

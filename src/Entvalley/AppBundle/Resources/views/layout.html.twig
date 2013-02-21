@@ -9,13 +9,12 @@
     <link href="http://fonts.googleapis.com/css?family=Lato:300,400" rel="stylesheet" type="text/css">
 
     {% stylesheets
-        '@EntvalleyAppBundle/Resources/public/css/bootstrap.css'
-        '@EntvalleyAppBundle/Resources/public/css/font-awesome.min.css'
-        '@EntvalleyAppBundle/Resources/public/css/bootstrap-responsive.min.css'
-        '@EntvalleyAppBundle/Resources/public/css/main.less'
-        '@EntvalleyAppBundle/Resources/public/css/bootstrap-wysihtml5.css'
-        '@EntvalleyAppBundle/Resources/public/css/prettify.css'
-        %}
+    '@EntvalleyAppBundle/Resources/public/css/bootstrap.css'
+    '@EntvalleyAppBundle/Resources/public/css/font-awesome.min.css'
+    '@EntvalleyAppBundle/Resources/public/css/bootstrap-responsive.min.css'
+    '@EntvalleyAppBundle/Resources/public/css/main.less'
+    '@EntvalleyAppBundle/Resources/public/css/bootstrap-wysihtml5.css'
+    '@EntvalleyAppBundle/Resources/public/css/prettify.css' %}
     <link rel="stylesheet" href="{{ asset_url }}"/>
     {% endstylesheets %}
 
@@ -31,19 +30,21 @@
 <body>
 
 <div class="navbar navbar-inverse">
-        <div class="navbar-inner">
-            <div class="container">
-                <div class="topbar">
-                    <div class=" pull-left">
-                    <img width="44" height="44" class="picture" src="{{ asset('/bundles/entvalleyapp/images/no-avatar.png') }}">
+    <div class="navbar-inner">
+        <div class="container">
+            <div class="topbar">
+                <div class=" pull-left">
+                    <img width="44" height="44" class="picture"
+                         src="{{ asset('/bundles/entvalleyapp/images/no-avatar.png') }}">
                     <a class="username" href="{{ path('app_homepage') }}">{{ app.user.username }}</a>
 
-                    </div>
+                </div>
 
-                    {% if project is defined %}
+                {% if project is defined %}
                     <div class="summary pull-left">
                         <div class="done">
-                            <div class="arrow"></div>Recent
+                            <div class="arrow"></div>
+                            Recent
                         </div>
                         <div class="inprogress">
                             <div class="arrow"></div>
@@ -58,37 +59,41 @@
                             </a>
                         </div>
                     </div>
-                    {% endif %}
-                </div>
+                {% endif %}
+            </div>
 
-                <div class="logo-inner pull-right">
-                    <img width="79" height="19" src="/bundles/entvalleyapp/images/logo-inner.png">
-                </div>
+            <div class="logo-inner pull-right">
+                <img width="79" height="19" src="/bundles/entvalleyapp/images/logo-inner.png">
+            </div>
 
-                {% if project is defined %}
+            {% if project is defined %}
                 <div class="project pull-right">
                     {% render path('app_project_navigation', { project: project.id }) %}
                 </div>
+            {% endif %}
+            <ul class="nav pull-right">
+                {% if project is defined %}
+                    <li class="active"><a
+                                href="{{ path('app_task_list', { project: project.id, project_name: project.canonicalName }) }}">Tasks</a>
+                    </li>
                 {% endif %}
-                <ul class="nav pull-right">
-                    {% if project is defined %}
-                    <li class="active"><a href="{{ path('app_task_list', { project: project.id, project_name: project.canonicalName }) }}">Tasks</a></li>
-                    {% endif %}
-                    <li {% if project is not defined %}class="active"{% endif %}><a href="{{ path('app_homepage') }}">Projects</a></li>
-                    <!--li><a href="#">Setting</a></li-->
-                    <li><a href="{{ path('fos_user_security_logout') }}">Log out</a></li>
-                </ul>
+                <li {% if project is not defined %}class="active"{% endif %}><a href="{{ path('app_homepage') }}">Projects</a>
+                </li>
+                <!--li><a href="#">Setting</a></li-->
+                <li><a href="{{ path('fos_user_security_logout') }}">Log out</a></li>
+            </ul>
 
-            </div>
         </div>
+    </div>
 </div>
 
-
-<div class="container" id="new_project" data-behaviour="expandable" style="width: 570px; display: none">
+<div class="container" id="new_project" data-behaviour="expandable" style="display: none">
     <div class="row">
+        <div class="span3"></div>
         <div class="span6">
             {% render controller('entvalley.project_controller:createAction') %}
         </div>
+        <div class="span3"></div>
     </div>
 </div>
 
@@ -110,9 +115,9 @@
         </div>
 
         {% if project is defined %}
-        <div class="tools">
-            {% render controller('entvalley.command_controller:formAction') %}
-        </div>
+            <div class="tools">
+                {% render controller('entvalley.command_controller:formAction') %}
+            </div>
         {% endif %}
     </div>
 </section>

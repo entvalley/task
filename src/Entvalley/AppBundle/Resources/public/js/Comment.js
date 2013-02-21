@@ -35,8 +35,9 @@
     App.Model.Comment.prototype = (function () {
         return {
             edit: function () {
+                var comment = this;
                 var dfd = $.ajax(Routing.generate('app_comment_edit', {
-                        id: this.id
+                        id: comment.id
                     }), {
                         dataType: "script"
                     }),
@@ -44,13 +45,13 @@
                         if (e.type !== 'keyup') {
                             e.preventDefault();
                         }
-                        $('#comment-' + this.id).find('.edit-comment').remove();
-                        $('#comment-' + this.id).find('.text').show();
+                        $('#comment-' + comment.id).find('.edit-comment').remove();
+                        $('#comment-' + comment.id).find('.text').show();
                         App.UI.removeWYSIWYG();
                     };
 
                 dfd.done(function () {
-                    $('#comment-' + this.id).one('click', '.cancel', cancel);
+                    $('#comment-' + comment.id).one('click', '.cancel', cancel);
                     App.UI.registerEscHandler(cancel);
                 });
             },
@@ -61,6 +62,11 @@
                 }
 
                 $.ajax(Routing.generate('app_comment_delete', { id: this.id }), { dataType: "script" });
+            },
+
+            removeText: function () {
+                this.text('');
+                this.safeText('');
             }
         };
     }());

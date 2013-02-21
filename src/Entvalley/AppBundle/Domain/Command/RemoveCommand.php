@@ -3,15 +3,16 @@
 namespace Entvalley\AppBundle\Domain\Command;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class RemoveCommand extends AbstractCommand
 {
     /**
-     * @var \Doctrine\Bundle\DoctrineBundle\Registry
+     * @var \Symfony\Bridge\Doctrine\RegistryInterface
      */
     private $doctrine;
 
-    public function __construct(Registry $doctrine)
+    public function __construct(RegistryInterface $doctrine)
     {
         $this->doctrine = $doctrine;
     }

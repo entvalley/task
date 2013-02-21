@@ -16,7 +16,8 @@ class ProjectInvitationEmailType extends AbstractType
             ->add('inviteeEmail', 'email', [
                     'required' => false,
                     'attr' => [
-                        'autocomplete' => 'off'
+                        'autocomplete' => 'off',
+                        'class' => 'input-medium'
                     ]
                ])
         ;

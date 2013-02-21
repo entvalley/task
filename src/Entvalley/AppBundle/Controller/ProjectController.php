@@ -117,13 +117,10 @@ class ProjectController extends Controller
         $invitationRepository = $this->container->getDoctrine()->getRepository('EntvalleyAppBundle:ProjectInvitation');
         $invitations = $invitationRepository->findByProject($project);
 
-        return JsonResponse::createWithSerializer(
-            $this->serializer,
-            [
+        return [
                 'collaborators' => $collaborators,
                 'invitations' => $invitations,
-            ]
-        );
+            ];
     }
 
     public function inviteCollaboratorsAction(Project $project)
@@ -144,12 +141,9 @@ class ProjectController extends Controller
             $inviter->invite($project, $invitations, $this->container->getUserContext()->getUser());
             $em->flush();
 
-            return JsonResponse::createWithSerializer(
-                $this->serializer,
-                [
+            return [
                     'invitees' => $invitations,
-                ]
-            );
+                ];
         }
     }
 

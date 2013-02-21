@@ -101,6 +101,14 @@
                 });
             },
 
+            removeCommentText: function (id) {
+                $.each(this.comments(), function (index, comment) {
+                    if (comment.id === parseInt(id, 10)) {
+                        comment.removeText();
+                    }
+                });
+            },
+
             hideComment: function (elem) {
                 if (elem.nodeType === 3) { // skip text nodes
                     return;

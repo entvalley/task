@@ -23,12 +23,19 @@ class CommentController extends Controller
 
         $deletedId = $comment->getId();
 
-        $em->remove($comment);
+        $isRemoved = false;
+        if ($comment->hasStatusChange()) {
+            $comment->setText('');
+        } else {
+            $isRemoved = true;
+            $em->remove($comment);
+        }
         $em->flush();
 
         return $this->javascript($this->viewContent(
             [
-                'commentId' => $deletedId
+                'comment_id' => $deletedId,
+                'is_removed' => $isRemoved
             ],
             'js.twig'
         ));

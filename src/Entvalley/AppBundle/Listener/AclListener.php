@@ -57,19 +57,4 @@ class AclListener
     {
 
     }
-
-    public function preLoad(LifecycleEventArgs $args)
-    {echo 2;
-        return;
-        $entity = $args->getEntity();
-        $entityManager = $args->getEntityManager();
-
-        if ($entity instanceof Project) {
-            $user = $this->container->get('context.user')->getUser();
-            $callback = function ($projectStatsService) use ($user, $entityManager, $entity) {
-                $entityManager->getRepository(get_class($entity))->populateWithStats($user, $projectStatsService);
-            };
-            $entity->getProjectStatsService()->setLoadCallback($callback);
-        }
-    }
 }

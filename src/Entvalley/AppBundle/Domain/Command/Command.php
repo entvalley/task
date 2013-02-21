@@ -3,7 +3,7 @@
 namespace Entvalley\AppBundle\Domain\Command;
 
 /**
- * Every command must implement Command interface
+ * Every command must implement Command interface to work with the command interpreter.
  *
  * @package Entvalley\AppBundle\Domain\Command
  */

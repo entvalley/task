@@ -48,7 +48,7 @@ class ApiListener
         }
 
         if (!$response) {
-            $response = new Response('No supported format is found (did you send correct "Accept"?)', 415);
+            $response = new Response('No supported format is found (did you send a correct "Accept" header?)', 415);
         }
 
         $event->setResponse($response);

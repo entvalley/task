@@ -1,1 +1,5 @@
-App.UI.project.chosenTask().deleteComment('{{ commentId }}');
+{% if is_removed %}
+    App.UI.project.chosenTask().deleteComment('{{ comment_id }}');
+{% else %}
+    App.UI.project.chosenTask().removeCommentText('{{ comment_id }}');
+{% endif %}
