@@ -22,8 +22,10 @@ class AppKernel extends Kernel
             new Entvalley\UserBundle\EntvalleyUserBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new Entvalley\AppBundle\EntvalleyAppBundle(),
-            new JMS\SerializerBundle\JMSSerializerBundle($this),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
             new Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle(),
+            new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
+            new Mgp\PropertyBundle\MgpPropertyBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

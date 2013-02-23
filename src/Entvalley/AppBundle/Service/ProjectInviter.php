@@ -8,6 +8,7 @@ use Entvalley\AppBundle\Entity\Project;
 use Entvalley\AppBundle\Entity\ProjectCollaborator;
 use Entvalley\AppBundle\Entity\ProjectInvitation;
 use FOS\UserBundle\Model\UserInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class ProjectInviter
 {
@@ -15,7 +16,7 @@ class ProjectInviter
     private $templatedMailer;
     private $router;
 
-    public function __construct(ObjectManager $em, TemplatedMailer $templatedMailer, $router)
+    public function __construct(ObjectManager $em, TemplatedMailer $templatedMailer, UrlGeneratorInterface $router)
     {
         $this->em = $em;
         $this->templatedMailer = $templatedMailer;
@@ -78,7 +79,7 @@ class ProjectInviter
         $invitationLink = $this->router->generate('app_project_accept_invitation', [
                 'company' => $invitation->getInvitedBy()->getCompanyId(),
                 'hash' => $invitation->getPublicHash()
-            ]);
+            ], UrlGeneratorInterface::ABSOLUTE_URL);
 
         $this->templatedMailer->send(
             'Invitation to ' . $invitation->getProjectName(),

@@ -107,6 +107,20 @@ class ProjectController extends Controller
         );
     }
 
+    public function fieldsAction(Project $project)
+    {
+        $invitationForm = $this->container->getFormFactory()->create(
+            new ProjectInvitationType(),
+            new ProjectInvitationList()
+        );
+        return $this->view(
+            [
+                'project' => $project,
+                'invitation_form' => $invitationForm->createView(),
+            ]
+        );
+    }
+
     public function collaboratorsAction(Project $project)
     {
         $collaboratorRepository = $this->container->getDoctrine()->getRepository(
@@ -154,11 +168,18 @@ class ProjectController extends Controller
 
 
         $invitationRepository = $this->container->getDoctrine()->getRepository('EntvalleyAppBundle:ProjectInvitation');
+        /**
+         * @var ProjectInvitation $invitation
+         */
         $invitation = $invitationRepository->findByHash($company, $hash);
-
         $inviter->accept($invitation, $this->container->getUserContext()->getUser());
 
-        $em->flush();
+
+
+        //$em->flush();
+
+        return $this->view();
+
 
         return new Response("thanks!");
         $userRepository = $this->container->getDoctrine()->getRepository('EntvalleyUserBundle:User');

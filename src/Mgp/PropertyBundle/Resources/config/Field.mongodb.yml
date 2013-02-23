@@ -1,0 +1,15 @@
+Mgp\AppBundle\Document\Field:
+    type: mappedSuperclass
+    fields:
+        id:
+            id: true
+        label: string
+        name: string
+        #widget: string
+        #helpText: string
+        #showInAdmin: boolean
+        #publicEditable: boolean
+        #isRequired: boolean
+        # options: hash
+        #options: string
+        #sequence: int

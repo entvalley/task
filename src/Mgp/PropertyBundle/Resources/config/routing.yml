@@ -1,0 +1,3 @@
+app_homepage:
+    pattern:  /
+    defaults: { _controller: MgpPropertyBundle:Welcome:index }

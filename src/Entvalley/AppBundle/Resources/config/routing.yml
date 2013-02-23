@@ -78,6 +78,15 @@ app_project_settings:
         project: \d+
         project_name: "[^/]+"
 
+app_project_settings_fields:
+    pattern:  /projects/{project}-{project_name}/settings/fields
+    defaults: { _controller: entvalley.project_controller:fieldsAction }
+    options:
+        expose: true
+    requirements:
+        project: \d+
+        project_name: "[^/]+"
+
 app_project_collaborators:
     pattern:  /projects/{project}-{project_name}/collaborators
     defaults: { _controller: entvalley.project_controller:collaboratorsAction }
@@ -97,7 +106,7 @@ app_project_collaborators_invite:
         project_name: "[^/]+"
 
 app_project_accept_invitation:
-    pattern:  /{company}/{hash}/acceptInvitation
+    pattern:  /companies/{company}/{hash}/acceptInvitation
     defaults: { _controller: entvalley.project_controller:acceptInvitationAction }
     options:
         expose: true
