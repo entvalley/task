@@ -1,6 +1,6 @@
 <?php
 
-$container->setParameter('database_driver', 'pdo_pgsql');
+$container->setParameter('database_driver', 'pdo_mysql');
 
 if (getenv('VCAP_SERVICES') != '') {
     $services_json = json_decode(getenv("VCAP_SERVICES"),true);
@@ -13,8 +13,8 @@ if (getenv('VCAP_SERVICES') != '') {
     $container->setParameter('database_name', $postgresql_config["name"]);
 } else {
     $container->setParameter('database_host', 'localhost');
-    $container->setParameter('database_port', '5432');
-    $container->setParameter('database_user', 'postgres');
+    $container->setParameter('database_port', '3306');
+    $container->setParameter('database_user', 'root');
     $container->setParameter('database_password', 'nbuser');
     $container->setParameter('database_name', 'tasks');
 }

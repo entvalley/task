@@ -44,10 +44,12 @@ class RemoveCommandTest extends \PHPUnit_Framework_TestCase
 
         $objectManagerMock->expects($this->once())
             ->method('find')
-            ->will($this->returnValue(new stdClass()));
+            ->will($this->returnValue(new \stdClass()));
 
         $objectManagerMock->expects($this->once())
             ->method('remove');
+
+        return $objectManagerMock;
     }
 
 }
