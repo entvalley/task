@@ -4,7 +4,7 @@ namespace Entvalley\AppBundle\Domain;
 
 use Symfony\Component\Security\Core\SecurityContextInterface;
 
-class UserContext
+class UserContext implements UserContextInterface
 {
     private $context;
 

@@ -6,6 +6,7 @@ use Entvalley\AppBundle\Domain\TaskFilter;
 use Entvalley\AppBundle\Entity\Project;
 use Entvalley\AppBundle\Component\HttpFoundation\JsonResponse;
 use Entvalley\AppBundle\Domain\JsonEncoder;
+use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Entvalley\AppBundle\Entity\Factory\TaskFactory;
 use Entvalley\AppBundle\Form\TaskType;
@@ -21,15 +22,21 @@ class TaskController extends Controller
      * @var \JMS\Serializer\SerializerInterface
      */
     private $serializer;
+    /**
+     * @var \JMS\Serializer\SerializationContext
+     */
+    private $serializationContext;
     private $htmlPurifier;
 
     public function __construct(
         ControllerContainer $container,
         SerializerInterface $serializer,
+        SerializationContext $serializationContext,
         $htmlPurifier)
     {
         $this->serializer = $serializer;
         $this->htmlPurifier = $htmlPurifier;
+        $this->serializationContext = $serializationContext;
         parent::__construct($container);
     }
 
@@ -59,21 +66,21 @@ class TaskController extends Controller
 
 
         if ($this->container->getRequest()->isXmlHttpRequest()) {
-            $this->serializer->setGroups(['summary']);
-
             foreach ($tasks as $task) {
                 $task->setHtmlPurifier($this->htmlPurifier);
             }
 
+            $this->serializationContext->setGroups(['summary']);
+
             return [
-                    'tasks' => $tasks,
-                    'pagination' => [
-                        'last' => $pagination->getLastPage(),
-                        'next' => $pagination->getNextUrl(),
-                        'previous' => $pagination->getPreviousUrl(),
-                        'current' => $pagination->getCurrentPage()
-                    ]
-                ];
+                'tasks' => $tasks,
+                'pagination' => [
+                    'last' => $pagination->getLastPage(),
+                    'next' => $pagination->getNextUrl(),
+                    'previous' => $pagination->getPreviousUrl(),
+                    'current' => $pagination->getCurrentPage()
+                ]
+            ];
         } else {
             return $this->view([
                 'tasks' => $tasks,
@@ -149,8 +156,8 @@ class TaskController extends Controller
     public function viewAction(Task $task)
     {
         if ($this->container->getRequest()->isXmlHttpRequest()) {
-            $this->serializer->setGroups(['details', 'summary']);
             $task->setHtmlPurifier($this->htmlPurifier);
+            $this->serializationContext->setGroups(['details', 'summary']);
             return $task;
         } else {
             return $this->view([

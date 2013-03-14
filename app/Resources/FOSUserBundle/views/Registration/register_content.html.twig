@@ -9,6 +9,7 @@
     <form class="form" action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register">
         <fieldset>
             {{ form_widget(form) }}
+            {{ asset('uploads') }}
         </fieldset>
         <div>
             <button type="submit" class="btn">{{ 'registration.submit'|trans({}, 'FOSUserBundle') }}</button>
@@ -17,5 +18,5 @@
 </div>
 
 {% if standalone == false %}
-    {% render "EntvalleyUserBundle:Security:login" with { standalone: true } %}
+    {% render controller("EntvalleyUserBundle:Security:login", {standalone: true}) %}
 {% endif %}

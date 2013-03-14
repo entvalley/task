@@ -67,7 +67,7 @@ jQuery(function ($) {
             this.post('/projects/create', function (context) {
                 $.post(context.path, context.params.toHash(), function (data, status, xhr) {
                     var type = xhr.getResponseHeader("content-type");
-                    if (type !== "application/javascript") {
+                    if (type !== "text/javascript") {
                         $('#new_project form').replaceWith(data);
                     }
                 });

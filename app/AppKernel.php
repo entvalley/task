@@ -25,7 +25,8 @@ class AppKernel extends Kernel
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new Exercise\HTMLPurifierBundle\ExerciseHTMLPurifierBundle(),
             new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
-            new Mgp\PropertyBundle\MgpPropertyBundle()
+            new Mgp\PropertyBundle\MgpPropertyBundle(),
+            new Liuggio\StatsDClientBundle\LiuggioStatsDClientBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -2,6 +2,7 @@
 
 namespace Entvalley\AppBundle\Controller;
 
+use Entvalley\AppBundle\Service\StatsService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Templating\EngineInterface;
 use Entvalley\AppBundle\Domain\UserContext;
@@ -59,6 +60,11 @@ class ControllerContainer
     protected $aclManager;
 
     /**
+     * @var \Entvalley\AppBundle\Service\StatsService
+     */
+    protected $stats;
+
+    /**
      * @param \Symfony\Component\HttpFoundation\Request $request
      * @param \Symfony\Component\Routing\RouterInterface $router
      * @param \Symfony\Bundle\FrameworkBundle\Templating\EngineInterface $templating
@@ -67,8 +73,9 @@ class ControllerContainer
      * @param \Symfony\Component\Form\FormFactoryInterface $formFactory
      * @param \Entvalley\AppBundle\Domain\UserContext $userContext
      * @param AclManager $aclManager
+     * @param StatsService $stats
      */
-    public function __construct(Request $request, RouterInterface $router, EngineInterface $templating, SessionInterface $session, RegistryInterface $doctrine, FormFactoryInterface $formFactory, UserContext $userContext, AclManager $aclManager)
+    public function __construct(Request $request, RouterInterface $router, EngineInterface $templating, SessionInterface $session, RegistryInterface $doctrine, FormFactoryInterface $formFactory, UserContext $userContext, AclManager $aclManager, StatsService $stats)
     {
         $this->request = $request;
         $this->router = $router;
@@ -78,6 +85,7 @@ class ControllerContainer
         $this->formFactory = $formFactory;
         $this->userContext = $userContext;
         $this->aclManager = $aclManager;
+        $this->stats = $stats;
     }
 
     /**
@@ -142,5 +150,13 @@ class ControllerContainer
     public function getAclManager()
     {
         return $this->aclManager;
+    }
+
+    /**
+     * @return \Entvalley\AppBundle\Service\StatsService
+     */
+    public function getStats()
+    {
+        return $this->stats;
     }
 }

@@ -3,6 +3,7 @@
 namespace Entvalley\AppBundle\EventListener;
 
 use Entvalley\AppBundle\Component\HttpFoundation\JsonResponse;
+use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 
@@ -10,14 +11,16 @@ class ApiListener
 {
     private $supportedFormats;
     private $jsonSerializer;
+    private $serializationContext;
 
-    public function __construct(array $supportedFormats, $jsonSerializer)
+    public function __construct(array $supportedFormats, $jsonSerializer, SerializationContext $serializationContext)
     {
         if (empty($supportedFormats)) {
             throw new \RuntimeException("You must set at least one supported format");
         }
         $this->supportedFormats = $supportedFormats;
         $this->jsonSerializer = $jsonSerializer;
+        $this->serializationContext = $serializationContext;
     }
 
     public function onKernelView(GetResponseForControllerResultEvent $event)
@@ -42,7 +45,7 @@ class ApiListener
         if ($responseFormat) {
             switch ($responseFormat) {
                 case "json":
-                    $response = JsonResponse::createWithSerializer($this->jsonSerializer, $event->getControllerResult());
+                    $response = JsonResponse::createWithSerializer($this->jsonSerializer, $event->getControllerResult(), $this->serializationContext);
                     break;
             }
         }

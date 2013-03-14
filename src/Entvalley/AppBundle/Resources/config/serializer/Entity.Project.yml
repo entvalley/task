@@ -12,6 +12,9 @@ Entvalley\AppBundle\Entity\Project:
             groups: [summary]
         totalNumber:
             groups: [summary]
+        projectStatsService:
+            expose: false
+            exclude: true
 
     callback_methods:
         pre_serialize: [loadStats]

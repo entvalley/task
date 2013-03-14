@@ -8,10 +8,10 @@ use JMS\Serializer\SerializerInterface;
 
 class JsonResponse extends BaseJsonResponse
 {
-    public static function createWithSerializer(SerializerInterface $serializer, $data = array(), $status = 200, $headers = array())
+    public static function createWithSerializer(SerializerInterface $serializer, $data = array(), $context = null, $status = 200, $headers = array())
     {
         $response = new static(array(), $status, $headers);
-        $response->setJsonData($serializer->serialize($data, 'json'));
+        $response->setJsonData($serializer->serialize($data, 'json', $context));
         return $response;
     }
 

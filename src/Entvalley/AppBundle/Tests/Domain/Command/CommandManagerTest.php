@@ -8,18 +8,19 @@ class CommandManagerTest extends \PHPUnit_Framework_TestCase
 {
     public function testShouldReturnCommandNamesWithAtSign()
     {
-        $regsitryMock = $this->getMock('\Entvalley\AppBundle\Domain\Command\CommandRegistry');
-        $regsitryMock->expects($this->once())
+        $registryMock = $this->getMock('\Entvalley\AppBundle\Domain\Command\CommandRegistry');
+        $registryMock->expects($this->once())
             ->method('getRegisteredNames')
             ->will($this->returnValue(array(
             'create',
             'close'
         )));
 
+        $userContextMock = $this->getMock('Entvalley\AppBundle\Domain\UserContextInterface');
+        $statsService = $this->getMock('Entvalley\AppBundle\Service\StatsServiceInterface');
+        $interpreterMock = $this->getMock('\Entvalley\AppBundle\Domain\Command\CommandInterpreter', array(), array($registryMock, $userContextMock, $statsService));
 
-        $interpreterMock = $this->getMock('\Entvalley\AppBundle\Domain\Command\CommandInterpreter', array(), array($regsitryMock));
-
-        $manager = new CommandManager($interpreterMock, $regsitryMock);
+        $manager = new CommandManager($interpreterMock, $registryMock);
 
         $this->assertEquals(array('@create', '@close'), $manager->getCommandNames());
     }
@@ -28,17 +29,20 @@ class CommandManagerTest extends \PHPUnit_Framework_TestCase
     {
         $close = new CloseCommandStub();
         $create = new CreateCommandStub();
-        $regsitryMock = $this->getMock('\Entvalley\AppBundle\Domain\Command\CommandRegistry');
-        $regsitryMock->expects($this->once())
+        $registryMock = $this->getMock('\Entvalley\AppBundle\Domain\Command\CommandRegistry');
+        $registryMock->expects($this->once())
             ->method('getAll')
             ->will($this->returnValue(array(
             $create,
             $close
         )));
 
-        $interpreterMock = $this->getMock('\Entvalley\AppBundle\Domain\Command\CommandInterpreter', array(), array($regsitryMock));
+        $userContextMock = $this->getMock('Entvalley\AppBundle\Domain\UserContextInterface');
+        $statsService = $this->getMock('Entvalley\AppBundle\Service\StatsServiceInterface');
+        $interpreterMock = $this->getMock('Entvalley\AppBundle\Domain\Command\CommandInterpreter', array(), array($registryMock, $userContextMock, $statsService));
 
-        $manager = new CommandManager($interpreterMock, $regsitryMock);
+
+        $manager = new CommandManager($interpreterMock, $registryMock);
 
         $this->assertEquals(array('@create' => array(
             'is_visible' => true,
@@ -62,7 +66,10 @@ class CommandManagerTest extends \PHPUnit_Framework_TestCase
             $close
         ));
 
-        $interpreterMock = $this->getMock('\Entvalley\AppBundle\Domain\Command\CommandInterpreter', array(), array($registryMock));
+        $userContextMock = $this->getMock('Entvalley\AppBundle\Domain\UserContextInterface');
+        $statsService = $this->getMock('Entvalley\AppBundle\Service\StatsServiceInterface');
+        $interpreterMock = $this->getMock('Entvalley\AppBundle\Domain\Command\CommandInterpreter', array(), array($registryMock, $userContextMock, $statsService));
+
 
         $manager = new CommandManager($interpreterMock, $registryMock);
 

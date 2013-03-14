@@ -131,7 +131,7 @@ services:
 
     entvalley.event_listener.api_listener:
         class: Entvalley\AppBundle\EventListener\ApiListener
-        arguments: [['json'], "@jms_serializer"]
+        arguments: [['json'], "@jms_serializer", "@entvalley.controller.serialization_context"]
         tags:
             - { name: kernel.event_listener, event: kernel.view, method: onKernelView }
 
@@ -151,3 +151,9 @@ exercise_html_purifier:
         Core.Encoding: 'UTF-8'
         Core.EscapeInvalidTags: true
         HTML.Allowed: 'a[href],b,i,u,li,ul,blockquote,ol,br,h1,h2,h3,img[src],span,div,pre[class]'
+
+liuggio_stats_d_client:
+    connection:
+        host: 192.168.1.232
+        port: 8125
+    collectors: ~

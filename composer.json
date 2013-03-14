@@ -44,7 +44,7 @@
         "exercise/htmlpurifier-bundle": "dev-master",
         "sensiolabs/security-checker": "dev-master",
 
-
+        "liuggio/statsd-client-bundle": "1.2.*",
         "doctrine/data-fixtures": "1.0.*",
         "doctrine/mongodb-odm-bundle": "3.0.*"
     },

@@ -38,7 +38,10 @@ class CommandInterpreterTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue('create'));
         $registry->register($expectedCreateCommand);
 
-        $interpreter = new CommandInterpreter($registry);
+        $userContextMock = $this->getMock('Entvalley\AppBundle\Domain\UserContextInterface');
+        $statsService = $this->getMock('Entvalley\AppBundle\Service\StatsServiceInterface');
+
+        $interpreter = new CommandInterpreter($registry, $userContextMock, $statsService);
 
         $source = "@create a new ticket\r\n";
         $source .= "@create another ticket";
@@ -94,6 +97,32 @@ class CommandInterpreterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('create' => array(true), 'close' =>  array(true)), $result);
     }
 
+    public function testShouldCountEveryCommandExecution()
+    {
+        $registry = new CommandRegistry();
+        $expectedCreateCommand = $this->getMock('Entvalley\AppBundle\Tests\Domain\Command\CreateCommandStub');
+        $expectedCreateCommand->expects($this->atLeastOnce())
+            ->method('execute')
+            ->will($this->returnValue(true));
+        $expectedCreateCommand->expects($this->any())
+            ->method('getName')
+            ->will($this->returnValue('create'));
+        $registry->register($expectedCreateCommand);
+
+        $userContextMock = $this->getMock('Entvalley\AppBundle\Domain\UserContextInterface');
+        $statsService = $this->getMock('Entvalley\AppBundle\Service\StatsServiceInterface');
+
+        $interpreter = new CommandInterpreter($registry, $userContextMock, $statsService);
+
+        $source = "@create a new ticket\r\n";
+        $source .= "@create another ticket";
+
+        $statsService->expects($this->exactly(2))
+            ->method('count');
+
+        $interpreter->interpret(new CommandSource($source));
+    }
+
     private function createInterpreterThatExpects($createExpected = false, $closeExpected = false)
     {
         $registry = new CommandRegistry();
@@ -134,7 +163,11 @@ class CommandInterpreterTest extends \PHPUnit_Framework_TestCase
         $registry->register($expectedCreateCommand);
         $registry->register($expectedCloseCommand);
 
-        return new CommandInterpreter($registry);
+
+        $userContextMock = $this->getMock('Entvalley\AppBundle\Domain\UserContextInterface');
+        $statsService = $this->getMock('Entvalley\AppBundle\Service\StatsServiceInterface');
+
+        return new CommandInterpreter($registry, $userContextMock, $statsService);
     }
 
 }

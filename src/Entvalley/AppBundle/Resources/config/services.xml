@@ -36,34 +36,34 @@
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.abstrac_status_change_command" class="Entvalley\AppBundle\Domain\AbstractStatusChangeCommand" abstract="true">
+        <service id="entvalley.abstract_status_change_command" class="Entvalley\AppBundle\Domain\AbstractStatusChangeCommand" abstract="true">
             <argument type="service" id="doctrine" />
             <argument type="service" id="context.user" />
             <argument type="service" id="exercise_html_purifier.default"/>
         </service>
 
 
-        <service id="entvalley.command_abandon" class="Entvalley\AppBundle\Domain\Command\AbandonCommand" parent="entvalley.abstrac_status_change_command">
+        <service id="entvalley.command_abandon" class="Entvalley\AppBundle\Domain\Command\AbandonCommand" parent="entvalley.abstract_status_change_command">
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.command_open" class="Entvalley\AppBundle\Domain\Command\OpenCommand" parent="entvalley.abstrac_status_change_command">
+        <service id="entvalley.command_open" class="Entvalley\AppBundle\Domain\Command\OpenCommand" parent="entvalley.abstract_status_change_command">
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.command_reject" class="Entvalley\AppBundle\Domain\Command\RejectCommand" parent="entvalley.abstrac_status_change_command">
+        <service id="entvalley.command_reject" class="Entvalley\AppBundle\Domain\Command\RejectCommand" parent="entvalley.abstract_status_change_command">
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.command_wontfix" class="Entvalley\AppBundle\Domain\Command\WontfixCommand" parent="entvalley.abstrac_status_change_command">
+        <service id="entvalley.command_wontfix" class="Entvalley\AppBundle\Domain\Command\WontfixCommand" parent="entvalley.abstract_status_change_command">
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.command_take" class="Entvalley\AppBundle\Domain\Command\TakeCommand" parent="entvalley.abstrac_status_change_command">
+        <service id="entvalley.command_take" class="Entvalley\AppBundle\Domain\Command\TakeCommand" parent="entvalley.abstract_status_change_command">
             <tag name="entvalley.command" />
         </service>
 
-        <service id="entvalley.command_done" class="Entvalley\AppBundle\Domain\Command\DoneCommand" parent="entvalley.abstrac_status_change_command">
+        <service id="entvalley.command_done" class="Entvalley\AppBundle\Domain\Command\DoneCommand" parent="entvalley.abstract_status_change_command">
             <tag name="entvalley.command" />
         </service>
 
@@ -72,6 +72,8 @@
 
         <service id="entvalley.command_interpreter" class="Entvalley\AppBundle\Domain\Command\CommandInterpreter">
             <argument type="service" id="entvalley.command_registry" />
+            <argument type="service" id="context.user" />
+            <argument type="service" id="entvalley.stats_service" />
         </service>
 
         <service id="entvalley.command_manager" class="Entvalley\AppBundle\Domain\Command\CommandManager">
@@ -93,6 +95,12 @@
             <argument type="service" id="form.factory"/>
             <argument type="service" id="context.user"/>
             <argument type="service" id="entvalley.acl_manager" />
+            <argument type="service" id="entvalley.stats_service" />
+        </service>
+
+        <service id="entvalley.stats_service" class="Entvalley\AppBundle\Service\StatsService">
+            <argument type="service" id="liuggio_stats_d_client.factory" />
+            <argument type="service" id="liuggio_stats_d_client.service" />
         </service>
 
         <service id="entvalley.controller" class="Entvalley\AppBundle\Controller\Controller" abstract="true" scope="request">
@@ -101,6 +109,7 @@
 
         <service id="entvalley.task_controller" class="Entvalley\AppBundle\Controller\TaskController" scope="request" parent="entvalley.controller">
             <argument type="service" id="jms_serializer"/>
+            <argument type="service" id="entvalley.controller.serialization_context" />
             <argument type="service" id="exercise_html_purifier.default"/>
         </service>
 
@@ -131,6 +140,9 @@
             <tag name="doctrine.event_listener" event="preUpdate" lazy="true" priority="999" />
             <tag name="doctrine.event_listener" event="preRemove" lazy="true" priority="999" />
             <tag name="doctrine.event_listener" event="postLoad" lazy="true" priority="999" />
+        </service>
+
+        <service id="entvalley.controller.serialization_context" class="JMS\Serializer\SerializationContext">
         </service>
 
     </services>

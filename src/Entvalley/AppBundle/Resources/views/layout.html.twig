@@ -87,15 +87,17 @@
     </div>
 </div>
 
-<div class="container" id="new_project" data-behaviour="expandable" style="display: none">
-    <div class="row">
-        <div class="span3"></div>
-        <div class="span6">
-            {% render controller('entvalley.project_controller:createAction') %}
+<section id="popup_page">
+    <div class="container" id="new_project" data-behaviour="expandable" style="display: none">
+        <div class="row">
+            <div class="span3"></div>
+            <div class="span6">
+                {% render controller('entvalley.project_controller:createAction') %}
+            </div>
+            <div class="span3"></div>
         </div>
-        <div class="span3"></div>
     </div>
-</div>
+</section>
 
 <section id="{{ section|default('common') }}">
     <div class="container" id="page" style="">
