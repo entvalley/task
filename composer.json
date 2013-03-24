@@ -39,12 +39,12 @@
         "symfony/assetic-bundle": "2.1.*",
         "symfony/monolog-bundle": "2.2.*",
         "symfony/swiftmailer-bundle": "2.2.*",
-        "symfony/symfony": "2.3.*@dev",
+        "symfony/symfony": "2.2.*@dev",
         "twig/extensions": "1.0.*",
         "exercise/htmlpurifier-bundle": "dev-master",
         "sensiolabs/security-checker": "dev-master",
 
-        "liuggio/statsd-client-bundle": "1.2.*",
+        "liuggio/statsd-client-bundle": "dev-master",
         "doctrine/data-fixtures": "1.0.*",
         "doctrine/mongodb-odm-bundle": "3.0.*"
     },

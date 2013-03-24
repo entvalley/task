@@ -58,19 +58,21 @@ class ProjectRepository extends EntityRepository
         $company = $user->getCompany();
         $query = $this->getEntityManager()
             ->createQuery(
-            "SELECT " . ($needEntity ? 'p, ' : '') . "(
-                                  SELECT COUNT(t0.id)
-                                    FROM EntvalleyAppBundle:Task t0
-                                    WHERE t0.project = p.id AND (t0.status = :reopened_status OR t0.status = :accepted_status)
-                                          AND t0.assignedTo = :assigned_to) AS in_progress,
-                                 (SELECT COUNT(t1.id)
-                                    FROM EntvalleyAppBundle:Task t1
-                                   WHERE t1.project = p.id AND t1.status = :unresolved_status) AS unresolved_total,
-                                 (SELECT COUNT(t2.id)
-                                    FROM EntvalleyAppBundle:Task t2
-                                   WHERE t2.project = p.id) AS total
-                             FROM EntvalleyAppBundle:Project p
-                            WHERE p.company = :company_id"
+            "SELECT " . ($needEntity ? 'p, ' : '') . "
+                   (SELECT COUNT(t0.id)
+                      FROM EntvalleyAppBundle:Task t0
+                     WHERE t0.project = p.id AND (t0.status = :reopened_status OR t0.status = :accepted_status)
+                           AND t0.assignedTo = :assigned_to) AS in_progress,
+                   (SELECT COUNT(t1.id)
+                      FROM EntvalleyAppBundle:Task t1
+                     WHERE t1.project = p.id AND t1.status = :unresolved_status) AS unresolved_total,
+                   (SELECT COUNT(t2.id)
+                      FROM EntvalleyAppBundle:Task t2
+                     WHERE t2.project = p.id) AS total
+               FROM EntvalleyAppBundle:Project p
+              WHERE p.company = :company_id OR p.id IN (SELECT IDENTITY(pc.project)
+                                                          FROM EntvalleyAppBundle:ProjectCollaborator pc
+                                                         WHERE pc.collaborator = :collaborator)"
         );
 
         $query->setParameter('company_id', $company->getId());
@@ -78,6 +80,7 @@ class ProjectRepository extends EntityRepository
         $query->setParameter('accepted_status', Status::ACCEPTED);
         $query->setParameter('unresolved_status', Status::UNASSIGNED);
         $query->setParameter('assigned_to', $user->getId());
+        $query->setParameter('collaborator', $user);
         $result = $query->getResult($needEntity ? Query::HYDRATE_OBJECT : Query::HYDRATE_ARRAY);
         return $result;
     }
