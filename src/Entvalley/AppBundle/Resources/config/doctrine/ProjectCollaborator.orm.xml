@@ -5,7 +5,7 @@
       xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
                           http://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
 
-    <entity name="Entvalley\AppBundle\Entity\ProjectCollaborator" table="entvalley_project_collaborator">
+    <entity name="Entvalley\AppBundle\Entity\ProjectCollaborator" repository-class="Entvalley\AppBundle\Repository\ProjectCollaboratorRepository" table="entvalley_project_collaborator">
         <unique-constraints>
             <unique-constraint columns="collaborator_id,project_id"/>
         </unique-constraints>

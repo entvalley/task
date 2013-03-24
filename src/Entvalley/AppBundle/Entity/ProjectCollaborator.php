@@ -67,8 +67,14 @@ class ProjectCollaborator implements IHaveOwner
         return $this->id;
     }
 
+    /**
+     * Belongs to the owner oj the project and to the collaborator
+     *
+     * @param User $user
+     * @return bool
+     */
     public function isBelongingTo(User $user)
     {
-        return $this->getProject()->isBelongingTo($user);
+        return $this->getProject()->isBelongingTo($user) || $this->collaborator->isUser($user);
     }
 }

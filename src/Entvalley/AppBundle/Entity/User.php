@@ -22,7 +22,7 @@ class User extends BaseUser implements IHaveOwner
 
     public function isBelongingTo(User $user)
     {
-        // since users are owners of all objects, they don't have owners and belong to anyone
+        // since users are owners of all objects, they don't have owners and can't belong to noone
         return true;
     }
 

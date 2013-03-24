@@ -3,20 +3,21 @@
 namespace Entvalley\AppBundle\Security;
 
 use Entvalley\AppBundle\Domain\IHaveProject;
+use Entvalley\AppBundle\Domain\ProjectCollaboratorService;
 use Entvalley\AppBundle\Entity\Project;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class InvitedToEvaluator
+class IsCollaboratorEvaluator
 {
-    private $container;
+    private $projectCollaboratorService;
 
-    public function __construct(ContainerInterface $container)
+    public function __construct(ProjectCollaboratorService $projectCollaboratorService)
     {
-        $this->container = $container;
+        $this->projectCollaboratorService = $projectCollaboratorService;
     }
 
-    public function invitedTo($object, $user)
+    public function isCollaborator($user, $object)
     {
         if (!($user instanceof UserInterface)) {
             return false;
@@ -30,7 +31,6 @@ class InvitedToEvaluator
             return false;
         }
 
-        return true;
-
+        return $this->projectCollaboratorService->isCollaborator($user, $project);
     }
 }

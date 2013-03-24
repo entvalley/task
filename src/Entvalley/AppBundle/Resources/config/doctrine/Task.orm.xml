@@ -37,7 +37,5 @@
         <many-to-one field="author" target-entity="Entvalley\AppBundle\Entity\User" />
         <many-to-one field="assignedTo" target-entity="Entvalley\AppBundle\Entity\User" />
         <many-to-one field="project" target-entity="Entvalley\AppBundle\Entity\Project" />
-
-
     </entity>
 </doctrine-mapping>

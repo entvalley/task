@@ -41,7 +41,7 @@ class AclListener
             return $entity;
         }
 
-        if (!$this->securityContext->isGranted(new Expression('belongsTo(object, user) or invitedTo(object, user)'), $args->getEntity())) {
+        if (!$this->securityContext->isGranted(new Expression('belongsTo(object, user) or isCollaborator(user, object)'), $args->getEntity())) {
             throw new AccessDeniedException("insufficient privileges to view the object of class: " . get_class($entity));
         }
 

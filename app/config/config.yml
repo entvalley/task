@@ -135,15 +135,27 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.view, method: onKernelView }
 
+    entvalley.repository.project_collaborator_repository:
+        class: Entvalley\AppBundle\Repository\ProjectCollaboratorRepository
+        factory_service: doctrine
+        factory_method:  getRepository
+        arguments:
+            - "EntvalleyAppBundle:ProjectCollaborator"
+
+    entvalley.domain.project_collaborator_service:
+        class: Entvalley\AppBundle\Domain\ProjectCollaboratorService
+        arguments: [ "@entvalley.repository.project_collaborator_repository"]
+
     security.owner_evaluator:
         class: Entvalley\AppBundle\Security\OwnerEvaluator
         tags:
             - { name: security.expressions.function_evaluator, function: belongsTo, method: belongsTo }
+
     security.invited_to_evaluator:
-        class: Entvalley\AppBundle\Security\InvitedToEvaluator
-        arguments:  [@service_container]
+        class: Entvalley\AppBundle\Security\IsCollaboratorEvaluator
+        arguments:  [@entvalley.domain.project_collaborator_service]
         tags:
-            - { name: security.expressions.function_evaluator, function: invitedTo, method: invitedTo }
+            - { name: security.expressions.function_evaluator, function: isCollaborator, method: isCollaborator }
 
 exercise_html_purifier:
     default:
